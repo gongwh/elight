@@ -30,7 +30,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
         if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            response.getWriter().write(objectMapper.writeValueAsString(ResultVOUtil.error(HttpStatus.UNAUTHORIZED.value(),exception.getMessage())));
+            response.getWriter().write(objectMapper.writeValueAsString(ResultVOUtil.error(HttpStatus.UNAUTHORIZED.value(), exception.getMessage())));
             response.getWriter().flush();
         } else {
             super.onAuthenticationFailure(request, response, exception);

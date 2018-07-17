@@ -60,7 +60,7 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
 
         // JSON+JWT认证流程,
         http.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAt(jwtAuthenticationFilter(),BasicAuthenticationFilter.class);
+        http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
 
         // 没有认证时
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());

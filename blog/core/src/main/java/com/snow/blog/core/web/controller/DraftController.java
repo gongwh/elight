@@ -51,7 +51,7 @@ public class DraftController {
     @GetMapping("/newest")
     public ResultVO getNewestDraftByUserId(String userId) {
         DraftVO draftVO = draftService.getNewestDraftByUserId(userId);
-        log.debug("加载最新草稿:{}",draftVO);
+        log.debug("加载最新草稿:{}", draftVO);
         return ResultVOUtil.success(draftVO);
     }
 
@@ -60,10 +60,10 @@ public class DraftController {
         ArticleVO articleVO = articleService.getArticleByArticleId(articleId);
         ArticleValidator.articleExist(articleVO);
         DraftVO draftNew = new DraftVO();
-        BeanCopyUtil.copy(articleVO,draftNew);
+        BeanCopyUtil.copy(articleVO, draftNew);
         draftNew.setUpdateTime(null);
         DraftVO draftNewSaveResult = draftService.saveDraft(draftNew);
-        log.debug("加载新的文章为草稿,draftNew:{}",draftNewSaveResult.getArticleId());
+        log.debug("加载新的文章为草稿,draftNew:{}", draftNewSaveResult.getArticleId());
         return ResultVOUtil.success(draftNewSaveResult);
     }
 

@@ -38,11 +38,12 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
 
             String username = null;
             String password = null;
-            try(InputStream is = request.getInputStream()) {
-                Map<String,String> loginInfo = objectMapper.readValue(is,new TypeReference<Map<String, String>>(){});
+            try (InputStream is = request.getInputStream()) {
+                Map<String, String> loginInfo = objectMapper.readValue(is, new TypeReference<Map<String, String>>() {
+                });
                 username = loginInfo.get("username");
                 password = loginInfo.get("password");
-            }catch (IOException e){
+            } catch (IOException e) {
                 // do nothing
             }
             if (username == null) {
@@ -68,7 +69,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String token = Jwts.builder()
                 .setSubject(((User) authResult.getPrincipal()).getUsername())
-                .claim("authorities",getAuthoritiesToStr(authResult))
+                .claim("authorities", getAuthoritiesToStr(authResult))
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 24 * 1000))
                 .signWith(SignatureAlgorithm.HS512, "SNOW")
                 .compact();
@@ -76,6 +77,6 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
     }
 
     private String getAuthoritiesToStr(Authentication authResult) throws JsonProcessingException {
-       return CustomUserDetailService.getAuthorities(((User) authResult.getPrincipal()).getAuthorities());
+        return CustomUserDetailService.getAuthorities(((User) authResult.getPrincipal()).getAuthorities());
     }
 }

@@ -38,7 +38,7 @@ public class Article extends EntityBase {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "Text")
-    private String  contentMd;
+    private String contentMd;
     // html 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)

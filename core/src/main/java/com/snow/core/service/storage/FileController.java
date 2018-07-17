@@ -48,7 +48,7 @@ public class FileController {
     @GetMapping("/**")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
-        String fileName = StringUtils.substringAfter(request.getServletPath(),"/file/");
+        String fileName = StringUtils.substringAfter(request.getServletPath(), "/file/");
         Resource file = storageService.loadAsResource(fileName);
         return ResponseEntity.ok().body(file);
     }
@@ -61,7 +61,7 @@ public class FileController {
             result.put(fileEntry.getKey(), storageService.store(fileEntry.getValue().get(0)));
         }
         return ResultVOUtil.success(result);
-    }   
+    }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {

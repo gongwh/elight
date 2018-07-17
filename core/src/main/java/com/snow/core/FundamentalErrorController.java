@@ -36,10 +36,10 @@ public class FundamentalErrorController implements ErrorController {
         Map<String, Object> errorAttributesData = errorAttributes.getErrorAttributes(requestAttributes, true);
 
         Integer status = (Integer) errorAttributesData.get("status");
-        String error = (String)errorAttributesData.get("error");
-        String exception = (String)errorAttributesData.get("exception");
-        String path = (String)errorAttributesData.get("path");
-        String message = (String)errorAttributesData.get("message");
+        String error = (String) errorAttributesData.get("error");
+        String exception = (String) errorAttributesData.get("exception");
+        String path = (String) errorAttributesData.get("path");
+        String message = (String) errorAttributesData.get("message");
 
         ResultVO resultVO = new ResultVO();
         resultVO.setStatus(status);

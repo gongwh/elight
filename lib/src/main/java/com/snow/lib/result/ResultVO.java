@@ -10,8 +10,7 @@ import java.util.Date;
  * Created by SNOW on 2018.01.18.
  */
 @Data
-public class ResultVO<T> implements Serializable
-{
+public class ResultVO<T> implements Serializable {
     private static final long serialVersionUID = 5216059160426137256L;
 
     // 时间
@@ -39,10 +38,10 @@ public class ResultVO<T> implements Serializable
     // 请求地址
     private String path;
 
-    public ResultVO(){
+    public ResultVO() {
     }
 
-    public ResultVO(Integer status, String message, T data, Pagination pagination){
+    public ResultVO(Integer status, String message, T data, Pagination pagination) {
         this.status = status;
         this.message = message;
         this.data = data;

@@ -7,16 +7,16 @@ import lombok.Data;
  * Created by SNOW on 2018.01.18.
  */
 @Data
-public class BaseException extends RuntimeException{
+public class BaseException extends RuntimeException {
 
     private Integer code;
 
-    public BaseException(ResultEnum statusEnum){
+    public BaseException(ResultEnum statusEnum) {
         super(statusEnum.getMsg());
         this.code = statusEnum.getCode();
     }
 
-    public BaseException(Integer code, String msg){
+    public BaseException(Integer code, String msg) {
         super(msg);
         this.code = code;
     }

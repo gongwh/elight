@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                     .setSigningKey("SNOW")
                     .parseClaimsJws(token.replace("Bearer ", "")).getBody();
             String username = claims.getSubject();
-            String authorities = (String)claims.get("authorities");
+            String authorities = (String) claims.get("authorities");
             if (null == username) {
                 chain.doFilter(request, response);
                 return;

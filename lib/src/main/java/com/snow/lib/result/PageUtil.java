@@ -8,9 +8,10 @@ import org.springframework.data.domain.Page;
  */
 public class PageUtil {
 
-    private PageUtil() {}
+    private PageUtil() {
+    }
 
-    public static Pagination GetPaginationFrom(Page page){
+    public static Pagination GetPaginationFrom(Page page) {
         Pagination pagination = new Pagination();
         pagination.setFirst(page.isFirst());
         pagination.setLast(page.isLast());

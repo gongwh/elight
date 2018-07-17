@@ -13,12 +13,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @create by SNOW 2018.07.12
  */
-@Target({TYPE,ANNOTATION_TYPE})
+@Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = PasswordMatchesValidator.class)
 @Documented
 public @interface PasswordMatches {
     String message() default "Passwords don't match";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
