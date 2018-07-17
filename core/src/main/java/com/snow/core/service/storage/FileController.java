@@ -61,7 +61,7 @@ public class FileController {
             result.put(fileEntry.getKey(), storageService.store(fileEntry.getValue().get(0)));
         }
         return ResultVOUtil.success(result);
-    }   
+    }
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
