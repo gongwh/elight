@@ -17,10 +17,10 @@ public class DraftValidator {
         }
     }
 
-    public static void validate(DraftVO draftVO,String errInfo) {
+    public static void validate(DraftVO draftVO, String errInfo) {
         if (null == draftVO
                 || draftVO.getContentMd() == null) {
-            throw new BaseException(ResultEnum.VALIDATE_ERROR.getCode(),errInfo);
+            throw new BaseException(ResultEnum.VALIDATE_ERROR.getCode(), errInfo);
         }
     }
 

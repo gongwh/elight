@@ -10,7 +10,7 @@ public enum ResultEnum implements IEnum<Integer> {
     VALIDATE_ERROR(503, "该数据不符合条件"),
     GET_ERROR(504, "获取失败"),
     DEL_ERROR(505, "删除失败"),
-    SAVE_ERROR(506,"保存失败");
+    SAVE_ERROR(506, "保存失败");
 
     private String message;
     private Integer index;

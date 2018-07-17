@@ -48,7 +48,7 @@ public class FileController {
     @GetMapping("/**")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(HttpServletRequest request) {
-        String fileName = StringUtils.substringAfter(request.getServletPath(),"/file/");
+        String fileName = StringUtils.substringAfter(request.getServletPath(), "/file/");
         Resource file = storageService.loadAsResource(fileName);
         return ResponseEntity.ok().body(file);
     }

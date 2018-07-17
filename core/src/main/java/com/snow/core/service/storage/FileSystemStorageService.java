@@ -42,7 +42,7 @@ public class FileSystemStorageService implements StorageService {
             if (!parentDir.toFile().exists())
                 Files.createDirectories(parentDir);
             Files.write(this.rootLocation.resolve(fileName), file.getBytes(), StandardOpenOption.CREATE);
-            return fileName.replaceAll("\\\\","/");
+            return fileName.replaceAll("\\\\", "/");
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + fileName, e);
         }

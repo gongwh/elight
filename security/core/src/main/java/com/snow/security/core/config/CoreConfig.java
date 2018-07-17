@@ -49,7 +49,7 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 授权配置
         http.authorizeRequests()
-                .antMatchers("/auth/login", "/user/registration").permitAll()
+                .antMatchers("/auth/login", "/user/registration","/file/**").permitAll()
                 .anyRequest().authenticated();
 
         // 表单认证
@@ -60,7 +60,7 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
 
         // JSON+JWT认证流程,
         http.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterAt(jwtAuthenticationFilter(),BasicAuthenticationFilter.class);
+        http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
 
         // 没有认证时
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());

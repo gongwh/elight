@@ -5,5 +5,6 @@ package com.snow.lib.enums;
  */
 public interface IEnum<T> {
     T getCode();
+
     String getMsg();
 }

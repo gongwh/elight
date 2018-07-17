@@ -25,6 +25,6 @@ public class FileUtil {
                         "HH" + File.separator +
                         "mm" + File.separator +
                         "ss") + File.separator +
-                UUID.randomUUID() + "."+ fileExtension;
+                UUID.randomUUID() + "." + fileExtension;
     }
 }

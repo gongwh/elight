@@ -26,11 +26,11 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResultVO registration(@RequestBody @Valid UserDto userDto){
-        if (null != userService.registerNewUserAccount(userDto)){
+    public ResultVO registration(@RequestBody @Valid UserDto userDto) {
+        if (null != userService.registerNewUserAccount(userDto)) {
             return ResultVOUtil.success();
         } else {
-            return ResultVOUtil.error(-1,"注册失败");
+            return ResultVOUtil.error(-1, "注册失败");
         }
     }
 }

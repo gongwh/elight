@@ -25,7 +25,7 @@ public class UserService implements IUserService {
     public User registerNewUserAccount(UserDto userDto) {
         if (emailExist(userDto.getEmail())) {
             throw new EmailExistsException(-1,
-                    "There is an account with that email address:"  + userDto.getEmail());
+                    "There is an account with that email address:" + userDto.getEmail());
         }
         User user = new User();
         user.setFirstName(userDto.getFirstName());
