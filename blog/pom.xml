@@ -6,10 +6,14 @@
     <groupId>com.snow.blog</groupId>
     <artifactId>blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>blog</name>
     <description>Demo project for Spring Boot</description>
+
+    <modules>
+        <module>core</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -60,24 +64,5 @@
             </snapshots>
         </repository>
     </repositories>
-
-    <build>
-        <finalName>blog</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>
-                                repackage
-                            </goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
