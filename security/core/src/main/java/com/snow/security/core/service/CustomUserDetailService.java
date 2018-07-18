@@ -39,15 +39,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 (user.getEmail(),
                         user.getPassword(), enabled, accountNonExpired,
                         credentialsNonExpired, accountNonLocked,
-                        getAuthorities(user.getAuthorities()));
-    }
-
-    public static Collection<GrantedAuthority> getAuthorities(List<String> authorityStr) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String auth : authorityStr) {
-            authorities.add(new SimpleGrantedAuthority(auth));
-        }
-        return authorities;
+                        user.getAuthorities());
     }
 
     public static String getAuthorities(Collection<GrantedAuthority> grantedAuthorities) {

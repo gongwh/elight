@@ -2,13 +2,17 @@ package com.snow.security.core.service;
 
 import com.snow.security.core.exception.EmailExistsException;
 import com.snow.security.core.repository.UserRepository;
+import com.snow.security.core.repository.entity.Authority;
 import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.support.UserDto;
+import org.apache.commons.collections.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @create by SNOW 2018.07.09
@@ -32,7 +36,10 @@ public class UserService implements IUserService {
         user.setLastName(userDto.getLastName());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
-        user.setAuthorities(Arrays.asList("USER"));
+        Authority authority = new Authority("USER");
+        Set authorities = new HashSet();
+        authorities.add(authority);
+        user.setAuthorities(authorities);
         user.setPhoneNumber(userDto.getPhoneNumber());
         return userRepository.save(user);
     }

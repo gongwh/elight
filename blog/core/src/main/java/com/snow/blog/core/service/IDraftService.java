@@ -1,6 +1,6 @@
 package com.snow.blog.core.service;
 
-import com.snow.blog.core.vo.DraftVO;
+import com.snow.blog.core.repository.entity.Draft;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,17 +12,17 @@ import java.util.List;
 public interface IDraftService {
 
     // 查
-    List<DraftVO> getDraftsAll();
+    List<Draft> getDraftsAll();
 
-    Page<DraftVO> getDraftsAllByPage(Pageable pageable);
+    Page<Draft> getDraftsAllByPage(Pageable pageable);
 
-    DraftVO getNewestDraftByUserId(String userId);
+    Draft getNewestDraftByUserId(String userId);
 
-    List<DraftVO> getDraftsByUserId(String userId);
+    List<Draft> getDraftsByUserId(String userId);
 
     // 增，改
-    DraftVO saveDraft(DraftVO DraftVO);
+    Draft saveDraft(Draft Draft);
 
     // 删
-    void deleteDraft(DraftVO DraftVO);
+    void deleteDraft(Draft Draft);
 }

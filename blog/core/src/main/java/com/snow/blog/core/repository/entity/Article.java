@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 文章
@@ -46,4 +48,24 @@ public class Article extends EntityBase {
     private String contentText;
     // 用户ID
     private String userId;
+    // 文章标签
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "article_tag",
+            joinColumns = {@JoinColumn(name = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_number")}
+    )
+    private Set<Tag> tags = new HashSet<>();
+    // 文章分类
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "article_tag",
+            joinColumns = {@JoinColumn(name = "article_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_number")}
+    )
+    private Set<Category> categories;
 }

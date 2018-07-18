@@ -1,6 +1,6 @@
 package com.snow.blog.core.service;
 
-import com.snow.blog.core.vo.ArticleVO;
+import com.snow.blog.core.repository.entity.Article;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,20 +12,20 @@ import java.util.List;
 public interface IArticleService {
 
     // 查
-    List<ArticleVO> getArticlesAll();
+    List<Article> getArticlesAll();
 
-    ArticleVO getArticleByArticleId(String articleId);
+    Article getArticleByArticleId(String articleId);
 
-    Page<ArticleVO> getArticlesAllByPage(Pageable pageable);
+    Page<Article> getArticlesAllByPage(Pageable pageable);
 
-    List<ArticleVO> getArticlesByUserId(String userId);
+    List<Article> getArticlesByUserId(String userId);
 
-    Page<ArticleVO> getArticlesByUserIdAndPage(String userId, Pageable pageable);
+    Page<Article> getArticlesByUserIdAndPage(String userId, Pageable pageable);
 
     // 增，改
-    ArticleVO saveArticle(ArticleVO articleVO);
+    Article saveArticle(Article article);
 
     // 删
-    void deleteArticle(ArticleVO articleVO);
+    void deleteArticle(Article article);
 
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -29,7 +30,14 @@ public class User {
     private String password;
     private String email;
     private String phoneNumber;
-    @ElementCollection(fetch = EAGER)
-    private List<String> authorities;
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    }, fetch = FetchType.EAGER)
+    @JoinTable( name = "user_authority",
+            joinColumns =        { @JoinColumn(name = "user_id")  },
+            inverseJoinColumns = { @JoinColumn(name = "authority_number")}
+    )
+    private Set<Authority> authorities;
     private boolean enable;
 }

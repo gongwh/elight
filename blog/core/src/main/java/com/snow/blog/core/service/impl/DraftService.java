@@ -4,7 +4,6 @@ import com.snow.blog.core.repository.DraftRepository;
 import com.snow.blog.core.repository.entity.Draft;
 import com.snow.blog.core.service.IDraftService;
 import com.snow.blog.core.util.validator.CommonValidator;
-import com.snow.blog.core.vo.DraftVO;
 import com.snow.lib.BeanCopyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,47 +24,45 @@ public class DraftService implements IDraftService {
     private DraftRepository draftRepository;
 
     @Override
-    public List<DraftVO> getDraftsAll() {
+    public List<Draft> getDraftsAll() {
         List<Draft> drafts = draftRepository.findByEnableIsTrue();
-        return BeanCopyUtil.createOnListCopy(drafts, DraftVO.class);
+        return drafts;
     }
 
 
     @Override
-    public Page<DraftVO> getDraftsAllByPage(Pageable pageable) {
+    public Page<Draft> getDraftsAllByPage(Pageable pageable) {
         Page<Draft> drafts = draftRepository.findByEnableIsTrue(pageable);
-        return drafts.map(e -> BeanCopyUtil.createOnCopy(e, DraftVO.class));
+        return drafts.map(e -> BeanCopyUtil.createOnCopy(e, Draft.class));
     }
 
     @Override
-    public DraftVO getNewestDraftByUserId(String userId) {
+    public Draft getNewestDraftByUserId(String userId) {
         Draft result = draftRepository.findFirstByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(userId);
         if (null == result) {
             return null;
         }
-        return BeanCopyUtil.createOnCopy(result, DraftVO.class);
+        return result;
     }
 
     @Override
-    public List<DraftVO> getDraftsByUserId(String userId) {
+    public List<Draft> getDraftsByUserId(String userId) {
         List<Draft> result = draftRepository.findByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(userId);
         if (CollectionUtils.isEmpty(result)) {
             return Collections.emptyList();
         }
-        return BeanCopyUtil.createOnListCopy(result, DraftVO.class);
+        return result;
     }
 
     @Override
-    public DraftVO saveDraft(DraftVO draftVO) {
-        Draft draft = BeanCopyUtil.createOnCopy(draftVO, Draft.class);
+    public Draft saveDraft(Draft draft) {
         Draft result = draftRepository.save(draft);
         CommonValidator.saveOk(result);
-        return BeanCopyUtil.createOnCopy(result, DraftVO.class);
+        return result;
     }
 
     @Override
-    public void deleteDraft(DraftVO draftVO) {
-        Draft draft = BeanCopyUtil.createOnCopy(draftVO, Draft.class);
+    public void deleteDraft(Draft draft) {
         draft.setEnable(false);
         Draft result = draftRepository.save(draft);
         CommonValidator.delOk(result);
