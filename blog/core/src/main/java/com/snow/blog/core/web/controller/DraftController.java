@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.security.Principal;
 
 /**
  * Created by SNOW on 2018.01.30.
@@ -33,59 +33,47 @@ public class DraftController {
     @Autowired
     private IArticleService articleService;
 
-    // 获取所有草稿
-    @GetMapping
-    public ResultVO getDraftsAll() {
-        List<Draft> list = draftService.getDraftsAll();
-        return ResultVOUtil.success(list);
-    }
-
     // 获取所有草稿-分页
     @GetMapping("/page")
-    public ResultVO getDraftsAll(@PageableDefault(page = 0, size = 10, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Draft> page = draftService.getDraftsAllByPage(pageable);
+    public ResultVO getDraftsAll(@PageableDefault(page = 0, size = 10, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                 @Autowired Principal principal) {
+        Page<Draft> page = draftService.getDraftPage(principal.getName(), pageable);
         return ResultVOUtil.page(page);
     }
 
     // 获取指定用户的最新草稿
     @GetMapping("/newest")
-    public ResultVO getNewestDraftByUserId(String userId) {
-        Draft draft = draftService.getNewestDraftByUserId(userId);
+    public ResultVO getNewestDraftByUserId(@Autowired Principal principal) {
+        Draft draft = draftService.getNewestDraft(principal.getName());
         log.debug("加载最新草稿:{}", draft);
         return ResultVOUtil.success(draft);
     }
 
     @GetMapping("/article")
-    public ResultVO loadDraftByArticleId(String userId, String articleId) {
-        Article article = articleService.getArticleByArticleId(articleId);
+    public ResultVO loadDraftByArticleId(String articleId, @Autowired Principal principal) {
+        Article article = articleService.getArticleById(articleId, principal.getName());
         ArticleValidator.articleExist(article);
         Draft draftNew = new Draft();
         BeanCopyUtil.copy(article, draftNew);
         draftNew.setUpdateTime(null);
-        Draft draftNewSaveResult = draftService.saveDraft(draftNew);
+        Draft draftNewSaveResult = draftService.saveDraft(draftNew, principal.getName());
         log.debug("加载新的文章为草稿,draftNew:{}", draftNewSaveResult.getArticleId());
         return ResultVOUtil.success(draftNewSaveResult);
     }
 
-    @GetMapping("/{userId}")
-    public ResultVO getDraftsByUserId(@PathVariable("userId") String userId) {
-        List<Draft> drafts = draftService.getDraftsByUserId(userId);
-        return ResultVOUtil.success(drafts);
-    }
-
     // 保存草稿
     @PostMapping
-    public ResultVO saveDraft(@RequestBody Draft draft) {
+    public ResultVO saveDraft(@RequestBody Draft draft, @Autowired Principal principal) {
         DraftValidator.validate(draft);
-        Draft result = draftService.saveDraft(draft);
+        Draft result = draftService.saveDraft(draft, principal.getName());
         return ResultVOUtil.success(result);
     }
 
     // 删除草稿
     @DeleteMapping
-    public ResultVO deleteDraft(@RequestBody Draft draft) {
+    public ResultVO deleteDraft(@RequestBody Draft draft, @Autowired Principal principal) {
         DraftValidator.draftExist(draft);
-        draftService.deleteDraft(draft);
+        draftService.deleteDraft(draft, principal.getName());
         log.debug("删除草稿,draft:{}", draft.getDraftId());
         return ResultVOUtil.success();
     }

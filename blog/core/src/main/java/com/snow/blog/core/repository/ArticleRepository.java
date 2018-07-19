@@ -13,13 +13,9 @@ import java.util.List;
  */
 public interface ArticleRepository extends JpaRepository<Article, String> {
 
-    List<Article> findByEnableIsTrue();
-
-    Page<Article> findByEnableIsTrue(Pageable pageable);
-
-    Article findByArticleIdAndEnableIsTrue(String articleId);
+    Article findByArticleIdAndUserIdAndEnableIsTrue(String articleId,String userId);
 
     Page<Article> findByUserIdAndEnableIsTrue(String userId, Pageable pageable);
 
-    List<Article> findByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(String userId);
+    Page<Article> findByUserIdAndPersonalIsFalseAndEnableIsTrue(String userId, Pageable pageable);
 }

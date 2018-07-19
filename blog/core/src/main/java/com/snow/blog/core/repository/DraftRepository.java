@@ -12,11 +12,10 @@ import java.util.List;
  */
 public interface DraftRepository extends JpaRepository<Draft, String> {
 
-    List<Draft> findByEnableIsTrue();
+    Page<Draft> findByUserIdAndEnableIsTrue(String userId,Pageable pageable);
 
-    Page<Draft> findByEnableIsTrue(Pageable pageable);
+    Draft findByDraftIdAndUserIdAndEnableIsTrue(String draftId,String userId);
 
     Draft findFirstByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(String userId);
 
-    List<Draft> findByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(String userId);
 }

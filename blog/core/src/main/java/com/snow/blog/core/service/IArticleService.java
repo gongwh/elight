@@ -11,21 +11,16 @@ import java.util.List;
  */
 public interface IArticleService {
 
-    // 查
-    List<Article> getArticlesAll();
+    // 分页查
+    Page<Article> getArticlePage(String targetUserId,String currentUserId,Pageable pageable);
 
-    Article getArticleByArticleId(String articleId);
-
-    Page<Article> getArticlesAllByPage(Pageable pageable);
-
-    List<Article> getArticlesByUserId(String userId);
-
-    Page<Article> getArticlesByUserIdAndPage(String userId, Pageable pageable);
+    // 单个查
+    Article getArticleById(String articleId,String userId);
 
     // 增，改
-    Article saveArticle(Article article);
+    Article saveArticle(Article article,String userId);
 
     // 删
-    void deleteArticle(Article article);
+    void deleteArticle(Article article,String userId);
 
 }

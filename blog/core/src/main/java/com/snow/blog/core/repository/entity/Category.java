@@ -25,8 +25,9 @@ import javax.persistence.Table;
 @ToString(callSuper = true)
 public class Category extends EntityBase {
     @Id
-    @GeneratedValue
-    private Integer number;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String categoryId;
 
     private String name;
 }

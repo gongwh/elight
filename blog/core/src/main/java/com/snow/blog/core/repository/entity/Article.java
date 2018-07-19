@@ -48,24 +48,22 @@ public class Article extends EntityBase {
     private String contentText;
     // 用户ID
     private String userId;
+    // 是否私有
+    private Boolean personal;
+
     // 文章标签
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "article_tag",
             joinColumns = {@JoinColumn(name = "article_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_number")}
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
     private Set<Tag> tags = new HashSet<>();
     // 文章分类
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(name = "article_tag",
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(name = "article_category",
             joinColumns = {@JoinColumn(name = "article_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_number")}
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private Set<Category> categories;
+
 }

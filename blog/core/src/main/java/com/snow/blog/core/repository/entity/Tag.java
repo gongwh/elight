@@ -25,8 +25,9 @@ import java.util.List;
 public class Tag extends EntityBase {
 
     @Id
-    @GeneratedValue
-    private Integer number;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String tagId;
 
     private String userId;
 

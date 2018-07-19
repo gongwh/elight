@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface ITagService {
     List<Tag> getAllTag(String userId);
+    Tag saveTag(Tag tag, String userId);
 }

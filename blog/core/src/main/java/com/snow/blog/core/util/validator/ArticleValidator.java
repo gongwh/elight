@@ -12,11 +12,10 @@ public class ArticleValidator {
 
     public static void validate(Article article) {
         if (null == article
-                || StringUtils.isBlank(article.getUserId())
                 || StringUtils.isBlank(article.getContentMd())
                 || StringUtils.isBlank(article.getContentHtml())
                 || StringUtils.isBlank(article.getContentText())) {
-            throw new BaseException(ResultEnum.VALIDATE_ERROR);
+            throw new BaseException(-1, "文章不符合条件");
         }
     }
 

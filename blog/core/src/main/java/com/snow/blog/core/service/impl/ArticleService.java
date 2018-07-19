@@ -6,14 +6,14 @@ import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.util.validator.CommonValidator;
 import com.snow.lib.BeanCopyUtil;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,40 +25,34 @@ public class ArticleService implements IArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
+
     @Override
-    public List<Article> getArticlesByUserId(String userId) {
-        List<Article> articles = articleRepository.findByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(userId);
-        return articles;
+    public Page<Article> getArticlePage(String targetUserId, String currentUserId, Pageable pageable) {
+        Page<Article> page;
+        // 判断目标用户ID和当前用户是否相同
+        if (StringUtils.equals(currentUserId, targetUserId)) {
+            // 加载所有文章
+            page = articleRepository.findByUserIdAndEnableIsTrue(targetUserId, pageable);
+        } else {
+            // 加载非私有文章
+            page = articleRepository.findByUserIdAndPersonalIsFalseAndEnableIsTrue(targetUserId, pageable);
+        }
+        return page;
     }
 
     @Override
-    public Page<Article> getArticlesByUserIdAndPage(String userId, Pageable pageable) {
-        Page<Article> page = articleRepository.findByUserIdAndEnableIsTrue(userId, pageable);
-        return page.map(e -> BeanCopyUtil.createOnCopy(e, Article.class));
-    }
-
-    @Override
-    public List<Article> getArticlesAll() {
-        List<Article> list = articleRepository.findByEnableIsTrue();
-        return BeanCopyUtil.createOnListCopy(list, Article.class);
-    }
-
-    @Override
-    public Article getArticleByArticleId(String articleId) {
-        Article article = articleRepository.findByArticleIdAndEnableIsTrue(articleId);
+    public Article getArticleById(String articleId, String userId) {
+        Article article = articleRepository.findByArticleIdAndUserIdAndEnableIsTrue(articleId, userId);
+        if (article.getPersonal() && !StringUtils.equals(article.getUserId(),userId)) {
+            throw new AccessDeniedException("私有文章，无法访问");
+        }
         CommonValidator.getOk(article);
         return BeanCopyUtil.createOnCopy(article, Article.class);
     }
 
     @Override
-    public Page<Article> getArticlesAllByPage(Pageable pageable) {
-        Page<Article> page = articleRepository.findByEnableIsTrue(pageable);
-        return page.map(e -> BeanCopyUtil.createOnCopy(e, Article.class));
-    }
-
-    @Override
-    public Article saveArticle(Article article) {
-        Assert.hasText(article.getUserId(), "文章用户ID不存在");
+    public Article saveArticle(Article article, String userId) {
+        article.setUserId(userId);
         Set<Tag> tagSet = article.getTags();
         if (!CollectionUtils.isEmpty(tagSet)) {
             tagSet.forEach((tag -> {
@@ -71,9 +65,12 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public void deleteArticle(Article article) {
-        article.setEnable(false);
-        Article result = articleRepository.save(article);
+    public void deleteArticle(Article article, String userId) {
+        Article result = articleRepository.findByArticleIdAndUserIdAndEnableIsTrue(article.getArticleId(), userId);
+        if (null != result) {
+            result.setEnable(false);
+            result = articleRepository.save(result);
+        }
         CommonValidator.delOk(result);
     }
 

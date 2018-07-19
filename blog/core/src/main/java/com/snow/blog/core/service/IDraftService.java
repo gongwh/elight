@@ -11,18 +11,15 @@ import java.util.List;
  */
 public interface IDraftService {
 
-    // 查
-    List<Draft> getDraftsAll();
+    // 分页查
+    Page<Draft> getDraftPage(String userId,Pageable pageable);
 
-    Page<Draft> getDraftsAllByPage(Pageable pageable);
-
-    Draft getNewestDraftByUserId(String userId);
-
-    List<Draft> getDraftsByUserId(String userId);
+    // 单个查
+    Draft getNewestDraft(String userId);
 
     // 增，改
-    Draft saveDraft(Draft Draft);
+    Draft saveDraft(Draft Draft,String userId);
 
     // 删
-    void deleteDraft(Draft Draft);
+    void deleteDraft(Draft Draft,String userId);
 }

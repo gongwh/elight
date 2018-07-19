@@ -26,15 +26,9 @@ public class DraftValidator {
 
     public static void draftExist(Draft draft) {
         validate(draft);
-        if (StringUtils.isBlank(draft.getUserId())) {
-            throw new BaseException(ResultEnum.VALIDATE_NOT_EXIST);
-        }
     }
 
     public static void draftNotExist(Draft draft) {
         validate(draft);
-        if (StringUtils.isNotBlank(draft.getUserId())) {
-            throw new BaseException(ResultEnum.VALIDATE_NOT_EXIST);
-        }
     }
 }

@@ -10,4 +10,5 @@ import java.util.List;
  */
 public interface TagRepository extends JpaRepository<Tag,Integer> {
     List<Tag> findTagsByUserId(String userId);
+    List<Tag> findByNameAndUserId(String name,String userId);
 }
