@@ -27,8 +27,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        if (MediaType.APPLICATION_JSON_UTF8_VALUE.equals(request.getContentType())
+                || MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.getWriter().write(objectMapper.writeValueAsString(ResultVOUtil.error(HttpStatus.UNAUTHORIZED.value(), exception.getMessage())));
             response.getWriter().flush();

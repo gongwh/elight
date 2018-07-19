@@ -6,6 +6,7 @@ import com.snow.security.core.filter.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -49,14 +50,15 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 授权配置
         http.authorizeRequests()
-                .antMatchers("/auth/login", "/user/registration","/file/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/auth/**", "/user/registration","/file/**").permitAll()
                 .anyRequest().authenticated();
 
         // 表单认证
         http.formLogin();
 
-        // 跨站请求伪造
-        http.csrf().disable();
+        // 跨站请求伪造,跨域
+        http.csrf().disable().cors();
 
         // JSON+JWT认证流程,
         http.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -65,6 +67,8 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
         // 没有认证时
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
 
+        // 登出
+        http.logout().logoutUrl("/auth/logout").deleteCookies("JSESSIONID");
         // 认证通过，权限不足时
         // http.accessDenied()...
     }

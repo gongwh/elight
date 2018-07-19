@@ -20,7 +20,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/me")
+    @GetMapping("/profile")
     public ResultVO me(@Autowired Principal principal) {
         return ResultVOUtil.success(principal);
     }

@@ -33,8 +33,8 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        if (MediaType.APPLICATION_JSON_UTF8_VALUE.equals(request.getContentType())
+                || MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
 
             String username = null;
             String password = null;
@@ -60,7 +60,8 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
             setDetails(request, authRequest);
 
             return this.getAuthenticationManager().authenticate(authRequest);
-        } else {
+        }
+        else {
             return super.attemptAuthentication(request, response);
         }
     }
