@@ -191,16 +191,18 @@
           this.contentBodyType = 'login'
         }
       },
-      localLogin () {
+      async localLogin () {
         const that = this
         that.$nextTick(function () {
           that.$refs.loginForm.validate((valid) => {
             if (valid) {
               // 进行登陆
-              const result = that.login(this.loginForm)
-              if (result) {
-                that.$router.push({path: '/home'})
-              }
+              that.login(this.loginForm).then((loginOk) => {
+                if (loginOk) {
+                  console.log('登陆成功，准备跳转到/article/articles')
+                  that.$router.push({path: '/articles'})
+                }
+              })
             } else {
               // 提醒填写正确
             }

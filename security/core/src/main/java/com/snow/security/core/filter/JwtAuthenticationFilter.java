@@ -1,12 +1,16 @@
 package com.snow.security.core.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snow.security.core.repository.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -26,6 +30,9 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
     }
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain chain)
@@ -44,15 +51,16 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             Claims claims = Jwts.parser()
                     .setSigningKey("SNOW")
                     .parseClaimsJws(token.replace("Bearer ", "")).getBody();
-            String username = claims.getSubject();
+            String userStr = claims.getSubject();
+            User user = objectMapper.readValue(userStr,User.class);
             String authorities = (String) claims.get("authorities");
-            if (null == username) {
+            if (null == user) {
                 chain.doFilter(request, response);
                 return;
             }
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    username, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                    user, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
 
             log.debug("Authentication success: " + authenticationToken);
 

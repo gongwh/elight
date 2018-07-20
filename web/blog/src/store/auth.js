@@ -4,6 +4,7 @@
 import auth from '@/api/auth'
 
 const SET_AUTHORIZATION = 'SET_AUTHORIZATION'
+const SET_USER_ID = 'SET_USER_ID'
 
 // state
 const state = {
@@ -17,6 +18,9 @@ const actions = {
         console.log('Authorization', res.headers.authorization)
         if (res.headers.authorization) {
           commit(SET_AUTHORIZATION, res.headers.authorization)
+          commit(SET_USER_ID, res.data.data.userId)
+          window.localStorage.setItem('authorization', res.headers.authorization)
+          window.localStorage.setItem('userId', res.data.data.userId)
           return true
         }
       },
@@ -42,6 +46,9 @@ const actions = {
 const mutations = {
   SET_AUTHORIZATION (state, authorization) {
     state.authorization = authorization
+  },
+  SET_USER_ID (state, userId) {
+    state.userId = userId
   }
 }
 

@@ -1,4 +1,4 @@
-package com.snow.blog.core.repository.entity;
+package com.snow.lib.entity;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @MappedSuperclass
 public class EntityBase {
-    protected Boolean enable = true;
+    protected Boolean enabled = true;
     protected Date createTime = new Date();
     protected Date updateTime = new Date();
 }

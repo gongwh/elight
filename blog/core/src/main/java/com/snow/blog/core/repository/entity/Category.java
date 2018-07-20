@@ -1,5 +1,6 @@
 package com.snow.blog.core.repository.entity;
 
+import com.snow.lib.entity.EntityBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

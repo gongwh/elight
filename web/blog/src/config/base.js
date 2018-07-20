@@ -3,4 +3,4 @@
  */
 exports.port = 80
 exports.serviceUrl = 'http://localhost:8080/'
-exports.fileUrl = this.service + 'file/'
+exports.fileBase = 'http://localhost:8080/' + 'file/'

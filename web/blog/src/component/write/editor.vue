@@ -101,6 +101,7 @@
       this.SET_BUTTON_STATE({display: false, index: 4})
     },
     methods: {
+      ...mapState('auth', ['authorization']),
       l_imgAdd (pos, $file) {
         this.imgFile[pos] = $file
       },

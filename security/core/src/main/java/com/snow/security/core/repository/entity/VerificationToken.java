@@ -1,5 +1,6 @@
 package com.snow.security.core.repository.entity;
 
+import com.snow.lib.entity.EntityBase;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Data
-public class VerificationToken {
+public class VerificationToken extends EntityBase {
 
     @Id
     @GeneratedValue(generator = "uuid")

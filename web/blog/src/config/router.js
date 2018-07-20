@@ -4,11 +4,16 @@
 
 export default {
   ConfigLoginAuth (router, store) {
+    // 页面刷新时，重新赋值token
+    if (window.localStorage.getItem('authorization')) {
+      console.log('页面刷新' + 'localStorage, authorization 为' + window.localStorage.getItem('authorization'))
+      store.commit('auth/SET_AUTHORIZATION', window.localStorage.getItem('authorization'))
+    }
     if (router && store) {
       router.beforeEach((to, from, next) => {
         console.log('路由登陆检查', to.meta)
         if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-          if (store.state.token) {  // 通过vuex state获取当前的token是否存在
+          if (store.state.auth.authorization) {  // 通过vuex state获取当前的token是否存在
             next()
           } else {
             next({
@@ -17,6 +22,7 @@ export default {
             })
           }
         } else {
+          console.log('跳转' + to.path + '成功')
           next()
         }
       })

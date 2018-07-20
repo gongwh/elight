@@ -24,7 +24,8 @@
 
 <script type="text/ecmascript-6">
   import show from '@/component/show'
-  import { createNamespacedHelpers } from 'vuex'
+  import {createNamespacedHelpers} from 'vuex'
+
   const {mapState, mapGetters, mapActions} = createNamespacedHelpers('article/articles')
   export default {
     data () {
@@ -55,7 +56,7 @@
       }
     },
     methods: {
-      ...mapActions(['loadUserArticles']),
+      ...mapActions(['loadArticlePage']),
       updateClasses () {
         if (this.screenWidth > 1428) {
           this.articlesAppendNum = 3 - this.articlesNum % 3
@@ -80,7 +81,7 @@
     created () {
       if (this.manualFlush || this.articles === null) {
         console.log('刷新文章列表')
-        this.loadUserArticles('123456')
+        this.loadArticlePage(0, 10)
       }
       this.updateClasses()
     },

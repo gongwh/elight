@@ -6,19 +6,11 @@ import article from '@/component/article/article'
 import articles from '@/component/article/articles'
 
 export default {
-  path: '/home',
+  path: '/article',
   component: ARTICLE,
   children: [
-    {
-      path: '/', redirect: '/articles'
-    },
-    {
-      path: '/article', name: 'article', component: article
-    },
-    {
-      path: '/articles',
-      name: 'articles',
-      component: articles
-    }
+    { path: '/', redirect: '/articles' },
+    { path: '/article', name: 'article', component: article },
+    { path: '/articles', name: 'articles', component: articles }
   ]
 }

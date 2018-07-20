@@ -5,12 +5,10 @@ import com.snow.security.core.repository.UserRepository;
 import com.snow.security.core.repository.entity.Authority;
 import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.support.UserDto;
-import org.apache.commons.collections.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,8 +30,7 @@ public class UserService implements IUserService {
                     "There is an account with that email address:" + userDto.getEmail());
         }
         User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
+        user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
         Authority authority = new Authority("USER");

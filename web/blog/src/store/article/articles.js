@@ -15,8 +15,8 @@ const state = {
 
 // actions
 const actions = {
-  async loadArticlePage ({commit}, userId, page, size) {
-    const result = await articlesApi.loadArticlePage(userId, page, size)
+  async loadArticlePage ({commit}, page, size) {
+    const result = await articlesApi.loadArticlePage(page, size)
     console.log('加载文章列表', result)
     commit(UPDATE_ARTICLES, result.data.data)
   }

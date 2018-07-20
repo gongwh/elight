@@ -7,7 +7,6 @@
       </transition>
       <div class="push"></div>
     </div>
-    <login></login>
     <myfoot></myfoot>
   </div>
 </template>
@@ -15,9 +14,8 @@
 <script type="text/ecmascript-6">
   import myhead from '@/component/myhead'
   import myfoot from '@/component/myfoot'
-  import login from '@/component/login'
   export default {
-    components: {myhead, myfoot, login}
+    components: {myhead, myfoot}
   }
 </script>
 

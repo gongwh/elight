@@ -7,7 +7,7 @@ import routerConfig from './router'
 
 export default {
   install (Vue, options) {
-    Vue.prototype.fileBase = base.fileUrl
+    Vue.prototype.fileBase = base.fileBase
     routerConfig.ConfigLoginAuth(options.router, options.store)
   }
 }

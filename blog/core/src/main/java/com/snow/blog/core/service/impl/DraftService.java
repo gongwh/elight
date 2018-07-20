@@ -26,13 +26,13 @@ public class DraftService implements IDraftService {
 
     @Override
     public Page<Draft> getDraftPage(String userId, Pageable pageable) {
-        Page<Draft> drafts = draftRepository.findByUserIdAndEnableIsTrue(userId, pageable);
+        Page<Draft> drafts = draftRepository.findByUserIdAndEnabledIsTrue(userId, pageable);
         return drafts.map(e -> BeanCopyUtil.createOnCopy(e, Draft.class));
     }
 
     @Override
     public Draft getNewestDraft(String userId) {
-        Draft result = draftRepository.findFirstByUserIdAndEnableIsTrueOrderByUpdateTimeDesc(userId);
+        Draft result = draftRepository.findFirstByUserIdAndEnabledIsTrueOrderByUpdateTimeDesc(userId);
         if (null == result) {
             return null;
         }
@@ -49,9 +49,9 @@ public class DraftService implements IDraftService {
 
     @Override
     public void deleteDraft(Draft draft,String userId) {
-        Draft result = draftRepository.findByDraftIdAndUserIdAndEnableIsTrue(draft.getDraftId(),userId);
+        Draft result = draftRepository.findByDraftIdAndUserIdAndEnabledIsTrue(draft.getDraftId(),userId);
         if (null != result) {
-            result.setEnable(false);
+            result.setEnabled(false);
             result = draftRepository.save(result);
         }
         CommonValidator.delOk(result);

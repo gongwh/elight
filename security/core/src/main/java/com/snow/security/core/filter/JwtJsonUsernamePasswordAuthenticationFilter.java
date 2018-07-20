@@ -3,6 +3,8 @@ package com.snow.security.core.filter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snow.lib.result.ResultVOUtil;
+import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.service.CustomUserDetailService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -59,9 +60,17 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
 
             setDetails(request, authRequest);
 
-            return this.getAuthenticationManager().authenticate(authRequest);
-        }
-        else {
+            Authentication authentication = this.getAuthenticationManager().authenticate(authRequest);
+            // === 这一块本身在AuthenticationSuccessHandler中做处理的，但是配置成功处理器不成功。
+            response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+            try {
+                response.getWriter().write(objectMapper.writeValueAsString(ResultVOUtil.success((User) authentication.getPrincipal())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // ===
+            return authentication;
+        } else {
             return super.attemptAuthentication(request, response);
         }
     }
@@ -69,7 +78,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         String token = Jwts.builder()
-                .setSubject(((User) authResult.getPrincipal()).getUsername())
+                .setSubject(objectMapper.writeValueAsString((User) authResult.getPrincipal()))
                 .claim("authorities", getAuthoritiesToStr(authResult))
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 24 * 1000))
                 .signWith(SignatureAlgorithm.HS512, "SNOW")

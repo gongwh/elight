@@ -32,17 +32,17 @@ public class ArticleService implements IArticleService {
         // 判断目标用户ID和当前用户是否相同
         if (StringUtils.equals(currentUserId, targetUserId)) {
             // 加载所有文章
-            page = articleRepository.findByUserIdAndEnableIsTrue(targetUserId, pageable);
+            page = articleRepository.findByUserIdAndEnabledIsTrue(targetUserId, pageable);
         } else {
             // 加载非私有文章
-            page = articleRepository.findByUserIdAndPersonalIsFalseAndEnableIsTrue(targetUserId, pageable);
+            page = articleRepository.findByUserIdAndPersonalIsFalseAndEnabledIsTrue(targetUserId, pageable);
         }
         return page;
     }
 
     @Override
     public Article getArticleById(String articleId, String userId) {
-        Article article = articleRepository.findByArticleIdAndUserIdAndEnableIsTrue(articleId, userId);
+        Article article = articleRepository.findByArticleIdAndUserIdAndEnabledIsTrue(articleId, userId);
         if (article.getPersonal() && !StringUtils.equals(article.getUserId(),userId)) {
             throw new AccessDeniedException("私有文章，无法访问");
         }
@@ -66,9 +66,9 @@ public class ArticleService implements IArticleService {
 
     @Override
     public void deleteArticle(Article article, String userId) {
-        Article result = articleRepository.findByArticleIdAndUserIdAndEnableIsTrue(article.getArticleId(), userId);
+        Article result = articleRepository.findByArticleIdAndUserIdAndEnabledIsTrue(article.getArticleId(), userId);
         if (null != result) {
-            result.setEnable(false);
+            result.setEnabled(false);
             result = articleRepository.save(result);
         }
         CommonValidator.delOk(result);

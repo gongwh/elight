@@ -5,7 +5,9 @@ import com.snow.blog.core.service.ITagService;
 import com.snow.lib.enums.ResultEnum;
 import com.snow.lib.result.ResultVO;
 import com.snow.lib.result.ResultVOUtil;
+import com.snow.security.core.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,14 +24,14 @@ public class TagController {
     private ITagService tagService;
 
     @GetMapping
-    public ResultVO getAllTag(@Autowired Principal principal) {
-        List<Tag> result = tagService.getAllTag(principal.getName());
+    public ResultVO getAllTag(@AuthenticationPrincipal User user) {
+        List<Tag> result = tagService.getAllTag(user.getUserId());
         return ResultVOUtil.success(result);
     }
 
     @PostMapping
-    public ResultVO saveTag(@RequestBody Tag tag, @Autowired Principal principal) {
-        Tag result = tagService.saveTag(tag, principal.getName());
+    public ResultVO saveTag(@RequestBody Tag tag, @AuthenticationPrincipal User user) {
+        Tag result = tagService.saveTag(tag, user.getUserId());
         if (null != result) {
             return ResultVOUtil.success(result);
         } else {
