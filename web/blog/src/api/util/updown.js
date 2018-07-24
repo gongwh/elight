@@ -18,7 +18,7 @@ export default {
     }
     return http.formPost(axios.defaults.fileUrl, formData).then(
       (res) => {
-        if (res.data.code === 0) {
+        if (res.data.status === 0) {
           return res.data.data
         } else {
           return {}

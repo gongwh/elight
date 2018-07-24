@@ -172,9 +172,14 @@ function GetImgRGBaster (img, opts) {
   })
 }
 
+function NavigateToTop () {
+  document.documentElement.scrollTop = document.body.scrollTop = 0
+}
+
 exports.install = function (Vue, options) {
   Vue.prototype.GetElementBottomMiddlePosition = GetElementBottomMiddlePosition
   Vue.prototype.ImgLoader = ImgLoader
   Vue.prototype.GetImgRGBaster = GetImgRGBaster
+  Vue.prototype.NavigateToTop = NavigateToTop
 }
 

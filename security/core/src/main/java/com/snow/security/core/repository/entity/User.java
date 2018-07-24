@@ -2,6 +2,7 @@ package com.snow.security.core.repository.entity;
 
 import com.snow.lib.entity.EntityBase;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dozer.util.CollectionUtils;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -22,13 +23,9 @@ import java.util.*;
 @DynamicUpdate
 @DynamicInsert
 @Entity
+@NoArgsConstructor
 @Data
 public class User extends EntityBase implements UserDetails, CredentialsContainer {
-
-    public User() {
-        super();
-        this.enabled = true;
-    }
 
     public User(String username, String password, Collection<Authority> authorities) {
         this(username, password, true, true, true, true, authorities);

@@ -6,6 +6,7 @@ import com.snow.blog.core.util.validator.ArticleValidator;
 import com.snow.lib.result.ResultVO;
 import com.snow.lib.result.ResultVOUtil;
 import com.snow.security.core.repository.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,9 @@ public class ArticleController {
             String userId,
             @PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
             @AuthenticationPrincipal User user) {
+        if (StringUtils.isBlank(userId)){
+            userId = user.getUserId();
+        }
         Page<Article> page = articlesService.getArticlePage(userId, user.getUserId(), pageable);
         return ResultVOUtil.page(page);
     }

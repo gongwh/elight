@@ -2,8 +2,8 @@
   <div class="show">
     <!--:style="{background: 'url(' + this.fileBase + this.backgroundUrl + ')'}"-->
     <!--<img ref="showImg" :src="this.fileBase + this.backgroundUrl"/>-->
-    <div class="show-bg" :style="{background: 'url(' + this.fileBase + this.backgroundUrl + ')'}"></div>
-    <div class="show-inner">
+    <div class="show-bg" :style="{'background-image': 'url(' + this.fileBase + this.backgroundUrl + ')'} "></div>
+    <div class="show-inner" >
       <div class="title"><span>{{title}}</span></div>
       <div class="detail"><span>{{detail}}</span></div>
     </div>
@@ -33,32 +33,12 @@
     },
     data () {
       return {
-//        clipTop: 0
       }
     },
     computed: {
-//      style () {
-//        return {
-//          top: -(this.clipTop - 42) + 'px'
-//        }
-//      }
     },
     methods: {},
     watch: {
-//      backgroundUrl (to, from) {
-//        const _that = this
-//        const loader = this.ImgLoader
-//        console.log('加载图片', this.fileBase, to)
-//        loader(this.fileBase + to, function () {
-//          _that.$notify.info({
-//            title: '图片大小',
-//            message: this.width + ' x ' + this.height
-//          })
-//          _that.clipTop = (this.height - 300) / 2
-//          console.log(this.width + ' x ' + this.height)
-//        })
-//         this.GetImgRGBaster()
-//      }
     }
   }
 </script>
@@ -84,11 +64,15 @@
       .detail
         font-size 18px
     .show-bg
-      width 100%
-      filter blur(10px)
-      opacity 0.7
-      height 300px
+      background-size cover
+      background-repeat no-repeat
+      background-position center center
       position absolute
+      width 100%
+      filter blur(15px)
+      opacity 0.3
+      height 300px
+      margin: auto
       z-index 1
       overflow hidden
       img

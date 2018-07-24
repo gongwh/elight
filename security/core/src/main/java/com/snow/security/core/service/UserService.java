@@ -29,15 +29,15 @@ public class UserService implements IUserService {
             throw new EmailExistsException(-1,
                     "There is an account with that email address:" + userDto.getEmail());
         }
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail());
         Authority authority = new Authority("USER");
         Set authorities = new HashSet();
         authorities.add(authority);
-        user.setAuthorities(authorities);
-        user.setPhoneNumber(userDto.getPhoneNumber());
+        User user = new User(
+                userDto.getUsername(),
+                passwordEncoder.encode(userDto.getPassword()),
+                authorities
+        );
+        user.setEmail(userDto.getEmail());
         return userRepository.save(user);
     }
 

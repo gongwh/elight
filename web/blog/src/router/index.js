@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import article from './article'
+import articles from './articles'
 import write from './write'
 import login from '@/component/login'
 import index from '@/component/index'
@@ -10,16 +11,23 @@ const routes = [
   {
     path: '/',
     component: index,
-    redirect: 'article',
+    redirect: 'articles',
     children: [
       article,
+      articles,
       write,
-      {path: '/login', component: login}
+      {
+        path: 'login',
+        component: login,
+        meta: {
+          title: 'Login'
+        }
+      }
     ]
   },
   {
-    path: '/*',
-    redirect: '/'
+    path: '/**',
+    redirect: 'articles'
   }
 ]
 

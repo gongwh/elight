@@ -1,6 +1,6 @@
 <template>
   <div class="article" id="article">
-    <div class="articleWrapper">
+    <div class="article_wrapper">
       <snowDialog :visible.sync='deleteDialogVisible' :position="delDialogPosition">
         <div>确认删除?</div>
         <div class="dialog_content">
@@ -8,9 +8,8 @@
           <el-button type="primary" @click="l_confirmDelete">确 定</el-button>
         </div>
       </snowDialog>
-      <!--<el-dialog :visible.sync='deleteDialogVisible' :modal="false"></el-dialog>-->
       <show :title="articleTemp.title" :detail="articleTemp.updateTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
-      <div v-loading="loading" v-if="!loading" class="article_wrapper">
+      <div v-loading="loading" v-if="!loading" class="article_body">
         <markdownShow :html="articleTemp.contentHtml"></markdownShow>
       </div>
     </div>
@@ -47,7 +46,7 @@
     methods: {
       ...mapActions('article/article', ['loadArticle', 'deleteArticle']),
       ...mapMutations(['SET_BUTTON_STATE']),
-      l_openDialog () {
+      l_openDeleteDialog () {
         this.l_setDialogPosition()
         this.deleteDialogVisible = true
       },
@@ -56,12 +55,15 @@
         this.delDialogPosition.y = 35
       },
       l_loadArticle () {
-        console.log('加载文章', this.$route)
-        if (!this.article || !this.article.articleId || this.article.articleId !== this.$route.query.articleId) {
-          this.loadArticle(this.$route.query.articleId).then(loadOk => {
+        console.log('文章详情路由信息', this.$route)
+        if (!this.article || !this.article.articleId || this.article.articleId !== this.$route.params.articleId) {
+          this.loadArticle(this.$route.params.articleId).then(loadOk => {
             if (loadOk) {
-              this.l_gotoPageTop()
+              this.NavigateToTop()
               this.articleTemp = this.article
+              console.log('加载文章成功', this.articleTemp)
+              this.l_updateTopButtonAddEdit()
+              this.l_updateTopButtonAddDel()
             }
           })
         } else {
@@ -70,9 +72,6 @@
         this.l_updateTopButtonAddEdit()
         this.l_updateTopButtonAddDel()
         this.loading = false
-      },
-      l_gotoPageTop () {
-        document.documentElement.scrollTop = document.body.scrollTop = 0
       },
       l_cancelDelete () {
         this.deleteDialogVisible = false
@@ -84,7 +83,7 @@
       l_deleteArticle () {
         this.deleteArticle(this.articleTemp).then((delOk) => {
           if (delOk) {
-            this.$router.push({name: 'articles', params: {flush: true}})
+            this.$router.push({path: '/articles/list', query: {flush: true}})
             this.$notify.success({
               title: '删除文章',
               message: '成功',
@@ -106,14 +105,15 @@
               isDisplay: true,
               displayName: this.article.title,
               index: 7,
-              query: {articleId: this.article.articleId}
+              path: `/article/${this.articleTemp.articleId}`
             }
           )
         } else {
           this.SET_BUTTON_STATE(
             {
               isDisplay: false,
-              index: 7
+              index: 7,
+              path: `/article/${this.articleTemp.articleId}`
             }
           )
         }
@@ -126,7 +126,7 @@
               {
                 isDisplay: true,
                 index: 5,
-                params: {articleId: this.article.articleId}
+                query: {articleId: this.article.articleId}
               }
             )
           }
@@ -146,7 +146,8 @@
             this.SET_BUTTON_STATE(
               {
                 isDisplay: true,
-                index: 6
+                index: 6,
+                path: `/article/${this.article.articleId}`
               }
             )
           }
@@ -168,7 +169,7 @@
     },
     beforeRouteUpdate (to, from, next) {
       if (to.query && to.query.delete) {
-        this.l_openDialog()
+        this.l_openDeleteDialog()
       } else {
         this.l_updateTopButtonUpdateReading()
         next()
@@ -195,11 +196,9 @@
 
   .article
     .article_wrapper
-      *
-        z-index 100
+      width 100%
       margin auto
       margin-top 40px
-      width 60%
       min-height 500px
       .title
         font-size 23px
@@ -207,14 +206,9 @@
       .date
         font-family "Lora", serif
         margin 10px 0
-
-  .article-body {
-    box-sizing border-box;
-    min-width 200px;
-    max-width 980px;
-    margin 0 auto;
-    padding 45px;
-  }
+      .article_body
+        width 60%
+        margin 30px auto
 
   @media (max-width: 767px) {
     .markdown-body {

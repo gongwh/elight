@@ -3,6 +3,7 @@ package com.snow.security.core.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snow.security.core.repository.entity.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
@@ -67,13 +68,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             onSuccessfulAuthentication(request, response, authenticationToken);
-        } catch (AuthenticationException failed) {
+        } catch (AuthenticationException |JwtException failed) {
 
             SecurityContextHolder.clearContext();
 
-            log.debug("Authentication request for failed: " + failed);
+            log.error("Authentication request for failed: " + failed);
 
-            onUnsuccessfulAuthentication(request, response, failed);
+            // onUnsuccessfulAuthentication(request, response, failed);
 
             chain.doFilter(request, response);
 

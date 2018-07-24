@@ -121,7 +121,8 @@
         }
       },
       l_loadEditor () {
-        if (this.$route.params.articleId) {
+        console.log('编辑器 route', this.$route)
+        if (this.$route.query.articleId) {
           this.l_loadEditorByArticle()
         } else {
           this.l_loadEditorByNewest()
@@ -129,7 +130,7 @@
       },
       l_loadEditorByNewest () {
         if (!this.draft) {
-          this.loadNewestDraft('123456').then((loadOk) => {
+          this.loadNewestDraft().then((loadOk) => {
             console.log('加载最新草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft
@@ -154,20 +155,20 @@
         //   文章id不为空且id相同       不做任何动作
         //   文章id不为空且id不同       提示已有文章正在编辑
         if (!this.draft || !this.draft.articleId) {
-          this.loadDraftByArticleId({'articleId': this.$route.params.articleId}).then((loadOk) => {
+          this.loadDraftByArticleId({'articleId': this.$route.query.articleId}).then((loadOk) => {
             console.log('加载文章草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft
             }
           })
-        } else if (this.draft.articleId !== this.$route.params.articleId) {
+        } else if (this.draft.articleId !== this.$route.query.articleId) {
           this.draftTemp = this.draft
           this.$notify.warning({
             title: '编辑器',
             message: '已有文章正在编辑',
             offset: 70
           })
-        } else if (this.draft.articleId === this.$route.params.articleId) {
+        } else if (this.draft.articleId === this.$route.query.articleId) {
           this.draftTemp = this.draft
         }
       },
@@ -217,7 +218,7 @@
         _this.l_saveDraft()
       },
       l_updateTopButton () {
-        console.log('刷新顶部')
+        // console.log('刷新顶部')
         if (this.draftTemp.contentMd !== '') {
           this.SET_BUTTON_STATE({isDisplay: true, index: 4})
           if (this.sync) {
@@ -247,7 +248,7 @@
         this.l_saveDraft()
       },
       e_change (md, html) {
-        console.log('编辑器更改this.draft', this.draft)
+        // console.log('编辑器更改this.draft', this.draft)
         this.draftTemp.contentMd = md
         this.draftTemp.contentHtml = html
         this.updateSync(false)
@@ -264,14 +265,21 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import '../md'
+  //@import url('https://cdn.bootcss.com/github-markdown-css/2.9.0/github-markdown.css')
+  /*@import "../md"*/
+  // @import url('https://cdn.bootcss.com/KaTeX/0.8.3/katex.min.css')
+
   .editor
     height 700px
 
+  .v-note-help-wrapper .v-note-help-content
+    margin 60px auto
+/*
   .v-note-op
     position fixed
     margin-top 50px
   .v-note-panel
     padding-top 10px
     z-index -1
+*/
 </style>

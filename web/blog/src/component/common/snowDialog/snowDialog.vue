@@ -53,7 +53,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .snow_dialog_wrapper
-    z-index 2000
+    z-index 5000
     position fixed
     top 0
     right 0

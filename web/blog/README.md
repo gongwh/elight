@@ -28,3 +28,9 @@ npm test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+代办：
+
+  1. 文章页首次进入后无法显示编辑和删除按钮
+  2. 方法提取到工具内。
+    1> Markdown CSS不一致问题

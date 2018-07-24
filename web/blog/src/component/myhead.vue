@@ -1,11 +1,17 @@
 <template>
   <div class="my_head" @scroll="l_onScroll">
+    <snowDialog :visible.sync='profileDialogVisible' :position="profileDialogPosition">
+      <div class="dialog_content">
+        <!--<el-button type="primary" >个人信息</el-button>-->
+        <el-button type="primary" >退出登陆</el-button>
+      </div>
+    </snowDialog>
     <div class="title">
       <div class="title-inner">
         <div class="me">
-            <span>
-              Snow
-            </span>
+              <span id="navigation_block_username" @click="e_openDeleteDialog">
+                {{username}}
+              </span>
         </div>
         <div class="navigation">
           <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
@@ -15,7 +21,7 @@
         </div>
       </div>
     </div>
-    <img @click="l_backToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top"/>
+    <img @click="NavigateToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top"/>
   </div>
 </template>
 
@@ -23,13 +29,25 @@
   import { mapState, mapMutations } from 'vuex'
   export default {
     data () {
-      return {}
+      return {
+        profileDialogVisible: false,
+        profileDialogPosition: {x: 0, y: 35}
+      }
     },
     computed: {
-      ...mapState(['topButtonsProps'])
+      ...mapState(['topButtonsProps']),
+      ...mapState('auth', ['username'])
     },
     methods: {
       ...mapMutations(['SET_BUTTON_STATE']),
+      e_openDeleteDialog () {
+        this.l_setDialogPosition()
+        this.profileDialogVisible = true
+      },
+      l_setDialogPosition () {
+        this.profileDialogPosition = this.GetElementBottomMiddlePosition('navigation_block_username')
+        this.profileDialogPosition.y = 35
+      },
       l_generateNavigationBlockId (index) {
         return 'navigation_block_' + index
       },
@@ -39,12 +57,6 @@
       },
       l_onScroll () {
         console.log('监测到scroll')
-      },
-      l_backToTop () {
-        window.scrollBy(0, -30)
-        let scrolldelay = setTimeout(this.l_backToTop, 5)
-        let sTop = document.documentElement.scrollTop + document.body.scrollTop
-        if (sTop <= 0) clearTimeout(scrolldelay)
       }
     },
     watch: {

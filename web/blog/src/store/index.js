@@ -11,14 +11,14 @@ Vue.use(Vuex)
 
 const state = {
   topButtonsProps: [
-    {index: 0, isDisplay: true, path: '/home', displayName: 'Home', style: 'normal'},
+    {index: 0, isDisplay: true, path: '/', displayName: 'Home', style: 'normal'},
     {index: 1, isDisplay: true, path: '/write', displayName: 'Write', style: 'normal'},
-    {index: 2, isDisplay: false, name: 'publish', displayName: 'Publish', style: 'normal'},
-    {index: 3, isDisplay: false, name: 'editor', displayName: 'Unsaved', style: 'normal', query: {save: true}},
-    {index: 4, isDisplay: false, name: 'editor', displayName: 'Abandon', style: 'normal', query: {abandon: true}},
-    {index: 5, isDisplay: false, name: 'editor', displayName: 'Edit', style: 'normal', params: {}},
-    {index: 6, isDisplay: false, name: 'article', displayName: 'Delete', style: 'normal', query: {delete: true}},
-    {index: 7, isDisplay: false, name: 'article', displayName: 'Reading', style: 'reading', query: {}}
+    {index: 2, isDisplay: false, path: '/write/publish', displayName: 'Publish', style: 'normal'},
+    {index: 3, isDisplay: false, path: '/write/editor', displayName: 'Unsaved', style: 'normal', query: {save: true}},
+    {index: 4, isDisplay: false, path: '/write/editor', displayName: 'Abandon', style: 'normal', query: {abandon: true}},
+    {index: 5, isDisplay: false, path: '/write/editor', displayName: 'Edit', style: 'normal', query: {}},
+    {index: 6, isDisplay: false, path: '/article', displayName: 'Delete', style: 'normal', query: {delete: true}},
+    {index: 7, isDisplay: false, path: '/article', displayName: 'Reading', style: 'reading'}
   ]
 }
 
@@ -34,11 +34,14 @@ const mutations = {
         if (prop.displayName) {
           state.topButtonsProps[prop.index].displayName = prop.displayName
         }
-        if (prop.query) {
-          state.topButtonsProps[prop.index].query = prop.query
+        if (prop.path) {
+          state.topButtonsProps[prop.index].path = prop.path
         }
         if (prop.params) {
           state.topButtonsProps[prop.index].params = prop.params
+        }
+        if (prop.query) {
+          state.topButtonsProps[prop.index].query = prop.query
         }
       }
     }

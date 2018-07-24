@@ -5,6 +5,7 @@ import auth from '@/api/auth'
 
 const SET_AUTHORIZATION = 'SET_AUTHORIZATION'
 const SET_USER_ID = 'SET_USER_ID'
+const SET_USERNAME = 'SET_USERNAME'
 
 // state
 const state = {
@@ -15,13 +16,17 @@ const actions = {
   async login ({commit}, username, password) {
     return auth.login(username, password).then(
       (res) => {
-        console.log('Authorization', res.headers.authorization)
         if (res.headers.authorization) {
+          console.log('登陆成功', res.data.data)
           commit(SET_AUTHORIZATION, res.headers.authorization)
           commit(SET_USER_ID, res.data.data.userId)
+          commit(SET_USERNAME, res.data.data.username)
           window.localStorage.setItem('authorization', res.headers.authorization)
           window.localStorage.setItem('userId', res.data.data.userId)
+          window.localStorage.setItem('username', res.data.data.username)
           return true
+        } else {
+          return false
         }
       },
       (e) => {
@@ -49,6 +54,9 @@ const mutations = {
   },
   SET_USER_ID (state, userId) {
     state.userId = userId
+  },
+  SET_USERNAME (state, username) {
+    state.username = username
   }
 }
 

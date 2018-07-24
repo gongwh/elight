@@ -1,6 +1,6 @@
 <template>
   <div id="articles" class="articles">
-    <show title="Snow" detail="He is rich enough that wants nothing"></show>
+    <show title="xxx" detail="He is rich enough that wants nothing"></show>
     <div class="articles-inner" :class="classes.articlesInnerAppend">
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
@@ -46,9 +46,9 @@
       ...mapGetters(['articlesNum']),
       // 是否手动刷新
       manualFlush () {
-        if (this.$route.params) {
-          if (this.$route.params.flush) {
-            return this.$route.params.flush
+        if (this.$route.query) {
+          if (this.$route.query.flush) {
+            return this.$route.query.flush
           } else {
             return false
           }
@@ -75,7 +75,7 @@
         }
       },
       l_openArticle (_articleId) {
-        this.$router.push({name: 'article', query: {articleId: _articleId}})
+        this.$router.push({ path: `/article/${_articleId}` })
       }
     },
     created () {

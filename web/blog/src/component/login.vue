@@ -7,8 +7,8 @@
             <div class="header_title">Elight</div>
             <div class="header_content">Making Edit and Share lighter</div>
           </div>
-          <div class="content_body" :class="'content_body' + contentBodyType">
-            <el-form :rules="loginRules" v-if="!switchToggle" ref="loginForm" :model="loginForm">
+          <div class="content_body" :class="`content_body_${isLogin ? 'login':'registration'}`">
+            <el-form :rules="loginRules" v-if="isLogin" ref="loginForm" :model="loginForm">
               <table class="login_table">
                 <tr class="row">
                   <td>
@@ -38,12 +38,12 @@
                 </tr>
                 <tr class="row">
                   <td>
-                    <el-button type="primary" @click="localLogin">登陆</el-button>
+                    <el-button type="primary" @click="localLogin">Login</el-button>
                   </td>
                 </tr>
               </table>
             </el-form>
-            <el-form :rules="registerRules" v-if="switchToggle" ref="registerForm" :model="registerForm">
+            <el-form :rules="registerRules" v-if="!isLogin" ref="registerForm" :model="registerForm">
               <table class="login_table">
                 <tr class="row">
                   <td>
@@ -63,7 +63,7 @@
                       <el-input
                         class="element"
                         placeholder="用户名"
-                        v-model="registerForm.firstName"
+                        v-model="registerForm.username"
                         clearable>
                       </el-input>
                     </el-form-item>
@@ -85,13 +85,13 @@
                 </tr>
                 <tr class="row">
                   <td>
-                    <el-form-item prop="passwordMatching">
+                    <el-form-item prop="matchingPassword">
                       <el-input
                         auto-complete="off"
                         type="password"
                         class="element"
                         placeholder="确认密码"
-                        v-model="registerForm.passwordMatching"
+                        v-model="registerForm.matchingPassword"
                         clearable>
                       </el-input>
                     </el-form-item>
@@ -99,14 +99,14 @@
                 </tr>
                 <tr class="row">
                   <td>
-                    <el-button type="primary" @click="localRegistration">注册</el-button>
+                    <el-button type="primary" @click="localRegistration">Registration</el-button>
                   </td>
                 </tr>
               </table>
             </el-form>
           </div>
           <div class="content_foot">
-            没有账号? <span @click="changeSwitch">{{switchText}}</span>
+            <span @click="changeSwitch">{{`${isLogin ? 'Registration':'Login'}`}}</span>
           </div>
         </div>
       </div>
@@ -119,16 +119,6 @@
 
   export default {
     data () {
-      const registerValidatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'))
-        } else {
-          if (this.registerForm.passwordMatching !== '') {
-            this.$refs.registerForm.validateField('passwordMatching')
-          }
-          callback()
-        }
-      }
       const registerValidatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'))
@@ -143,12 +133,11 @@
           username: '',
           password: ''
         },
-        contentBodyType: 'login',
         registerForm: {
-          firstName: '',
+          email: '',
+          username: '',
           password: '',
-          passwordMatching: '',
-          email: ''
+          matchingPassword: ''
         },
         loginRules: {
           username: [
@@ -161,35 +150,38 @@
         registerRules: {
           email: [
             {required: true, message: '请输入邮箱地址', trigger: 'blur'},
-            {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
+            {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur'}
           ],
           username: [
             {required: true, message: '请输入用户名', trigger: 'blur'},
             {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
           ],
           password: [
-            {validator: registerValidatePass, trigger: 'blur'}
+            {required: true, message: '请输入密码', trigger: 'blur'}
           ],
-          passwordMatching: [
+          matchingPassword: [
             {validator: registerValidatePass2, trigger: 'blur'}
           ]
         },
-        switchText: '注册',
-        switchToggle: false
+        isLogin: true // true 登陆状态， false 注册状态
       }
     },
     methods: {
       ...mapActions('user', ['registration', 'profile']),
       ...mapActions('auth', ['login', 'logout']),
       changeSwitch () {
-        this.switchToggle = !this.switchToggle
-        if (this.switchToggle) {
-          this.switchText = '登陆'
-          this.contentBodyType = 'registration'
-        } else {
-          this.switchText = '注册'
-          this.contentBodyType = 'login'
-        }
+        this.l_clearForm()
+        // this.isLogin = !this.isLogin
+      },
+      l_clearForm () {
+        this.isLogin = !this.isLogin
+        this.$nextTick(function () {
+          if (this.isLogin) {
+            this.$refs.loginForm.resetFields()
+          } else {
+            this.$refs.registerForm.resetFields()
+          }
+        })
       },
       async localLogin () {
         const that = this
@@ -198,9 +190,12 @@
             if (valid) {
               // 进行登陆
               that.login(this.loginForm).then((loginOk) => {
+                console.log('登陆结果', loginOk)
                 if (loginOk) {
-                  console.log('登陆成功，准备跳转到/article/articles')
+                  console.log('准备跳转到/article/articles')
                   that.$router.push({path: '/articles'})
+                } else {
+                  that.$message('账户名或密码错误')
                 }
               })
             } else {
@@ -215,7 +210,16 @@
           that.$refs.registerForm.validate((valid) => {
             if (valid) {
               // 进行注册
-              that.registration(that.registerForm)
+              that.registration(that.registerForm).then(
+                (registerOk) => {
+                  if (registerOk) {
+                    that.$message('注册成功')
+                    that.changeSwitch()
+                  } else {
+                    that.$message('注册失败')
+                  }
+                }
+              )
               console.log(valid)
               return true
             } else {
@@ -233,7 +237,7 @@
   @import "../common/stylus/index.styl"
   .login_wrapper
     bg-image('../assets/login_background.png')
-    z-index 3000
+    z-index 2000
     position fixed
     right 0
     bottom 0

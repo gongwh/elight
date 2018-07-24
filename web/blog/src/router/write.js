@@ -13,13 +13,21 @@ export default {
   },
   children: [
     {
-      path: '/', redirect: '/editor'
+      path: '', redirect: 'editor'
     },
     {
-      path: '/editor', component: editor, name: 'editor'
+      path: 'editor',
+      component: editor,
+      meta: {
+        title: 'Writing...'
+      }
     },
     {
-      path: '/publish', component: publish, name: 'publish'
+      path: 'publish',
+      component: publish,
+      meta: {
+        title: 'Publishing...'
+      }
     }
   ]
 }

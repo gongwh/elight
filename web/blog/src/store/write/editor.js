@@ -19,18 +19,18 @@ const state = {
 
 // actions
 const actions = {
-  loadNewestDraft (context, userId) {
+  loadNewestDraft (context) {
     context.commit(UPDATE_LOADING, true)
-    return writeApi.editor.loadNewestDraft(userId).then(
+    return writeApi.editor.loadNewestDraft().then(
       (result) => {
-        if (result.data.code === 0) {
+        if (result.data.status === 0) {
           if (result.data.data) {
-            // console.log('非空草稿')
+            console.log('非空草稿', result.data.data)
             context.commit(UPDATE_DRAFT, result.data.data)
             context.commit(UPDATE_SYNC, true)
             return true
           } else {
-            // console.log('空草稿')
+            console.log('空草稿')
             return false
           }
         }
@@ -44,7 +44,7 @@ const actions = {
     context.commit(UPDATE_LOADING, true)
     return writeApi.editor.loadDraftByArticleId(articleId).then(
       (result) => {
-        if (result.data.code === 0) {
+        if (result.data.status === 0) {
           if (result.data.data) {
             // console.log('非空草稿')
             context.commit(UPDATE_DRAFT, result.data.data)
@@ -80,7 +80,7 @@ const actions = {
     return await
       writeApi.editor.deleteDraft(draft).then(
         (result) => {
-          if (result.data.code === 0) {
+          if (result.data.status === 0) {
             // console.log('删除草稿成功')
           }
           context.commit(UPDATE_LOADING, false)

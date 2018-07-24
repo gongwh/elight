@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "editor.md": "^1.5.0",
-    "element-ui": "^2.1.0",
+    "element-ui": "^2.4.4",
     "github-markdown-css": "^2.10.0",
     "highlight.js": "^9.12.0",
     "html-to-text": "^3.3.0",

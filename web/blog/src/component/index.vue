@@ -52,8 +52,6 @@
     opacity: 0
 
   .content
-    *
-      z-index 100
     padding-top 42px
     min-height: calc(100vh - 50px)
     *

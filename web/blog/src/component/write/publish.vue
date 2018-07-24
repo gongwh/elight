@@ -53,16 +53,18 @@
         this.titleImageUrl = ''
       },
       l_uploadSuccess (response, file, fileList) {
-        if (response.code === 0) {
+        console.log('上传图片结果', response)
+        if (response.status === 0) {
           this.titleImageUrl = response.data[this.titleImgName]
           this.draftTemp.titleImgUrl = this.titleImageUrl
+          console.log('上传图片成功', this.draftTemp)
         }
       },
       l_loadDraft () {
         // 加载标题和tag
         if (!this.draft) {
           // 跳转到编辑器
-          this.$router.push({name: 'editor'})
+          this.$router.push({name: '/write/editor'})
         } else {
           this.draftTemp = this.draft
           this.draftTemp.contentText = htmlToText.fromString(this.draftTemp.contentHtml, {
@@ -72,6 +74,7 @@
       },
       l_publish () {
         // 保存文章
+        console.log('准备发布保存文章', this.draftTemp)
         this.saveArticle(this.draftTemp).then(saveOk => {
           if (saveOk) {
             // 删除草稿
@@ -79,7 +82,7 @@
             // 清除编辑器
             this.clearEditor()
             // 刷新并跳转到文章列表
-            this.gotoArticles()
+            this.$router.push({path: '/articles/list', params: {flush: true}})
             // 保存成功
             this.$notify.success({
               title: '文章发布',
@@ -94,9 +97,6 @@
             })
           }
         })
-      },
-      gotoArticles () {
-        this.$router.push({name: 'articles', params: {flush: true}})
       }
     }
   }
