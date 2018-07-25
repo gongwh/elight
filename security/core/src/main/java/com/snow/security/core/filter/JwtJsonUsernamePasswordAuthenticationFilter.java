@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snow.lib.result.ResultVOUtil;
+import com.snow.security.core.properties.SecurityProperties;
 import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.service.CustomUserDetailService;
 import io.jsonwebtoken.Jwts;
@@ -31,6 +32,9 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -80,7 +84,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
         String token = Jwts.builder()
                 .setSubject(objectMapper.writeValueAsString((User) authResult.getPrincipal()))
                 .claim("authorities", getAuthoritiesToStr(authResult))
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 24 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * securityProperties.getPassword().getJwtExpirationHours() ))
                 .signWith(SignatureAlgorithm.HS512, "SNOW")
                 .compact();
         response.addHeader("Authorization", "Bearer " + token);

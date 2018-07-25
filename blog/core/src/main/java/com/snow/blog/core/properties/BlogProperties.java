@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "blog")
+@ConfigurationProperties(prefix = "snow.blog")
 public class BlogProperties {
-    private ArticleProperties article;
+    private ArticleProperties article = new ArticleProperties();
 }

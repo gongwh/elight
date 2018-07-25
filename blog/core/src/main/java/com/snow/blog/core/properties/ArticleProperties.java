@@ -7,5 +7,5 @@ import lombok.Data;
  */
 @Data
 public class ArticleProperties {
-    private int subNailCharNum = 39;
+    private int thumbnailCharNum = 150;
 }

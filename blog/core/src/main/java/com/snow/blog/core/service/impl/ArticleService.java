@@ -65,7 +65,7 @@ public class ArticleService implements IArticleService {
         }
         article.setContentTextSubNail(
                 StringUtils.substring(
-                        article.getContentText(), 0, blogProperties.getArticle().getSubNailCharNum()
+                        article.getContentText(), 0, blogProperties.getArticle().getThumbnailCharNum()
                 )
         );
         Article result = articleRepository.save(article);

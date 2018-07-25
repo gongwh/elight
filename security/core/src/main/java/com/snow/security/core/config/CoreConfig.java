@@ -3,7 +3,9 @@ package com.snow.security.core.config;
 import com.snow.security.core.filter.JwtAuthenticationFilter;
 import com.snow.security.core.filter.JwtJsonUsernamePasswordAuthenticationFilter;
 import com.snow.security.core.filter.RestAuthenticationEntryPoint;
+import com.snow.security.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,6 +24,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties({SecurityProperties.class})
 public class CoreConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
