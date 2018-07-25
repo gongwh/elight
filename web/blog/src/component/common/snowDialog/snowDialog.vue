@@ -45,6 +45,7 @@
     },
     methods: {
       close () {
+        console.log('SnowDialog Wrapper 被点击')
         this.$emit('update:visible', false)
       }
     }
@@ -54,13 +55,14 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .snow_dialog_wrapper
     z-index 5000
-    position fixed
+    position absolute
     top 0
     right 0
     bottom 0
     left 0
     overflow auto
     margin 0
+    background-color rgba(0,0,0,0.2)
     .snow_dialog
       font-size 0
       position fixed

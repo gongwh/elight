@@ -1,32 +1,34 @@
 <template>
-  <div class="my_head" @scroll="l_onScroll">
+  <div>
     <snowDialog :visible.sync='profileDialogVisible' :position="profileDialogPosition">
       <div class="dialog_content">
-        <!--<el-button type="primary" >个人信息</el-button>-->
-        <el-button type="primary" >退出登陆</el-button>
+        <el-button type="primary" @click="e_login">重新登陆</el-button>
       </div>
     </snowDialog>
-    <div class="title">
-      <div class="title-inner">
-        <div class="me">
+    <div class="my_head" @scroll="l_onScroll">
+      <div class="title">
+        <div class="title-inner">
+          <div class="me">
               <span id="navigation_block_username" @click="e_openDeleteDialog">
                 {{username}}
               </span>
-        </div>
-        <div class="navigation">
-          <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
-               v-for="(prop,index) in topButtonsProps" :id="l_generateNavigationBlockId(index)">
-            {{prop.displayName}}
+          </div>
+          <div class="navigation">
+            <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
+                 v-for="(prop,index) in topButtonsProps" :id="l_generateNavigationBlockId(index)">
+              {{prop.displayName}}
+            </div>
           </div>
         </div>
       </div>
+      <img @click="NavigateToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top"/>
     </div>
-    <img @click="NavigateToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top"/>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import { mapState, mapMutations } from 'vuex'
+  import {mapMutations, mapState} from 'vuex'
+
   export default {
     data () {
       return {
@@ -40,6 +42,9 @@
     },
     methods: {
       ...mapMutations(['SET_BUTTON_STATE']),
+      e_login () {
+        this.$router.push({path: '/login'})
+      },
       e_openDeleteDialog () {
         this.l_setDialogPosition()
         this.profileDialogVisible = true
@@ -114,6 +119,7 @@
         .me
           font-size 25px
           font-weight 500
+          cursor pointer
         .navigation
           float right
           font-size 18px
