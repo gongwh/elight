@@ -5,7 +5,7 @@ import elementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
-import 'highlight.js/styles/googlecode.css' // 样式文件
+// import 'highlight.js/styles/googlecode.css' // 样式文件
 import commonUtil from '@/util/common'
 import VueHighlightJS from 'vue-highlightjs'
 import snowDialog from '@/component/common/snowDialog'

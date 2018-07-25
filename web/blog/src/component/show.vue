@@ -16,7 +16,7 @@
       title: {
         type: String,
         require: true,
-        default: 'SNOW(D)'
+        default: 'You'
       },
       backgroundUrl: {
         type: String,
@@ -26,7 +26,7 @@
       detail: {
         type: String,
         require: true,
-        default: 'He is rich enough that wants nothing.'
+        default: 'All Izz well.'
       }
     },
     created () {

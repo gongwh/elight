@@ -1,18 +1,20 @@
 <template>
   <div class="editor">
-    <div class="title"></div>
-    <mavon-editor ref=md :toolbars="toolbars"
-                  v-model="draftTemp.contentMd"
-                  :placeholder="begin"
-                  @imgAdd="l_imgAdd"
-                  @imgDel="l_imgDel"
-                  @save="e_save" @change="e_change">
-    </mavon-editor>
+    <div class="editor_wrapper" v-loading="isLoading">
+      <div class="title"></div>
+      <mavon-editor ref=md :toolbars="toolbars"
+                    v-model="draftTemp.contentMd"
+                    :placeholder="begin"
+                    @imgAdd="l_imgAdd"
+                    @imgDel="l_imgDel"
+                    @save="e_save" @change="e_change">
+      </mavon-editor>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6" scoped>
-  import { mapState, mapActions, mapMutations } from 'vuex'
+  import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
 
   export default {
@@ -71,7 +73,9 @@
             // 这是你的代码高亮配色文件路径
             return 'https://cdn.bootcss.com/highlight.js/9.12.0/styles/' + css + '.min.css'
           }
-        }
+        },
+        isLoading: true,
+        isLoading2: true
       }
     },
     computed: {
@@ -101,7 +105,6 @@
       this.SET_BUTTON_STATE({display: false, index: 4})
     },
     methods: {
-      ...mapState('auth', ['authorization']),
       l_imgAdd (pos, $file) {
         this.imgFile[pos] = $file
       },
@@ -141,11 +144,15 @@
                 offset: 70
               })
             }
+            this.isLoading = false
+          }, () => {
+            this.isLoading = false
           })
         }
         if (this.sync) {
           this.draftTemp = this.draft
           this.l_updateTopButton()
+          this.isLoading = false
         }
       },
       l_loadEditorByArticle () {
@@ -159,6 +166,7 @@
             console.log('加载文章草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft
+              this.isLoading = false
             }
           })
         } else if (this.draft.articleId !== this.$route.query.articleId) {
@@ -168,8 +176,10 @@
             message: '已有文章正在编辑',
             offset: 70
           })
+          this.isLoading = false
         } else if (this.draft.articleId === this.$route.query.articleId) {
           this.draftTemp = this.draft
+          this.isLoading = false
         }
       },
       l_saveDraft () {
@@ -265,21 +275,21 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  //@import url('https://cdn.bootcss.com/github-markdown-css/2.9.0/github-markdown.css')
-  /*@import "../md"*/
-  // @import url('https://cdn.bootcss.com/KaTeX/0.8.3/katex.min.css')
 
   .editor
     height 700px
 
   .v-note-help-wrapper .v-note-help-content
     margin 60px auto
-/*
+
   .v-note-op
     position fixed
-    margin-top 50px
+  .v-note-edit
+    background white
   .v-note-panel
-    padding-top 10px
-    z-index -1
-*/
+    top 40px
+  .editor_wrapper
+    padding-top 0
+  .v-note-wrapper
+    background none
 </style>

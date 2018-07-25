@@ -16,9 +16,15 @@ const state = {
 // actions
 const actions = {
   async loadArticlePage ({commit}, page, size) {
-    const result = await articlesApi.loadArticlePage(page, size)
-    console.log('加载文章列表', result)
-    commit(UPDATE_ARTICLES, result.data.data)
+    return articlesApi.loadArticlePage(page, size).then(
+      (result) => {
+        console.log('加载文章列表成功')
+        commit(UPDATE_ARTICLES, result.data.data)
+      },
+      (e) => {
+        console.log('加载文章列表失败', e)
+      }
+    )
   }
 }
 

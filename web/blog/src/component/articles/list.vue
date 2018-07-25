@@ -1,6 +1,6 @@
 <template>
   <div id="articles" class="articles">
-    <show title="xxx" detail="He is rich enough that wants nothing"></show>
+    <show></show>
     <div class="articles-inner" :class="classes.articlesInnerAppend">
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
@@ -14,7 +14,8 @@
         <div class="content">
           <div class="title">{{article.title}}</div>
           <div class="date">{{article.updateTime}}</div>
-          <div :class="classes.descAppend" class="desc">{{article.contentText}}</div>
+          <!--<div :class="classes.descAppend" class="desc">文章内容缩略</div>-->
+          <div :class="classes.descAppend" class="desc">{{article.contentTextSubNail}}</div>
         </div>
       </div>
       <div v-for="n in articlesAppendNum" :class="classes.articleAppend" class="article" v-visible="false"></div>
@@ -116,8 +117,8 @@
         background-color rgba(255, 255, 255, 0.9)
         overflow hidden
         .image-wrapper
-          border-radius 6px
-          display table
+          /*border-radius 6px*/
+          /*display table*/
           border-collapse collapse
           max-height 50%
           min-height 50%

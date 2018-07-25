@@ -8,6 +8,7 @@ import router from '../router'
 
 axios.defaults.baseURL = base.serviceUrl
 axios.defaults.fileUrl = base.fileUrl
+axios.defaults.headers['Content-Type'] = 'application/json'
 
 // http request 拦截器
 axios.interceptors.request.use(
@@ -16,6 +17,7 @@ axios.interceptors.request.use(
     if (store.state.auth.authorization) {
       config.headers.Authorization = `${store.state.auth.authorization}`
     }
+    config.headers['Cache-Control'] = 'max-age=3600'
     return config
   },
   err => {

@@ -1,12 +1,13 @@
 package com.snow.blog.core.service.impl;
 
+import com.snow.blog.core.properties.BlogProperties;
 import com.snow.blog.core.repository.ArticleRepository;
 import com.snow.blog.core.repository.entity.Article;
 import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.util.validator.CommonValidator;
 import com.snow.lib.BeanCopyUtil;
-import org.apache.commons.codec.binary.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,9 @@ public class ArticleService implements IArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private BlogProperties blogProperties;
 
 
     @Override
@@ -43,7 +47,7 @@ public class ArticleService implements IArticleService {
     @Override
     public Article getArticleById(String articleId, String userId) {
         Article article = articleRepository.findByArticleIdAndUserIdAndEnabledIsTrue(articleId, userId);
-        if (article.getPersonal() && !StringUtils.equals(article.getUserId(),userId)) {
+        if (article.getPersonal() && !StringUtils.equals(article.getUserId(), userId)) {
             throw new AccessDeniedException("私有文章，无法访问");
         }
         CommonValidator.getOk(article);
@@ -59,6 +63,11 @@ public class ArticleService implements IArticleService {
                 tag.setUserId(article.getUserId());
             }));
         }
+        article.setContentTextSubNail(
+                StringUtils.substring(
+                        article.getContentText(), 0, blogProperties.getArticle().getSubNailCharNum()
+                )
+        );
         Article result = articleRepository.save(article);
         CommonValidator.saveOk(result);
         return result;

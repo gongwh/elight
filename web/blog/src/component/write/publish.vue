@@ -82,7 +82,7 @@
             // 清除编辑器
             this.clearEditor()
             // 刷新并跳转到文章列表
-            this.$router.push({path: '/articles/list', params: {flush: true}})
+            this.$router.push({path: '/articles/list', query: {flush: true}})
             // 保存成功
             this.$notify.success({
               title: '文章发布',

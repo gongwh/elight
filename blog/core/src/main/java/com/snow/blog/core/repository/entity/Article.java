@@ -35,18 +35,21 @@ public class Article extends EntityBase {
     // html 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "Text")
+    @Column(columnDefinition = "mediumtext")
     private String contentHtml;
     // markdown 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "Text")
+    @Column(columnDefinition = "mediumtext")
     private String contentMd;
     // html 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "Text")
+    @Column(columnDefinition = "mediumtext")
     private String contentText;
+    // html 文本缩略
+    @Column
+    private String contentTextSubNail;
     // 用户ID
     private String userId;
     // 是否私有

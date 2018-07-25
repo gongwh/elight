@@ -2,14 +2,15 @@ import axios from 'axios'
 
 export default {
   get: (url, params = {}) => {
-    return axios.get(url, {params: params, headers: { 'Content-Type': 'application/json' }}).then(response => {
+    axios.defaults.params = params
+    return axios.get(url, {params: params}).then(response => {
       return response
     }).catch(err => {
       throw err
     })
   },
   post: (url, data) => {
-    return axios.post(url, data, {headers: { 'Content-Type': 'application/json' }}).then(response => {
+    return axios.post(url, data).then(response => {
       return response
     }).catch(err => {
       throw err

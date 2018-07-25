@@ -61,7 +61,7 @@
     },
     watch: {
       '$route' (to) {
-        console.log('路由监控', to)
+        // console.log('路由监控', to)
         if (to.path === this.topButtonsProps[1].to || to.redirectedFrom === this.topButtonsProps[1].to) {
           this.SET_BUTTON_STATE({display: true, index: 2})
         }
@@ -94,7 +94,7 @@
     width 100%
     position fixed
     background-color rgba(230, 230, 230, 1)
-    z-index 2000
+    z-index 2100
     transition transform .5s;
     transform translateZ(0);
     .title

@@ -35,6 +35,6 @@ public class Draft extends EntityBase {
     // markdown 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "Text")
+    @Column(columnDefinition = "mediumtext")
     private String contentMd;
 }

@@ -64,10 +64,12 @@
               console.log('加载文章成功', this.articleTemp)
               this.l_updateTopButtonAddEdit()
               this.l_updateTopButtonAddDel()
+              document.title = this.articleTemp.title
             }
           })
         } else {
           this.articleTemp = this.article
+          document.title = this.articleTemp.title
         }
         this.l_updateTopButtonAddEdit()
         this.l_updateTopButtonAddDel()
@@ -198,7 +200,7 @@
     .article_wrapper
       width 100%
       margin auto
-      margin-top 40px
+      /*margin-top 40px*/
       min-height 500px
       .title
         font-size 23px
