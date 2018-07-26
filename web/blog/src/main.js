@@ -10,6 +10,7 @@ import commonUtil from '@/util/common'
 import VueHighlightJS from 'vue-highlightjs'
 import snowDialog from '@/component/common/snowDialog'
 import snowUpload from '@/component/common/snowUpload'
+import snowInput from '@/component/common/snowInput'
 
 import store from '@/store'
 import router from '@/router'
@@ -22,6 +23,7 @@ Vue.use(VueHighlightJS)
 
 Vue.use(snowDialog)
 Vue.use(snowUpload)
+Vue.use(snowInput)
 
 Vue.use(commonUtil)
 Vue.config.productionTip = false
@@ -32,7 +34,7 @@ Vue.use(globalConfig, {router, store})
 const vm = new Vue({
   router,
   store,
-  components: {App, snowDialog, snowUpload},
+  components: {App, snowDialog, snowUpload, snowInput},
   template: '<App/>'
 })
 vm.$mount('#app')

@@ -83,5 +83,19 @@ public class ArticleService implements IArticleService {
         CommonValidator.delOk(result);
     }
 
+    @Override
+    public Page<Article> getArticleSearchPage(String targetUserId,String currentUserId,String content,Pageable pageable) {
+        Page<Article> page;
+        // 判断目标用户ID和当前用户是否相同
+        if (StringUtils.equals(currentUserId, targetUserId)) {
+            // 搜索所有文章
+            page = articleRepository.findByUserIdAndSearchLike(targetUserId, content, pageable);
+        } else {
+            // 搜索非私有文章
+            page = articleRepository.findByUserIdAndPersonalIsFalseSearchLike(targetUserId, content, pageable);
+        }
+        return page;
+    }
+
 
 }

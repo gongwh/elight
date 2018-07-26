@@ -166,6 +166,12 @@
         isLogin: true // true 登陆状态， false 注册状态
       }
     },
+    created () {
+      document.addEventListener('keydown', this.e_enter)
+    },
+    destroyed () {
+      document.removeEventListener('keydown', this.e_enter)
+    },
     methods: {
       ...mapActions('user', ['registration', 'profile']),
       ...mapActions('auth', ['login', 'logout']),
@@ -182,6 +188,15 @@
             this.$refs.registerForm.resetFields()
           }
         })
+      },
+      e_enter (e) {
+        if (e.keyCode === 13) {
+          if (this.isLogin) {
+            this.localLogin()
+          } else {
+            this.localRegistration()
+          }
+        }
       },
       async localLogin () {
         const that = this

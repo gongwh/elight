@@ -41,6 +41,22 @@ public class ArticleController {
         return ResultVOUtil.page(page);
     }
 
+    // 获取所有文章-分页
+    @GetMapping("/page/search")
+    public ResultVO getArticleSearchPage(
+            String userId,
+            String content,
+            @PageableDefault(sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal User user) {
+        if (StringUtils.isBlank(userId)){
+            userId = user.getUserId();
+        }
+        Page<Article> page = articlesService.getArticleSearchPage(userId, user.getUserId(), content, pageable);
+        return ResultVOUtil.page(page);
+    }
+
+
+
     // 获取指定文章
     @GetMapping("/{articleId}")
     public ResultVO getArticleByArticleId(@PathVariable("articleId") String articleId, @AuthenticationPrincipal User user) {

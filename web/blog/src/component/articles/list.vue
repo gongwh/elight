@@ -1,6 +1,8 @@
 <template>
   <div id="articles" class="articles">
-    <show></show>
+    <show>
+      <snow-input @keyup.enter.native="e_searchArticle" placeholder="搜索文章" v-model="searchInput"></snow-input>
+    </show>
     <div class="articles-inner" :class="classes.articlesInnerAppend">
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
@@ -38,7 +40,8 @@
           descAppend: ''
         },
         articlesAppendNum: 0,
-        defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg'
+        defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
+        searchInput: ''
       }
     },
     components: {show},
@@ -57,7 +60,12 @@
       }
     },
     methods: {
-      ...mapActions(['loadArticlePage']),
+      ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
+      e_searchArticle () {
+        if (this.searchInput && this.searchInput !== '') {
+          this.loadArticleSearchPage('%' + this.searchInput + '%')
+        }
+      },
       updateClasses () {
         if (this.screenWidth > 1428) {
           this.articlesAppendNum = 3 - this.articlesNum % 3
@@ -82,7 +90,7 @@
     created () {
       if (this.manualFlush || this.articles === null) {
         console.log('刷新文章列表')
-        this.loadArticlePage(0, 10)
+        this.loadArticlePage()
       }
       this.updateClasses()
     },

@@ -6,6 +6,7 @@
     <div class="show-inner" >
       <div class="title"><span>{{title}}</span></div>
       <div class="detail"><span>{{detail}}</span></div>
+      <slot></slot>
     </div>
   </div>
 </template>

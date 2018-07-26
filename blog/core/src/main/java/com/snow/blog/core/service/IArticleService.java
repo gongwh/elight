@@ -23,4 +23,5 @@ public interface IArticleService {
     // 删
     void deleteArticle(Article article,String userId);
 
+    Page<Article> getArticleSearchPage(String targetUserId,String currentUserId,String content,Pageable pageable);
 }

@@ -15,15 +15,15 @@ const routes = [
     children: [
       article,
       articles,
-      write,
-      {
-        path: 'login',
-        component: login,
-        meta: {
-          title: 'Login'
-        }
-      }
+      write
     ]
+  },
+  {
+    path: '/login',
+    component: login,
+    meta: {
+      title: 'Login'
+    }
   },
   {
     path: '/**',

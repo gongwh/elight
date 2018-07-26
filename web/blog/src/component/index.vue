@@ -5,7 +5,7 @@
       <transition name="fade">
         <router-view></router-view>
       </transition>
-      <div class="push"></div>
+      <!--<div class="push"></div>-->
     </div>
     <myfoot></myfoot>
   </div>

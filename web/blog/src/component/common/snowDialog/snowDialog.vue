@@ -1,5 +1,5 @@
 <template>
-  <div class="snow_dialog_wrapper" @click="close" v-show="visible">
+  <div class="snow_dialog_wrapper" v-show="visible">
     <div class="snow_dialog" :style="style">
       <div class="snow_cro_left_top"></div>
       <div class="snow_cro_right_top"></div>
@@ -33,6 +33,15 @@
     data () {
       return {}
     },
+    watch: {
+      visible: function (isOpen) {
+        if (isOpen) {
+          document.documentElement.style.overflow = 'hidden'
+        } else {
+          document.documentElement.style.overflow = 'auto'
+        }
+      }
+    },
     computed: {
       style: function () {
         return {
@@ -42,10 +51,25 @@
       }
     },
     created () {
+      document.addEventListener('keydown', this.closeModalWithEsc)
+      document.addEventListener('mouseup', this.closeModalWithMouse)
+    },
+    destroyed () {
+      document.removeEventListener('keydown', this.closeModalWithEsc)
+      document.removeEventListener('mouseup', this.closeModalWithMouse)
     },
     methods: {
+      closeModalWithEsc (e) {
+        if (e.keyCode === 27 && this.visible) {
+          this.close()
+        }
+      },
+      closeModalWithMouse (e) {
+        if (this.visible) {
+          this.close()
+        }
+      },
       close () {
-        console.log('SnowDialog Wrapper 被点击')
         this.$emit('update:visible', false)
       }
     }
@@ -62,7 +86,7 @@
     left 0
     overflow auto
     margin 0
-    background-color rgba(0,0,0,0.2)
+    // background-color rgba(0,0,0,0.2)
     .snow_dialog
       font-size 0
       position fixed
