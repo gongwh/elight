@@ -1,6 +1,6 @@
 <template>
   <div class="snow_input">
-    <el-input v-model="currentValue" :placeholder="placeholder" clearable="true" prefix-icon="el-icon-search"></el-input>
+    <el-input v-model="currentValue" :placeholder="placeholder" :clearable="true" prefix-icon="el-icon-search"></el-input>
   </div>
 </template>
 

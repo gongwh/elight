@@ -3,7 +3,10 @@
     <show>
       <snow-input @keyup.enter.native="e_searchArticle" placeholder="搜索文章" v-model="searchInput"></snow-input>
     </show>
-    <div class="articles-inner" :class="classes.articlesInnerAppend">
+    <div class="articles-inner"
+         :class="classes.articlesInnerAppend"
+         v-show="!isSearch"
+    >
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
            v-for="article in articles">
@@ -16,7 +19,27 @@
         <div class="content">
           <div class="title">{{article.title}}</div>
           <div class="date">{{article.updateTime}}</div>
-          <!--<div :class="classes.descAppend" class="desc">文章内容缩略</div>-->
+          <div :class="classes.descAppend" class="desc">{{article.contentTextSubNail}}</div>
+        </div>
+      </div>
+      <div v-for="n in articlesAppendNum" :class="classes.articleAppend" class="article" v-visible="false"></div>
+    </div>
+    <div class="articles-inner"
+         :class="classes.articlesInnerAppend"
+         v-show="isSearch"
+    >
+      <div @click="l_openArticle(article.articleId)" class="article"
+           :class="classes.articleAppend"
+           v-for="article in articlesSearch">
+        <div class="image-wrapper">
+          <div class="image-wrapper-inner">
+            <img v-if="article.titleImgUrl" :src="fileBase+article.titleImgUrl"/>
+            <img v-if="!article.titleImgUrl" :src="fileBase + defaultImgPath"/>
+          </div>
+        </div>
+        <div class="content">
+          <div class="title">{{article.title}}</div>
+          <div class="date">{{article.updateTime}}</div>
           <div :class="classes.descAppend" class="desc">{{article.contentTextSubNail}}</div>
         </div>
       </div>
@@ -29,7 +52,8 @@
   import show from '@/component/show'
   import {createNamespacedHelpers} from 'vuex'
 
-  const {mapState, mapGetters, mapActions} = createNamespacedHelpers('article/articles')
+  const {mapState, mapGetters, mapMutations, mapActions} = createNamespacedHelpers('article/articles')
+
   export default {
     data () {
       return {
@@ -47,7 +71,9 @@
     components: {show},
     computed: {
       ...mapState(['articles']),
+      ...mapState(['articlesSearch']),
       ...mapGetters(['articlesNum']),
+      ...mapGetters(['articlesNumSearch']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -57,10 +83,25 @@
             return false
           }
         }
+      },
+      isSearch () {
+        let state = this.searchInput && this.searchInput.length > 0
+        console.log('正在搜索', state)
+        return state
+      }
+    },
+    watch: {
+      'isSearch' (val, oldVal) {
+        if (!val) {
+          this.CLEAR_ARTICLES_SEARCH_RESULT()
+        }
+        console.log('刷新搜索状态')
+        this.updateClasses()
       }
     },
     methods: {
       ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
+      ...mapMutations(['CLEAR_ARTICLES_SEARCH_RESULT']),
       e_searchArticle () {
         if (this.searchInput && this.searchInput !== '') {
           this.loadArticleSearchPage('%' + this.searchInput + '%')
@@ -68,12 +109,12 @@
       },
       updateClasses () {
         if (this.screenWidth > 1428) {
-          this.articlesAppendNum = 3 - this.articlesNum % 3
+          this.articlesAppendNum = 3 - (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 3
           this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerBetween'
           this.classes.descAppend = 'descLineClamp2'
         } else if (this.screenWidth > 958) {
-          this.articlesAppendNum = this.articlesNum % 2
+          this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
           this.classes.articleAppend = 'articleMiddle'
           this.classes.articlesInnerAppend = 'articlesInnerBetween'
           this.classes.descAppend = 'descLineClamp4'
@@ -84,7 +125,7 @@
         }
       },
       l_openArticle (_articleId) {
-        this.$router.push({ path: `/article/${_articleId}` })
+        this.$router.push({path: `/article/${_articleId}`})
       }
     },
     created () {
