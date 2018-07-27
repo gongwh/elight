@@ -7,6 +7,6 @@ export const saveDraft = (draft) => http.post('/draft', draft)
 
 export const deleteDraft = (draft) => http.delete('/draft', draft)
 
-export const loadNewestDraft = (userId) => http.get('/draft/newest', {userId})
+export const loadNewestDraft = (userId) => http.get('/draft/newest', {userId: userId})
 
-export const loadDraftByArticleId = (articleId) => http.get('/draft/article', articleId)
+export const loadDraftByArticleId = (articleId) => http.get('/draft/article', {articleId: articleId})

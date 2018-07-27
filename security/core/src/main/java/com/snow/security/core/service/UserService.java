@@ -1,6 +1,7 @@
 package com.snow.security.core.service;
 
 import com.snow.security.core.exception.EmailExistsException;
+import com.snow.security.core.exception.UsernameExistsException;
 import com.snow.security.core.repository.UserRepository;
 import com.snow.security.core.repository.entity.Authority;
 import com.snow.security.core.repository.entity.User;
@@ -29,6 +30,11 @@ public class UserService implements IUserService {
             throw new EmailExistsException(-1,
                     "There is an account with that email address:" + userDto.getEmail());
         }
+
+        if (usernameExist(userDto.getUsername())) {
+            throw new UsernameExistsException(-1,
+                    "There is an account with that username:" + userDto.getUsername());
+        }
         Authority authority = new Authority("USER");
         Set authorities = new HashSet();
         authorities.add(authority);
@@ -39,6 +45,14 @@ public class UserService implements IUserService {
         );
         user.setEmail(userDto.getEmail());
         return userRepository.save(user);
+    }
+
+    private boolean usernameExist(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return true;
+        }
+        return false;
     }
 
     private boolean emailExist(String email) {

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
   get: (url, params = {}) => {
-    axios.defaults.params = params
+    console.log('AXIOS GET', params)
     return axios.get(url, {params: params}).then(response => {
       return response
     }).catch(err => {

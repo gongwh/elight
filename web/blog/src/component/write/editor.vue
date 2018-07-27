@@ -162,7 +162,7 @@
         //   文章id不为空且id相同       不做任何动作
         //   文章id不为空且id不同       提示已有文章正在编辑
         if (!this.draft || !this.draft.articleId) {
-          this.loadDraftByArticleId({'articleId': this.$route.query.articleId}).then((loadOk) => {
+          this.loadDraftByArticleId(this.$route.query.articleId).then((loadOk) => {
             console.log('加载文章草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft

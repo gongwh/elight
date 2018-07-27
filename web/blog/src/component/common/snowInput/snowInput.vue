@@ -25,6 +25,7 @@
       'currentValue' (val, oldValue) {
         this.setCurrentValue(val)
         this.$emit('input', val)
+        this.$emit('change', val)
       }
     },
     computed: {},

@@ -1,7 +1,13 @@
 <template>
   <div id="articles" class="articles">
     <show>
-      <snow-input @keyup.enter.native="e_searchArticle" placeholder="搜索文章" v-model="searchInput"></snow-input>
+      <snow-input @keyup.enter.native="e_searchArticle"
+                  placeholder="输入以开始搜索"
+                  @change="e_searchInputChange"
+                  v-model="searchInput"></snow-input>
+      <transition name="el-fade-in-linear">
+        <span class="search-result-show" v-visible="searchResultShow">{{`${articlesTotalNumSearch + (articlesTotalNumSearch>1?' results':' result')}`}}</span>
+      </transition>
     </show>
     <div class="articles-inner"
          :class="classes.articlesInnerAppend"
@@ -65,7 +71,8 @@
         },
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
-        searchInput: ''
+        searchInput: '',
+        searchResultShow: false
       }
     },
     components: {show},
@@ -74,6 +81,7 @@
       ...mapState(['articlesSearch']),
       ...mapGetters(['articlesNum']),
       ...mapGetters(['articlesNumSearch']),
+      ...mapGetters(['articlesTotalNumSearch']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -86,13 +94,13 @@
       },
       isSearch () {
         let state = this.searchInput && this.searchInput.length > 0
-        console.log('正在搜索', state)
         return state
       }
     },
     watch: {
       'isSearch' (val, oldVal) {
         if (!val) {
+          this.searchResultShow = false
           this.CLEAR_ARTICLES_SEARCH_RESULT()
         }
         console.log('刷新搜索状态')
@@ -102,9 +110,16 @@
     methods: {
       ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
       ...mapMutations(['CLEAR_ARTICLES_SEARCH_RESULT']),
+      e_searchInputChange (value) {
+        this.searchResultShow = false
+      },
       e_searchArticle () {
         if (this.searchInput && this.searchInput !== '') {
-          this.loadArticleSearchPage('%' + this.searchInput + '%')
+          this.loadArticleSearchPage('%' + this.searchInput + '%').then(
+            () => {
+              this.searchResultShow = true
+            }
+          )
         }
       },
       updateClasses () {
@@ -150,6 +165,10 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
+    .search-result-show
+      font-size 14px
+      color #626262
+      font-family Raleway Arial Helvetica sans-serif
     .articles-inner
       display flex
       margin auto
@@ -166,18 +185,17 @@
         background-color rgba(255, 255, 255, 0.9)
         overflow hidden
         .image-wrapper
-          /*border-radius 6px*/
-          /*display table*/
           border-collapse collapse
           max-height 50%
           min-height 50%
           overflow hidden
           vertical-align middle
           text-align center
+          /*display table*/
           .image-wrapper-inner
             padding 0
-            display table-cell
-            vertical-align middle
+            /*display table-cell*/
+            /*vertical-align middle*/
             .image
               height 100%
 

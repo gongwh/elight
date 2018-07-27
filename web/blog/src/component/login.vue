@@ -128,6 +128,19 @@
           callback()
         }
       }
+      const usernameValidate = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9]+([a-zA-Z0-9_\u4e00-\u9fa5])*[a-zA-Z0-9\u4e00-\u9fa5]+$/
+        // let reg = /^[a-zA-Z0-9]+^[A-Za-z0-9\u4e00-\u9fa5]+$/
+        if (!value || value === '') {
+          callback(new Error('请输入用户名'))
+        } else if (value.length < 3 || value.length > 20) {
+          callback(new Error('长度在3至20个字符'))
+        } else if (!reg.test(value)) {
+          callback(new Error('请以数字字母开头,不以下划线结尾'))
+        } else {
+          callback()
+        }
+      }
       return {
         loginForm: {
           username: '',
@@ -153,8 +166,9 @@
             {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur'}
           ],
           username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'},
-            {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+            // {required: true, message: '请输入用户名', trigger: 'blur'},
+            // {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+            {validator: usernameValidate, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}

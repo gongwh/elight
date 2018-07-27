@@ -22,7 +22,7 @@ const actions = {
     return articlesApi.loadArticlePage(undefined, page, size).then(
       (result) => {
         console.log('加载文章列表成功', result.data)
-        commit(UPDATE_ARTICLES_PAGE, result.data.data, result.data.pagination)
+        commit(UPDATE_ARTICLES_PAGE, result.data)
       },
       (e) => {
         console.log('加载文章列表失败', e)
@@ -34,7 +34,7 @@ const actions = {
     return articlesApi.loadArticleSearchPage(undefined, content, page, size).then(
       (result) => {
         console.log('搜索文章列表成功', result.data)
-        commit(UPDATE_ARTICLES_SEARCH_PAGE, result.data.data, result.data.pagination)
+        commit(UPDATE_ARTICLES_SEARCH_PAGE, result.data)
       },
       (e) => {
         console.log('搜索文章列表失败', e)
@@ -45,13 +45,14 @@ const actions = {
 
 // mutations
 const mutations = {
-  UPDATE_ARTICLES_PAGE (state, articles, pagination) {
-    state.articles = articles
-    state.pagination = pagination
+  UPDATE_ARTICLES_PAGE (state, data) {
+    state.articles = data.data
+    state.pagination = data.pagination
   },
-  UPDATE_ARTICLES_SEARCH_PAGE (state, articles, pagination) {
-    state.articlesSearch = articles
-    state.paginationSearch = pagination
+  UPDATE_ARTICLES_SEARCH_PAGE (state, data) {
+    console.log('UPDATE_ARTICLES_SEARCH_PAGE ', data.data, data.pagination)
+    state.articlesSearch = data.data
+    state.paginationSearch = data.pagination
   },
   CLEAR_ARTICLES_SEARCH_RESULT (state) {
     state.articlesSearch = null
@@ -60,7 +61,6 @@ const mutations = {
 }
 
 // getters
-
 const getters = {
   articlesNum (state) {
     if (state.articles === null) {
@@ -73,7 +73,14 @@ const getters = {
     if (state.articlesSearch === null) {
       return 0
     } else {
-      return state.paginationSearch.length
+      return state.articlesSearch.length
+    }
+  },
+  articlesTotalNumSearch (state) {
+    if (state.paginationSearch === null) {
+      return 0
+    } else {
+      return state.paginationSearch.totalElements
     }
   }
 }

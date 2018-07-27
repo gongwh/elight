@@ -1,8 +1,5 @@
 <template>
     <div class="articles">
-      <!--<span>ARTICLE</span>-->
-      <!--<router-link to="/article">article</router-link>-->
-      <!--<router-link to="/articles">articles</router-link>-->
       <router-view></router-view>
     </div>
 </template>

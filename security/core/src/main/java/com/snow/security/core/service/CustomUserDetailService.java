@@ -19,13 +19,16 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public User loadUserByUsername(String email)
+    public User loadUserByUsername(String usernameOrEmail)
             throws UsernameNotFoundException {
 
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(usernameOrEmail);
         if (user == null) {
-            throw new UsernameNotFoundException(
-                    "No user found with username: " + email);
+            user = userRepository.findByUsername(usernameOrEmail);
+            if (user == null) {
+                throw new UsernameNotFoundException(
+                        "No user found with username: " + usernameOrEmail);
+            }
         }
         return user;
     }
