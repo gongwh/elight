@@ -47,7 +47,7 @@
       max-width 200px
       .el-input__inner
         border-radius 18px
-        height 38px
+        height 36px
         background-color #61b4da00
         border-color #c4c4c4
         &:focus

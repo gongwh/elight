@@ -57,6 +57,10 @@ const mutations = {
   CLEAR_ARTICLES_SEARCH_RESULT (state) {
     state.articlesSearch = null
     state.paginationSearch = {}
+  },
+  SET_ARTICLES_SEARCH_INPUT (state, searchInput) {
+    console.log('SET_ARTICLES_SEARCH_INPUT', searchInput)
+    state.stateSearchInput = searchInput
   }
 }
 

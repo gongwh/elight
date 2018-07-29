@@ -54,9 +54,9 @@
   .content
     padding-top 42px
     min-height: calc(100vh - 50px)
-    *
-      color rgba(0, 0, 0, 1)
-      font-family "Raleway", Arial, Helvetica, sans-serif
+    //*
+    //  color rgba(0, 0, 0, 1)
+    //  font-family "Raleway", Arial, Helvetica, sans-serif
 
   .push
     height 100px

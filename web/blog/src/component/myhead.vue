@@ -107,7 +107,7 @@
       height 42px
       .title-inner
         height 30px
-        width 80%
+        width 90%
         line-height 30px
         margin auto
         padding-top 6px
@@ -125,7 +125,7 @@
           font-size 18px
           text-align center
           .navigation_block
-            width 100px
+            width 80px
             cursor pointer
             overflow hidden
           .normal

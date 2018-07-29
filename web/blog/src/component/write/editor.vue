@@ -5,6 +5,7 @@
       <mavon-editor ref=md :toolbars="toolbars"
                     v-model="draftTemp.contentMd"
                     :placeholder="begin"
+                    :externalLink="externalLink"
                     @imgAdd="l_imgAdd"
                     @imgDel="l_imgDel"
                     @save="e_save" @change="e_change">
@@ -68,14 +69,16 @@
           subfield: true, // 单双栏模式
           preview: true // 预览
         },
-        external_link: {
-          hljs_css: function (css) {
-            // 这是你的代码高亮配色文件路径
-            return 'https://cdn.bootcss.com/highlight.js/9.12.0/styles/' + css + '.min.css'
-          }
+        externalLink: {
+          // hljs_css: function (css) {
+          //   // 这是你的代码高亮配色文件路径
+          //   // return 'https://cdn.bootcss.com/highlight.js/9.12.0/styles/' + css + '.min.css'
+          //   return '../../common/highlight/styles/github.css'
+          // }
+          hljs_css: false,
+          markdown_css: false
         },
-        isLoading: true,
-        isLoading2: true
+        isLoading: true
       }
     },
     computed: {
@@ -275,7 +278,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-
+  @import 'mavon-editor/dist/css/index.css'
   .editor
     height 700px
 
@@ -292,4 +295,5 @@
     padding-top 0
   .v-note-wrapper
     background none
+    min-height 700px
 </style>
