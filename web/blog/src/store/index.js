@@ -7,18 +7,27 @@ import article from './article'
 import write from './write'
 import auth from './auth'
 import user from './user'
+
 Vue.use(Vuex)
 
 const state = {
   topButtonsProps: [
-    {index: 0, isDisplay: true, path: '/', displayName: 'Home', style: 'normal'},
-    {index: 1, isDisplay: true, path: '/write', displayName: 'Write', style: 'normal'},
+    {index: 0, isDisplay: true, path: '/', displayName: 'Home', tip: 'Home', style: 'normal'},
+    {index: 1, isDisplay: true, path: '/write', displayName: 'Write', tip: 'begin write', style: 'normal'},
     {index: 2, isDisplay: false, path: '/write/publish', displayName: 'Publish', style: 'normal'},
-    {index: 3, isDisplay: false, path: '/write/editor', displayName: 'Unsaved', style: 'normal', query: {save: true}},
-    {index: 4, isDisplay: false, path: '/write/editor', displayName: 'Abandon', style: 'normal', query: {abandon: true}},
-    {index: 5, isDisplay: false, path: '/write/editor', displayName: 'Edit', style: 'normal', query: {}},
-    {index: 6, isDisplay: false, path: '/article', displayName: 'Delete', style: 'normal', query: {delete: true}},
-    {index: 7, isDisplay: false, path: '/article', displayName: 'Reading', style: 'reading'}
+    {index: 3, isDisplay: false, path: '/write/editor', displayName: 'Unsaved', tip: 'save draft', style: 'normal', query: {save: true}},
+    {
+      index: 4,
+      isDisplay: false,
+      path: '/write/editor',
+      displayName: 'Abandon',
+      tip: 'abandon this draft',
+      style: 'normal',
+      query: {abandon: true}
+    },
+    {index: 5, isDisplay: false, path: '/write/editor', displayName: 'Edit', tip: 'edit this article', style: 'normal', query: {}},
+    {index: 6, isDisplay: false, path: '/article', displayName: 'Delete', tip: 'delete this article', style: 'normal', query: {delete: true}},
+    {index: 7, isDisplay: false, path: '/article', displayName: 'Reading', tip: 'latest read', style: 'reading'}
   ]
 }
 

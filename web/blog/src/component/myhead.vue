@@ -8,20 +8,26 @@
     <div class="my_head" @scroll="l_onScroll">
       <div class="title">
         <div class="title-inner">
-          <div class="me">
+          <snow-tooltip content="login out">
+            <div class="me">
               <span id="navigation_block_username" @click="e_openDeleteDialog">
                 {{username}}
               </span>
-          </div>
+            </div>
+          </snow-tooltip>
           <div class="navigation">
-            <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
-                 v-for="(prop,index) in topButtonsProps" :id="l_generateNavigationBlockId(index)">
-              {{prop.displayName}}
+            <div v-for="(prop,index) in topButtonsProps">
+              <snow-tooltip :content="prop.tip">
+                <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
+                     :id="l_generateNavigationBlockId(index)">
+                  {{prop.displayName}}
+                </div>
+              </snow-tooltip>
             </div>
           </div>
         </div>
       </div>
-      <img @click="NavigateToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top"/>
+      <img @click="NavigateToTop" src="./3d-up-arrow.png" class="back_to_top" alt="top" />
     </div>
   </div>
 </template>
@@ -128,6 +134,7 @@
             width 80px
             cursor pointer
             overflow hidden
+            display block
           .normal
             font-weight 300
           .reading

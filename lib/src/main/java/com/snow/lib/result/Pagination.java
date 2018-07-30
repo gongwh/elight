@@ -12,6 +12,6 @@ public class Pagination {
     private int totalPages;         // 所有页数
     private long totalElements;     // 所有个数
     private int size;               // 每页大小
-    private int number;             // 当前页数
+    private int pageNumber;             // 当前页数
     private int numberOfElements;   // 当前页数量
 }

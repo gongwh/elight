@@ -15,7 +15,7 @@ public class PageUtil {
         Pagination pagination = new Pagination();
         pagination.setFirst(page.isFirst());
         pagination.setLast(page.isLast());
-        pagination.setNumber(page.getNumber());
+        pagination.setPageNumber(page.getNumber());
         pagination.setNumberOfElements(page.getNumberOfElements());
         pagination.setSize(page.getSize());
         pagination.setTotalPages(page.getTotalPages());

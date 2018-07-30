@@ -11,15 +11,16 @@ const UPDATE_ARTICLES_SEARCH_PAGE = 'UPDATE_ARTICLES_SEARCH_PAGE'
 const state = {
   // 一定要记得设置默认值，可以用来再 mapState的时候保留占位符，否则mapState时候发现没有定义会map失败。
   articles: null,
-  pagination: {},
+  pagination: null,
   articlesSearch: null,
-  paginationSearch: {}
+  paginationSearch: null
 }
 
 // actions
 const actions = {
-  async loadArticlePage ({commit}, page, size) {
-    return articlesApi.loadArticlePage(undefined, page, size).then(
+  async loadArticlePage ({commit}, {page, size}) {
+    console.log('loadArticlePage', page, size)
+    return articlesApi.loadArticlePage({userId: undefined, page, size}).then(
       (result) => {
         console.log('加载文章列表成功', result.data)
         commit(UPDATE_ARTICLES_PAGE, result.data)
@@ -46,17 +47,24 @@ const actions = {
 // mutations
 const mutations = {
   UPDATE_ARTICLES_PAGE (state, data) {
-    state.articles = data.data
+    if (state.articles) {
+      state.articles.push(...data.data)
+    } else {
+      state.articles = data.data
+    }
     state.pagination = data.pagination
   },
   UPDATE_ARTICLES_SEARCH_PAGE (state, data) {
-    console.log('UPDATE_ARTICLES_SEARCH_PAGE ', data.data, data.pagination)
-    state.articlesSearch = data.data
+    if (state.articlesSearch) {
+      state.articlesSearch.push(...data.data)
+    } else {
+      state.articlesSearch = data.data
+    }
     state.paginationSearch = data.pagination
   },
   CLEAR_ARTICLES_SEARCH_RESULT (state) {
     state.articlesSearch = null
-    state.paginationSearch = {}
+    state.paginationSearch = null
   },
   SET_ARTICLES_SEARCH_INPUT (state, searchInput) {
     console.log('SET_ARTICLES_SEARCH_INPUT', searchInput)

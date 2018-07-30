@@ -287,12 +287,16 @@
 
   .v-note-op
     position fixed
+
   .v-note-edit
     background white
+
   .v-note-panel
     top 40px
+
   .editor_wrapper
     padding-top 0
+
   .v-note-wrapper
     background none
     min-height 700px

@@ -6,17 +6,19 @@ import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import highlight from 'highlight.js'
-// import 'highlight.js/styles/github.css'
 import './common/highlight/styles/github.css'
-import './common/stylus/md.styl'
+import './common/stylus/md.css'
 import commonUtil from '@/util/common'
 import snowDialog from '@/component/common/snowDialog'
 import snowUpload from '@/component/common/snowUpload'
 import snowInput from '@/component/common/snowInput'
+import snowTooltip from '@/component/common/snowTooltip'
 
 import store from '@/store'
 import router from '@/router'
 import globalConfig from '@/config'
+
+import './common/main.css'
 
 Vue.use(elementUI)
 Vue.use(mavonEditor)
@@ -25,6 +27,7 @@ Vue.use(VueVisible)
 Vue.use(snowDialog)
 Vue.use(snowUpload)
 Vue.use(snowInput)
+Vue.use(snowTooltip)
 
 Vue.use(commonUtil)
 Vue.config.productionTip = false
@@ -42,7 +45,7 @@ Vue.directive('highlight', function (el) {
 const vm = new Vue({
   router,
   store,
-  components: {App, snowDialog, snowUpload, snowInput},
+  components: {App, snowDialog, snowUpload, snowInput, snowTooltip},
   template: '<App/>'
 })
 vm.$mount('#app')

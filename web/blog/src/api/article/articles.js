@@ -3,7 +3,7 @@
  */
 import http from '@/api/util/http'
 
-export const loadArticlePage = (userId, page, size) => {
+export const loadArticlePage = ({userId, page, size}) => {
   console.log('loadArticlePage 参数', userId, page, size)
   return http.get('/article/page', {userId: userId, page: page, size: size})
 }

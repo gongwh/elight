@@ -39,10 +39,8 @@
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
            v-for="article in articlesSearch">
-        <div class="image-wrapper"  v-if="article.titleImgUrl">
+        <div class="image-wrapper" v-if="article.titleImgUrl">
           <div class="image-wrapper-inner">
-            <!--<img v-if="article.titleImgUrl" :src="fileBase+article.titleImgUrl"/>-->
-            <!--<img v-if="!article.titleImgUrl" :src="fileBase + defaultImgPath"/>-->
             <div class="bg-img"
                  :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
           </div>
@@ -76,7 +74,8 @@
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
         searchInput: '',
-        searchResultShow: false
+        searchResultShow: false,
+        noArticleNotifyTimes: 0
       }
     },
     components: {show},
@@ -84,9 +83,11 @@
       ...mapState(['articles']),
       ...mapState(['articlesSearch']),
       ...mapState(['stateSearchInput']),
+      ...mapState(['pagination']),
       ...mapGetters(['articlesNum']),
       ...mapGetters(['articlesNumSearch']),
       ...mapGetters(['articlesTotalNumSearch']),
+      ...mapGetters(['paginationSearch']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -118,12 +119,42 @@
     methods: {
       ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
       ...mapMutations(['CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_INPUT']),
+      l_scrollLoadArticlePage () {
+        const that = this
+        console.log('scrolling')
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+        if (scrollTop + windowHeight >= scrollHeight) {
+          that.l_loadArticlePage()
+        }
+      },
       l_loadArticlePage () {
-        this.loadArticlePage().then(
-          () => {
-            this.updateClasses()
+        console.log('加载文章', this.pagination)
+        if (!this.pagination) {
+          this.loadArticlePage({page: 0, size: 10}).then(
+            () => {
+              this.updateClasses()
+            }
+          )
+        } else if (!this.pagination.last) {
+          this.loadArticlePage({page: (this.pagination.pageNumber + 1), size: 10}).then(
+            () => {
+              this.updateClasses()
+            }
+          )
+        } else {
+          if (this.noArticleNotifyTimes >= 3) {
+            this.$notify.info({
+              title: '加载文章',
+              message: '没有更多文章了',
+              offset: 70
+            })
+            this.noArticleNotifyTimes = 0
+          } else {
+            this.noArticleNotifyTimes++
           }
-        )
+        }
       },
       e_searchArticle () {
         if (this.searchInput && this.searchInput !== '') {
@@ -147,14 +178,14 @@
           console.log('检测到中屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
           this.articlesAppendNum = 0
-          this.classes.articleAppend = 'articleMiddle'
+          this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerBetween'
           this.classes.descAppend = 'descLineClamp4'
         } else {
           console.log('检测到小屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
           this.articlesAppendNum = 0
-          this.classes.articleAppend = 'articleLarge'
+          this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerCenter'
           this.classes.descAppend = 'descLineClamp8'
         }
@@ -174,13 +205,18 @@
     },
     mounted () {
       const that = this
-      window.onresize = () => {
+      window.addEventListener('resize', function () {
         that.screenWidth = `${document.documentElement.clientWidth}`
         that.updateClasses()
-      }
-      window.onload = () => {
+      })
+      window.addEventListener('load', function () {
         that.screenWidth = `${document.documentElement.clientWidth}`
-      }
+      })
+      window.addEventListener('scroll', that.l_scrollLoadArticlePage)
+    },
+    destroyed () {
+      const that = this
+      window.removeEventListener('scroll', that.l_scrollLoadArticlePage)
     }
   }
 </script>
@@ -195,11 +231,12 @@
       display flex
       margin auto
       padding-top 50px
-      width 85%
+      width 95%
       text-align center
       flex-direction row
       flex-wrap wrap
       .article
+        cursor pointer
         display block
         margin 30px 10px
         border-radius 6px
@@ -229,16 +266,16 @@
         &:hover
           box-shadow: 0 0 30px #cacaca
         .miniContent
-          margin 25px 20px 10px 20px
+          margin 15px 10px 10px 10px
           padding 0
           text-align center
           .title
-            font-size 23px
+            font-size 15px
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
           .date
-            margin 10px 0
+            margin 5px 0
             font-size 15px
           .desc
             color rgba(0, 0, 0, 0.7)
@@ -249,9 +286,9 @@
           .descLineClamp3
             -webkit-line-clamp 3
           .descLineClamp4
-            -webkit-line-clamp 4
+            -webkit-line-clamp 3
           .descLineClamp8
-            -webkit-line-clamp 8
+            -webkit-line-clamp 3
 
   .articleLarge
     width 500px
@@ -262,12 +299,15 @@
     height 420px
 
   .articleSmall
-    width 320px
-    height 380px
+    width 220px
+    height 280px
+
   .articlesFlexStart
     justify-content center
+
   .articlesInnerCenter
     justify-content center
+
   .articlesInnerBetween
     justify-content center
 </style>
