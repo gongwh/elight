@@ -4,8 +4,8 @@
     <!--<img ref="showImg" :src="this.fileBase + this.backgroundUrl"/>-->
     <div class="show-bg" :style="{'background-image': 'url(' + this.fileBase + this.backgroundUrl + ')'} "></div>
     <div class="show-inner" >
-        <div class="title"><span>{{title}}</span></div>
-      <div class="detail"><span>{{detail}}</span></div>
+        <div class="title"><span v-html="title"></span></div>
+      <div class="detail"><span v-html="detail"></span></div>
       <slot></slot>
     </div>
   </div>
@@ -27,7 +27,10 @@
       detail: {
         type: String,
         require: true,
-        default: 'All Izz well.'
+        default: 'To see the world, things dangerous to come to.' +
+          '<br/>To see behind walls, to draw closer.' +
+          '<br/>To find each other and to feel.' +
+          '<br/>That is the purpose of life.'
       }
     },
     created () {

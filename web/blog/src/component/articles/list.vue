@@ -74,6 +74,7 @@
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
         searchInput: '',
+        searchInputLatest: '',
         searchResultShow: false,
         noArticleNotifyTimes: 0
       }
@@ -158,11 +159,15 @@
       },
       e_searchArticle () {
         if (this.searchInput && this.searchInput !== '') {
-          this.loadArticleSearchPage('%' + this.searchInput + '%').then(
-            () => {
-              this.searchResultShow = true
-            }
-          )
+          if (this.searchInputLatest !== this.searchInput) {
+            this.CLEAR_ARTICLES_SEARCH_RESULT()
+            this.loadArticleSearchPage('%' + this.searchInput + '%').then(
+              () => {
+                this.searchResultShow = true
+                this.searchInputLatest = this.searchInput
+              }
+            )
+          }
         }
       },
       updateClasses () {
