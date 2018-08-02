@@ -300,4 +300,11 @@
   .v-note-wrapper
     background none
     min-height 700px
+
+  .v-note-edit
+    margin 20px 5px 10px 10px
+
+  .content-input-wrapper
+    margin 0
+    padding 0
 </style>

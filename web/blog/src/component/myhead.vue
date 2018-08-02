@@ -81,10 +81,7 @@
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-  *
-    color rgba(0, 0, 0, 1)
 
-  /*font-family Georgia*/
   a:link {
     text-decoration: none;
   }

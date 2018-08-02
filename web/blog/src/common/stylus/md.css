@@ -2,25 +2,26 @@
   display: inline;
 }
 
-.markdown-body strong {
-  font-weight: normal;
-}
-
-.markdown-body italic {
-  font-weight: normal;
-  color: #95f;
-}
-
-.markdown-body body {
-  font-size: 15px;
-  padding: 30px;
+.markdown-body p {
+  font-family: Georgia, "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif
 }
 
 .markdown-body pre .hljs {
-  font-family: Menlo, Monaco, Consolas, monospace;
-  border-left: 2px solid #e8e8e8;
-  margin-left: 2px;
+  font-family: Consolas, "Courier New", monospace;
+  border-radius: 8px;
+  background-color: #f5f7f1;
 }
+
+.markdown-body pre {
+   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+   border-left: 3px solid #d8d8d8;
+   border-radius: 10px;
+   margin-left: 2px;
+   font-size: 16px;
+   line-height: 150%;
+ }
+
+
 
 .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
   word-break: break-all !important;

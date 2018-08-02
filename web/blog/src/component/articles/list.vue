@@ -1,5 +1,5 @@
 <template>
-  <div id="articles" class="articles">
+  <div id="articles" class="articles" @wheel="l_scrollLoadArticlePage">
     <show>
       <snow-input @keyup.enter.native="e_searchArticle"
                   placeholder="输入回车以开始搜索"
@@ -76,7 +76,7 @@
         searchInput: '',
         searchInputLatest: '',
         searchResultShow: false,
-        noArticleNotifyTimes: 0
+        noArticleNotifyTimes: 10
       }
     },
     components: {show},
@@ -120,41 +120,45 @@
     methods: {
       ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
       ...mapMutations(['CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_INPUT']),
-      l_scrollLoadArticlePage () {
+      l_scrollLoadArticlePage (e) {
+        // console.log('滚轮滚动事件', 'deltaY', e.deltaY)
         const that = this
-        console.log('scrolling')
         let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
         let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        if (scrollTop + windowHeight >= scrollHeight) {
-          that.l_loadArticlePage()
+        if (scrollTop + windowHeight >= scrollHeight && e.deltaY > 0) {
+          // that.l_loadArticlePage()
+          if (this.noArticleNotifyTimes >= 15) {
+            this.noArticleNotifyTimes = 0
+            // console.log('到底了要加载')
+            that.l_loadArticlePage()
+          } else {
+            // console.log('到底了不加载')
+            this.noArticleNotifyTimes++
+          }
         }
       },
       l_loadArticlePage () {
-        console.log('加载文章', this.pagination)
         if (!this.pagination) {
+          // console.log('首次加载文章', this.pagination)
           this.loadArticlePage({page: 0, size: 10}).then(
             () => {
               this.updateClasses()
             }
           )
         } else if (!this.pagination.last) {
+          // console.log('加载文章', this.pagination)
           this.loadArticlePage({page: (this.pagination.pageNumber + 1), size: 10}).then(
             () => {
               this.updateClasses()
             }
           )
         } else {
-          if (this.noArticleNotifyTimes >= 3) {
-            this.$notify.info({
-              title: '加载文章',
-              message: '没有更多文章了',
-              offset: 70
-            })
-            this.noArticleNotifyTimes = 0
-          } else {
-            this.noArticleNotifyTimes++
-          }
+          this.$notify.info({
+            title: '加载文章',
+            message: '没有更多文章了',
+            offset: 70
+          })
         }
       },
       e_searchArticle () {
@@ -217,11 +221,11 @@
       window.addEventListener('load', function () {
         that.screenWidth = `${document.documentElement.clientWidth}`
       })
-      window.addEventListener('scroll', that.l_scrollLoadArticlePage)
+      // window.addEventListener('scroll', that.l_scrollLoadArticlePage)
     },
     destroyed () {
-      const that = this
-      window.removeEventListener('scroll', that.l_scrollLoadArticlePage)
+      // const that = this
+      // window.removeEventListener('scroll', that.l_scrollLoadArticlePage)
     }
   }
 </script>
