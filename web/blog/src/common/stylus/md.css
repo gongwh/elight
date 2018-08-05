@@ -3,27 +3,39 @@
 }
 
 .markdown-body p {
-  font-family: Georgia, "Xin Gothic", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif
+  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+}
+
+.markdown-body code {
+  margin: 3px;
+  padding: 2px 4px;
+  background-color: #f6f6f6;
+  vertical-align: middle;
+  border-radius: 3px;
+  border: none;
+  color: #c7254e;
+  font-size: 12px;
+  white-space: pre-wrap;
 }
 
 .markdown-body pre .hljs {
-  font-family: Consolas, "Courier New", monospace;
-  border-radius: 8px;
-  background-color: #f5f7f1;
+  font-family: Menlo,Monaco,Consolas,Courier New,monospace;
+  border-radius: 7px;
+  background-color: #ffffff;
+  font-size: 13px;
 }
 
 .markdown-body pre {
    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-   border-left: 3px solid #d8d8d8;
-   border-radius: 10px;
+   border-left: 2px solid #3e4053;
+   border-radius: 7px;
    margin-left: 2px;
    font-size: 16px;
    line-height: 150%;
  }
 
 
-
-.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+.markdown-body h1, h2, h3, h4, h5, h6 {
   word-break: break-all !important;
   margin: 20px 0;
   line-height: 1.2;
@@ -145,7 +157,7 @@
   border-radius: 3px;
 }
 
-.markdown_my2 h1, .markdown_my2 h2, .markdown_my2 h3, .markdown_my2 h4, .markdown_my2 h5, .markdown_my2 h6 {
+.markdown_my2 h1, h2, h3, h4,  h5, h6 {
   word-break: break-all !important;
   margin: 20px 0;
   line-height: 1.2;

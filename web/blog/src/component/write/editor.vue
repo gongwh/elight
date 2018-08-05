@@ -1,7 +1,6 @@
 <template>
   <div class="editor">
     <div class="editor_wrapper" v-loading="isLoading">
-      <div class="title"></div>
       <mavon-editor ref=md :toolbars="toolbars"
                     v-model="draftTemp.contentMd"
                     :placeholder="begin"
@@ -14,7 +13,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6" scoped>
+<script type="text/ecmascript-6">
   import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
 
@@ -279,8 +278,17 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import 'mavon-editor/dist/css/index.css'
+</style>
+
+<style lang="stylus" rel="stylesheet/stylus">
   .editor
-    height 700px
+    // ::-webkit-scrollbar {display:unset}
+    height 800px
+    .editor_wrapper
+      padding-top 0
+      height 100%
+      .v-note-wrapper
+        height 100%
 
   .v-note-help-wrapper .v-note-help-content
     margin 60px auto
@@ -294,17 +302,18 @@
   .v-note-panel
     top 40px
 
-  .editor_wrapper
-    padding-top 0
 
   .v-note-wrapper
     background none
-    min-height 700px
+    // min-height 700px
+    margin unset
+    padding unset
 
-  .v-note-edit
-    margin 20px 5px 10px 10px
-
-  .content-input-wrapper
-    margin 0
-    padding 0
+  .v-note-wrapper .v-note-panel .v-note-edit.divarea-wrapper .content-input-wrapper
+    -moz-box-sizing border-box /*Firefox3.5+*/
+    -webkit-box-sizing border-box /*Safari3.2+*/
+    -o-box-sizing border-box /*Opera9.6*/
+    -ms-box-sizing border-box /*IE8*/
+    box-sizing border-box
+    margin-top 18px
 </style>

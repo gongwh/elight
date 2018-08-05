@@ -28,6 +28,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class CoreConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private SecurityProperties securityProperties;
+
+    @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Autowired
@@ -55,6 +58,7 @@ public class CoreConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/auth/**", "/user/registration","/file/**").permitAll()
+                .antMatchers(securityProperties.getPermitAnts()).permitAll()
                 .anyRequest().authenticated();
 
         // 表单认证

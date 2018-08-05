@@ -197,6 +197,7 @@
     margin-top 30px
 
   .article
+    //::-webkit-scrollbar {display:unset}
     .article_wrapper
       width 100%
       margin auto
@@ -209,7 +210,8 @@
         font-family "Lora", serif
         margin 10px 0
       .article_body
-        width 60%
+        width 40%
+        min-width 800px
         margin 30px auto
 
   @media (max-width: 767px) {

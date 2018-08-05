@@ -232,6 +232,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
+    font-family "Arial","Microsoft YaHei","黑体","宋体",sans-serif
     .search-result-show
       font-size 14px
       color #626262

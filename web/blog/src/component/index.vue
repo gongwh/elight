@@ -20,44 +20,58 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  img
-    width 100%
 
-  a:link {
-    text-decoration: none;
-  }
+  @import '../common/highlight/styles/github.css'
+  @import '../common/stylus/md'
 
-  a:active {
-    text-decoration: none
-  }
+  html, body
+    margin 0
+    /*padding 0*/
+    /*background-color #f7f7f7*/
+    // ::-webkit-scrollbar {display:none}
+  .el-message
+    z-index 5000
 
-  a:hover {
-    text-decoration: none;
-  }
+  .index
+    background-color #e6e6e6
+    img
+      width 100%
 
-  a:visited {
-    text-decoration: none;
-  }
+    a:link {
+      text-decoration: none;
+    }
 
-  .fade-enter-active
-    transition: all 0.5s ease
+    a:active {
+      text-decoration: none
+    }
 
-  .fade-leave-active
-    transition: all 0s ease
+    a:hover {
+      text-decoration: none;
+    }
 
-  .fade-enter
-    opacity: 0
+    a:visited {
+      text-decoration: none;
+    }
 
-  .fade-leave-active
-    opacity: 0
+    .fade-enter-active
+      transition: all 0.5s ease
 
-  .content
-    padding-top 42px
-    min-height: calc(100vh - 50px)
-    //*
-    //  color rgba(0, 0, 0, 1)
-    //  font-family "Raleway", Arial, Helvetica, sans-serif
+    .fade-leave-active
+      transition: all 0s ease
 
-  .push
-    height 100px
+    .fade-enter
+      opacity: 0
+
+    .fade-leave-active
+      opacity: 0
+
+    .content
+      padding-top 42px
+      min-height: calc(100vh - 50px)
+      //*
+      //  color rgba(0, 0, 0, 1)
+      //  font-family "Raleway", Arial, Helvetica, sans-serif
+
+    .push
+      height 100px
 </style>

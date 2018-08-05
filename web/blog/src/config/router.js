@@ -8,8 +8,18 @@ export default {
     if (window.localStorage.getItem('authorization')) {
       // console.log('页面刷新' + 'localStorage, authorization 为' + window.localStorage.getItem('authorization'))
       store.commit('auth/SET_AUTHORIZATION', window.localStorage.getItem('authorization'))
+    }
+    if (window.localStorage.getItem('userId')) {
+      // console.log('页面刷新' + 'localStorage, authorization 为' + window.localStorage.getItem('authorization'))
       store.commit('auth/SET_USER_ID', window.localStorage.getItem('userId'))
+    } else {
+      store.commit('auth/SET_USER_ID', '')
+    }
+    if (window.localStorage.getItem('username')) {
+      // console.log('页面刷新' + 'localStorage, authorization 为' + window.localStorage.getItem('authorization'))
       store.commit('auth/SET_USERNAME', window.localStorage.getItem('username'))
+    } else {
+      store.commit('auth/SET_USERNAME', 'gongwenhua')
     }
     if (router && store) {
       router.beforeEach((to, from, next) => {

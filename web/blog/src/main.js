@@ -6,8 +6,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import highlight from 'highlight.js'
-import './common/highlight/styles/github.css'
-import './common/stylus/md.css'
 import commonUtil from '@/util/common'
 import snowDialog from '@/component/common/snowDialog'
 import snowUpload from '@/component/common/snowUpload'
@@ -17,8 +15,6 @@ import snowTooltip from '@/component/common/snowTooltip'
 import store from '@/store'
 import router from '@/router'
 import globalConfig from '@/config'
-
-import './common/main.css'
 
 Vue.use(elementUI)
 Vue.use(mavonEditor)

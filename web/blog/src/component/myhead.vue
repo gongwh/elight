@@ -99,6 +99,7 @@
   }
 
   .my_head
+    // background-image linear-gradient(120deg,#155799,#159957)
     width 100%
     position fixed
     background-color rgba(230, 230, 230, 1)

@@ -41,7 +41,7 @@ public class ArticleController {
         return ResultVOUtil.page(page);
     }
 
-    // 获取所有文章-分页
+    // 搜索所有文章-分页
     @GetMapping("/page/search")
     public ResultVO getArticleSearchPage(
             String userId,

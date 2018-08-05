@@ -17,7 +17,7 @@
       title: {
         type: String,
         require: true,
-        default: 'You'
+        default: ''
       },
       backgroundUrl: {
         type: String,
@@ -27,10 +27,9 @@
       detail: {
         type: String,
         require: true,
-        default: 'To see the world, things dangerous to come to.' +
-          '<br/>To see behind walls, to draw closer.' +
-          '<br/>To find each other and to feel.' +
-          '<br/>That is the purpose of life.'
+        default: 'To see the world, things dangerous to come to' +
+          '<br/>To see behind walls, to draw closer' +
+          '<br/>To find each other and to feel'
       }
     },
     created () {
@@ -67,6 +66,7 @@
         font-weight 600
       .detail
         font-size 18px
+        font-family "Arial","Microsoft YaHei","黑体","宋体",sans-serif
     .show-bg
       background-size cover
       background-repeat no-repeat
