@@ -2,10 +2,10 @@
   <div class="article" id="article">
     <div class="article_wrapper">
       <snowDialog :visible.sync='deleteDialogVisible' :position="delDialogPosition">
-        <div>确认删除?</div>
+        <div>are you sure ?</div>
         <div class="dialog_content">
-          <el-button type="primary" @click="l_cancelDelete">取 消</el-button>
-          <el-button type="primary" @click="l_confirmDelete">确 定</el-button>
+          <el-button type="primary" @click="l_cancelDelete">cancel</el-button>
+          <el-button type="primary" @click="l_confirmDelete">sure</el-button>
         </div>
       </snowDialog>
       <show :title="articleTemp.title" :detail="articleTemp.updateTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
@@ -193,15 +193,10 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
 
-  .dialog_content
-    margin-top 30px
-
   .article
-    //::-webkit-scrollbar {display:unset}
     .article_wrapper
       width 100%
       margin auto
-      /*margin-top 40px*/
       min-height 500px
       .title
         font-size 23px

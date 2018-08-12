@@ -2,13 +2,13 @@
   <div>
     <snow-dialog :visible.sync='profileDialogVisible' :position="profileDialogPosition">
       <div class="dialog_content">
-        <el-button type="primary" @click="e_login">登陆</el-button>
+        <el-button type="primary" @click="e_login">login</el-button>
       </div>
     </snow-dialog>
     <div class="my_head" @scroll="l_onScroll">
       <div class="title">
         <div class="title-inner">
-          <snow-tooltip content="login out">
+          <snow-tooltip content="login in">
             <div class="me">
               <span id="navigation_block_username" @click="e_openDeleteDialog">
                 {{`${username? username: defaultUserName}`}}

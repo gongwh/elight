@@ -2,10 +2,10 @@
   <div class="publish">
     <div class="publish_inner">
       <div class="input_area">
-        <el-input placeholder="请输文章标题" v-model="draftTemp.title">
+        <el-input placeholder="article title" v-model="draftTemp.title">
           <template slot="prepend">Title</template>
         </el-input>
-        <el-input placeholder="以英文逗号分割" v-model="tags" :disabled="true">
+        <el-input placeholder="split by ','" v-model="tags" :disabled="true">
           <template slot="prepend">Tags</template>
         </el-input>
         <div>
@@ -19,7 +19,7 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </div>
-        <el-button @click="l_publish">发布<i class="el-icon-upload el-icon--right"></i></el-button>
+        <el-button @click="l_publish">publish<i class="el-icon-upload el-icon--right"></i></el-button>
       </div>
     </div>
   </div>

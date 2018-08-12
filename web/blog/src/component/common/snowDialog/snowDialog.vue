@@ -86,7 +86,6 @@
     left 0
     overflow auto
     margin 0
-    // background-color rgba(0,0,0,0.2)
     .snow_dialog
       font-size 0
       position fixed

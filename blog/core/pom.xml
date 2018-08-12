@@ -74,16 +74,20 @@
 
     <build>
         <plugins>
+                <!--打包时将依赖的内容也进行打包-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>repackage</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <configuration>
+                    <excludeGroupIds>com.snow,com.snow.security</excludeGroupIds>
+                </configuration>
             </plugin>
         </plugins>
     </build>

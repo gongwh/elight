@@ -27,9 +27,10 @@
       detail: {
         type: String,
         require: true,
-        default: 'To see the world, things dangerous to come to' +
-          '<br/>To see behind walls, to draw closer' +
-          '<br/>To find each other and to feel'
+        // default: 'To see the world, things dangerous to come to' +
+        //   '<br/>To see behind walls, to draw closer' +
+        //   '<br/>To find each other and to feel'
+        default: ''
       }
     },
     created () {
@@ -51,7 +52,7 @@
   .show
     display table
     position relative
-    height 300px
+    height 250px
     width 100%
     .show-inner
       display table-cell
@@ -75,7 +76,7 @@
       width 100%
       filter blur(15px)
       opacity 0.3
-      height 300px
+      height 250px
       margin: auto
       z-index 1
       overflow hidden

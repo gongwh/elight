@@ -2,6 +2,7 @@
  * Created by SNOW on 2018.07.19
  */
 import auth from '@/api/auth'
+import base from '@/config/base'
 
 const SET_AUTHORIZATION = 'SET_AUTHORIZATION'
 const SET_USER_ID = 'SET_USER_ID'
@@ -9,8 +10,10 @@ const SET_USERNAME = 'SET_USERNAME'
 
 // state
 const state = {
-  defaultUserId: 'bfc2efcb-ef2b-46e7-9787-e8b6f2099152',
-  defaultUserName: 'SNOW'
+  // defaultUserId: 'bfc2efcb-ef2b-46e7-9787-e8b6f2099152', // notebook pc
+  defaultUserId: 'efa43353-91b1-4b0f-9204-3172d79e4f22', //  server
+  // defaultUserId: '80fd5968-95dc-4ebe-84e4-dc684583a52c', //  pc
+  defaultUserName: 'Elight'
 }
 
 // actions

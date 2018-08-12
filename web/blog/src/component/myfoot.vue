@@ -1,7 +1,9 @@
 <template>
   <div class="snow_foot_wrapper">
     <div class="snow_foot">
-       <a class="git-me"  href='https://github.com/GongWenHua' target="_blank">SNOW</a>
+      <a href='https://gitee.com/gongwh' target="_blank">SNOW</a>
+      <br/>
+      <br/>
        <a href="http://www.miitbeian.gov.cn/" target="_blank">晋ICP备18008339号</a>
     </div>
   </div>
@@ -27,13 +29,14 @@
     height 50px
     font-size 10px
     .snow_foot
+      a:link, a:visited
+        color #000000
+      a:hover
+        color #000da3
       height 10px
       display table-cell
       vertical-align middle
       line-height 10px
-      .git-me
-        cursor pointer
-        font-weight 800
       img
         display inline-block
         margin 0 20px 0 5px

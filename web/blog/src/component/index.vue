@@ -21,21 +21,15 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
 
-  @import '../common/highlight/styles/github.css'
+  @import '../common/highlight/styles/atom-one-dark.css'
   @import '../common/stylus/md'
-
   html, body
     margin 0
-    /*padding 0*/
-    /*background-color #f7f7f7*/
-    // ::-webkit-scrollbar {display:none}
   .el-message
     z-index 5000
 
   .index
-    background-color #e6e6e6
-    img
-      width 100%
+    background-color #e6e6e682
 
     a:link {
       text-decoration: none;

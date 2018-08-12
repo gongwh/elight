@@ -113,17 +113,26 @@
       l_imgDel (pos) {
         delete this.imgFile[pos]
       },
-      l_uploadImg () {
-        if (Object.keys(this.imgFile).length !== 0) {
-          upDown.upload(this.imgFile).then(
-            (data) => {
-              for (let i in data) {
-                delete this.imgFile[i]
-                this.$refs.md.$img2Url(i, this.fileBase + '' + data[i])
+      async l_uploadImg () {
+        const that = this
+        return new Promise(
+          function (resolve, reject) {
+            console.log('准备上传图片')
+            upDown.upload(that.imgFile).then(
+              (data) => {
+                console.log('上传成功', data)
+                for (let i in data) {
+                  delete that.imgFile[i]
+                  that.$refs.md.$img2Url(i, that.fileBase + '' + data[i])
+                }
+                resolve(true)
+              },
+              () => {
+                reject(false)
               }
-            }
-          )
-        }
+            )
+          }
+        )
       },
       l_loadEditor () {
         console.log('编辑器 route', this.$route)
@@ -185,15 +194,22 @@
         }
       },
       l_saveDraft () {
+        console.log('文章是否要不存？')
         if (!this.sync && this.draftTemp) {
           try {
-            this.l_uploadImg()
-            this.saveDraft(this.draftTemp)
+            if (Object.keys(this.imgFile).length !== 0) {
+              this.l_uploadImg().then(() => {
+                console.log('准备保存草稿')
+                this.saveDraft(this.draftTemp)
+              })
+            } else {
+              this.saveDraft(this.draftTemp)
+            }
           } catch (err) {
             this.$notify.error({
               title: '草稿保存',
               message: '保存失败',
-              offset: 30
+              offset: 70
             })
           }
         }
@@ -282,7 +298,6 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .editor
-    // ::-webkit-scrollbar {display:unset}
     height 800px
     .editor_wrapper
       padding-top 0
@@ -290,7 +305,7 @@
       .v-note-wrapper
         height 100%
 
-  .v-note-help-wrapper .v-note-help-content
+  .v-note-help-content
     margin 60px auto
 
   .v-note-op
@@ -301,7 +316,6 @@
 
   .v-note-panel
     top 40px
-
 
   .v-note-wrapper
     background none

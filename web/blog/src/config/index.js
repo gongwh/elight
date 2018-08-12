@@ -1,7 +1,7 @@
 /**
  * Created by SNOW on 2018.03.09.
  */
-require('./http')
+require('./axios')
 import base from './base'
 import routerConfig from './router'
 

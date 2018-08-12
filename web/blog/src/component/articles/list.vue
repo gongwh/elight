@@ -109,12 +109,14 @@
       'isSearch' (val, oldVal) {
         if (!val) {
           this.searchResultShow = false
-          this.CLEAR_ARTICLES_SEARCH_RESULT()
         }
         console.log('刷新搜索状态')
         this.updateClasses()
       },
       'searchInput' (val, oldVal) {
+        if (val !== null) {
+          this.searchResultShow = val === this.searchInputLatest
+        }
         this.SET_ARTICLES_SEARCH_INPUT(val)
       }
     },
@@ -167,11 +169,8 @@
         if (this.searchInput && this.searchInput !== '') {
           if (this.searchInputLatest !== this.searchInput) {
             this.CLEAR_ARTICLES_SEARCH_RESULT()
-            let userId
-            if (!this.userId) {
-              userId = this.defaultUserId
-            }
-            this.loadArticleSearchPage({userId, content: '%' + this.searchInput + '%'}).then(
+            let userId = this.userId ? this.userId : this.defaultUserId
+            this.loadArticleSearchPage({userId: userId, content: '%' + this.searchInput + '%'}).then(
               () => {
                 this.searchResultShow = true
                 this.searchInputLatest = this.searchInput
@@ -257,7 +256,7 @@
         margin 30px 10px
         border-radius 6px
         box-shadow 1px 1px 3px #dddddd
-        background-color rgba(255, 255, 255, 0.9)
+        background-color #f4f4f4fa
         overflow hidden
         .image-wrapper
           height 100%
@@ -267,12 +266,9 @@
           overflow hidden
           vertical-align middle
           text-align center
-          /*display table*/
           .image-wrapper-inner
             padding 0
             height 100%
-            /*display table-cell*/
-            /*vertical-align middle*/
             .bg-img
               height 100%
               padding unset

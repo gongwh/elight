@@ -7,7 +7,7 @@ import store from '../store'
 import router from '../router'
 
 axios.defaults.baseURL = base.serviceUrl
-axios.defaults.fileUrl = base.fileUrl
+axios.defaults.fileUrl = base.fileBase
 axios.defaults.headers['Content-Type'] = 'application/json'
 
 // http request 拦截器
