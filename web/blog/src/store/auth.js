@@ -9,6 +9,8 @@ const SET_USERNAME = 'SET_USERNAME'
 
 // state
 const state = {
+  defaultUserId: 'bfc2efcb-ef2b-46e7-9787-e8b6f2099152',
+  defaultUserName: 'SNOW'
 }
 
 // actions
@@ -62,6 +64,9 @@ const mutations = {
 
 // getters
 const getters = {
+  alreadyAuth (state) {
+    return state.authorization && state.authorization.length > 0
+  }
 }
 
 export default {

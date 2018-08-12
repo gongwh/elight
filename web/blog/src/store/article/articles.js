@@ -18,9 +18,9 @@ const state = {
 
 // actions
 const actions = {
-  async loadArticlePage ({commit}, {page, size}) {
-    console.log('loadArticlePage', page, size)
-    return articlesApi.loadArticlePage({userId: undefined, page, size}).then(
+  async loadArticlePage ({commit}, {userId, page, size}) {
+    console.log('loadArticlePage', userId, page, size)
+    return articlesApi.loadArticlePage({userId, page, size}).then(
       (result) => {
         console.log('加载文章列表成功', result.data)
         commit(UPDATE_ARTICLES_PAGE, result.data)
@@ -30,9 +30,9 @@ const actions = {
       }
     )
   },
-  async loadArticleSearchPage ({commit}, content, page, size) {
+  async loadArticleSearchPage ({commit}, {userId, content, page, size}) {
     console.log('搜索文章列表参数', content, page, size)
-    return articlesApi.loadArticleSearchPage(undefined, content, page, size).then(
+    return articlesApi.loadArticleSearchPage(userId, content, page, size).then(
       (result) => {
         console.log('搜索文章列表成功', result.data)
         commit(UPDATE_ARTICLES_SEARCH_PAGE, result.data)

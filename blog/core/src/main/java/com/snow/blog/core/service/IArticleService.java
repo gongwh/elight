@@ -21,7 +21,7 @@ public interface IArticleService {
     Article saveArticle(Article article,String userId);
 
     // 删
-    void deleteArticle(Article article,String userId);
+    void deleteArticle(Article article);
 
     Page<Article> getArticleSearchPage(String targetUserId,String currentUserId,String content,Pageable pageable);
 }

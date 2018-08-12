@@ -1,24 +1,25 @@
 <template>
   <div>
-    <snowDialog :visible.sync='profileDialogVisible' :position="profileDialogPosition">
+    <snow-dialog :visible.sync='profileDialogVisible' :position="profileDialogPosition">
       <div class="dialog_content">
-        <el-button type="primary" @click="e_login">重新登陆</el-button>
+        <el-button type="primary" @click="e_login">登陆</el-button>
       </div>
-    </snowDialog>
+    </snow-dialog>
     <div class="my_head" @scroll="l_onScroll">
       <div class="title">
         <div class="title-inner">
           <snow-tooltip content="login out">
             <div class="me">
               <span id="navigation_block_username" @click="e_openDeleteDialog">
-                {{username}}
+                {{`${username? username: defaultUserName}`}}
               </span>
             </div>
           </snow-tooltip>
           <div class="navigation">
             <div v-for="(prop,index) in topButtonsProps">
               <snow-tooltip :content="prop.tip">
-                <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style" v-visible="prop.isDisplay"
+                <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style"
+                     v-visible="prop.needAuth? (alreadyAuth() && prop.isDisplay):prop.isDisplay"
                      :id="l_generateNavigationBlockId(index)">
                   {{prop.displayName}}
                 </div>
@@ -33,7 +34,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapMutations, mapState} from 'vuex'
+  import {mapGetters, mapMutations, mapState} from 'vuex'
 
   export default {
     data () {
@@ -44,10 +45,11 @@
     },
     computed: {
       ...mapState(['topButtonsProps']),
-      ...mapState('auth', ['username'])
+      ...mapState('auth', ['defaultUserName', 'username'])
     },
     methods: {
       ...mapMutations(['SET_BUTTON_STATE']),
+      ...mapGetters('auth', ['alreadyAuth']),
       e_login () {
         this.$router.push({path: '/login'})
       },

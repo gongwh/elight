@@ -46,7 +46,7 @@ public class ArticleService implements IArticleService {
 
     @Override
     public Article getArticleById(String articleId, String userId) {
-        Article article = articleRepository.findByArticleIdAndUserIdAndEnabledIsTrue(articleId, userId);
+        Article article = articleRepository.findByArticleIdAndEnabledIsTrue(articleId);
         if (article.getPersonal() && !StringUtils.equals(article.getUserId(), userId)) {
             throw new AccessDeniedException("私有文章，无法访问");
         }
@@ -74,8 +74,8 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public void deleteArticle(Article article, String userId) {
-        Article result = articleRepository.findByArticleIdAndUserIdAndEnabledIsTrue(article.getArticleId(), userId);
+    public void deleteArticle(Article article) {
+        Article result = articleRepository.findByArticleIdAndEnabledIsTrue(article.getArticleId());
         if (null != result) {
             result.setEnabled(false);
             result = articleRepository.save(result);

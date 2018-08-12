@@ -34,13 +34,13 @@
       return {}
     },
     watch: {
-      visible: function (isOpen) {
-        if (isOpen) {
-          document.documentElement.style.overflow = 'hidden'
-        } else {
-          document.documentElement.style.overflow = 'auto'
-        }
-      }
+      // visible: function (isOpen) {
+      //   if (isOpen) {
+      //     // document.documentElement.style.overflow = 'hidden'
+      //   } else {
+      //     document.documentElement.style.overflow = 'auto'
+      //   }
+      // }
     },
     computed: {
       style: function () {

@@ -58,9 +58,7 @@
 
 <script type="text/ecmascript-6">
   import show from '@/component/show'
-  import {createNamespacedHelpers} from 'vuex'
-
-  const {mapState, mapGetters, mapMutations, mapActions} = createNamespacedHelpers('article/articles')
+  import {mapActions, mapGetters, mapMutations, mapState} from 'vuex'
 
   export default {
     data () {
@@ -81,14 +79,17 @@
     },
     components: {show},
     computed: {
-      ...mapState(['articles']),
-      ...mapState(['articlesSearch']),
-      ...mapState(['stateSearchInput']),
-      ...mapState(['pagination']),
-      ...mapGetters(['articlesNum']),
-      ...mapGetters(['articlesNumSearch']),
-      ...mapGetters(['articlesTotalNumSearch']),
-      ...mapGetters(['paginationSearch']),
+      ...mapState('article/articles', ['articles']),
+      ...mapState('article/articles', ['articlesSearch']),
+      ...mapState('article/articles', ['stateSearchInput']),
+      ...mapState('article/articles', ['pagination']),
+
+      ...mapGetters('article/articles', ['articlesNum']),
+      ...mapGetters('article/articles', ['articlesNumSearch']),
+      ...mapGetters('article/articles', ['articlesTotalNumSearch']),
+      ...mapGetters('article/articles', ['paginationSearch']),
+
+      ...mapState('auth', ['userId', 'defaultUserId']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -118,8 +119,8 @@
       }
     },
     methods: {
-      ...mapActions(['loadArticlePage', 'loadArticleSearchPage']),
-      ...mapMutations(['CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_INPUT']),
+      ...mapActions('article/articles', ['loadArticlePage', 'loadArticleSearchPage']),
+      ...mapMutations('article/articles', ['CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_INPUT']),
       l_scrollLoadArticlePage (e) {
         // console.log('滚轮滚动事件', 'deltaY', e.deltaY)
         const that = this
@@ -139,16 +140,17 @@
         }
       },
       l_loadArticlePage () {
+        let userId = this.userId ? this.userId : this.defaultUserId
         if (!this.pagination) {
           // console.log('首次加载文章', this.pagination)
-          this.loadArticlePage({page: 0, size: 10}).then(
+          this.loadArticlePage({userId: userId, page: 0, size: 10}).then(
             () => {
               this.updateClasses()
             }
           )
         } else if (!this.pagination.last) {
           // console.log('加载文章', this.pagination)
-          this.loadArticlePage({page: (this.pagination.pageNumber + 1), size: 10}).then(
+          this.loadArticlePage({userId: userId, page: (this.pagination.pageNumber + 1), size: 10}).then(
             () => {
               this.updateClasses()
             }
@@ -165,7 +167,11 @@
         if (this.searchInput && this.searchInput !== '') {
           if (this.searchInputLatest !== this.searchInput) {
             this.CLEAR_ARTICLES_SEARCH_RESULT()
-            this.loadArticleSearchPage('%' + this.searchInput + '%').then(
+            let userId
+            if (!this.userId) {
+              userId = this.defaultUserId
+            }
+            this.loadArticleSearchPage({userId, content: '%' + this.searchInput + '%'}).then(
               () => {
                 this.searchResultShow = true
                 this.searchInputLatest = this.searchInput
@@ -232,7 +238,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
-    font-family "Arial","Microsoft YaHei","黑体","宋体",sans-serif
+    font-family "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif
     .search-result-show
       font-size 14px
       color #626262
