@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
   get: (url, params = {}) => {
-    console.log('AXIOS GET', params)
+    // console.log('AXIOS GET', params)
     return axios.get(url, {params: params}).then(response => {
       return response
     }).catch(err => {
@@ -31,7 +31,7 @@ export default {
     })
   },
   delete: (url, _data) => {
-    console.log('删除操作,url=' + url + 'data=', _data)
+    // console.log('删除操作,url=' + url + 'data=', _data)
     return axios.delete(url, {data: _data}).then(response => {
       return response
     }).catch(err => {

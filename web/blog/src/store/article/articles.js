@@ -13,32 +13,34 @@ const state = {
   articles: null,
   pagination: null,
   articlesSearch: null,
-  paginationSearch: null
+  paginationSearch: null,
+  stateSearchContent: {searchInput: '', selectedTagNamesSet: new Set()}
 }
 
 // actions
 const actions = {
+
   async loadArticlePage ({commit}, {userId, page, size}) {
-    console.log('loadArticlePage', userId, page, size)
+    // console.log('loadArticlePage', userId, page, size)
     return articlesApi.loadArticlePage({userId, page, size}).then(
       (result) => {
-        console.log('加载文章列表成功', result.data)
+        // console.log('加载文章列表成功', result.data)
         commit(UPDATE_ARTICLES_PAGE, result.data)
       },
       (e) => {
-        console.log('加载文章列表失败', e)
+        // console.log('加载文章列表失败', e)
       }
     )
   },
-  async loadArticleSearchPage ({commit}, {userId, content, page, size}) {
-    console.log('搜索文章列表参数', content, page, size)
-    return articlesApi.loadArticleSearchPage(userId, content, page, size).then(
+  async searchArticles ({commit}, {userId, title, tagNames, page, size}) {
+    // console.log('搜索文章列表参数', content, page, size)
+    return articlesApi.loadArticleSearchPage(userId, title, tagNames, page, size).then(
       (result) => {
-        console.log('搜索文章列表成功', result.data)
+        // console.log('搜索文章列表成功', result.data)
         commit(UPDATE_ARTICLES_SEARCH_PAGE, result.data)
       },
       (e) => {
-        console.log('搜索文章列表失败', e)
+        // console.log('搜索文章列表失败', e)
       }
     )
   }
@@ -62,13 +64,16 @@ const mutations = {
     }
     state.paginationSearch = data.pagination
   },
+  CLEAR_ARTICLES_RESULT (state) {
+    state.articles = null
+    state.pagination = null
+  },
   CLEAR_ARTICLES_SEARCH_RESULT (state) {
     state.articlesSearch = null
     state.paginationSearch = null
   },
-  SET_ARTICLES_SEARCH_INPUT (state, searchInput) {
-    console.log('SET_ARTICLES_SEARCH_INPUT', searchInput)
-    state.stateSearchInput = searchInput
+  SET_ARTICLES_SEARCH_CONTENT (state, content) {
+    state.stateSearchContent = content
   }
 }
 

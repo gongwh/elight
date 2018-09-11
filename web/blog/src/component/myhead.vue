@@ -19,7 +19,7 @@
             <div v-for="(prop,index) in topButtonsProps">
               <snow-tooltip :content="prop.tip">
                 <div class="navigation_block" @click=l_pushRout(prop) :class="prop.style"
-                     v-visible="prop.needAuth? (alreadyAuth() && prop.isDisplay):prop.isDisplay"
+                     v-visible="prop.isDisplay"
                      :id="l_generateNavigationBlockId(index)">
                   {{prop.displayName}}
                 </div>
@@ -65,11 +65,11 @@
         return 'navigation_block_' + index
       },
       l_pushRout (_prop) {
-        console.log('准备跳转', _prop)
+        // console.log('准备跳转', _prop)
         this.$router.push(_prop)
       },
       l_onScroll () {
-        console.log('监测到scroll')
+        // console.log('监测到scroll')
       }
     },
     watch: {

@@ -1,13 +1,18 @@
 <template>
-  <div id="articles" class="articles" @wheel="l_scrollLoadArticlePage">
+  <div id="articles" class="articles" @wheel="l_scrollLoad">
     <show>
       <snow-input @keyup.enter.native="e_searchArticle"
-                  placeholder="输入回车以开始搜索"
-                  v-model="searchInput">
+                  @focus="e_searchInputFocus"
+                  @blur="e_searchInputBlur"
+                  placeholder=""
+                  v-model="searchContent.searchInput">
       </snow-input>
-      <transition name="el-fade-in-linear">
-        <span class="search-result-show" v-visible="searchResultShow">{{`${articlesTotalNumSearch + (articlesTotalNumSearch>1?' results':' result')}`}}</span>
-      </transition>
+
+      <div class="tags">
+        <snow-tag :name="tag.name" :selected.sync="tag.selected" v-for="tag in tagsTemp" :key="tag.id"
+                  @selected="e_tagSelected(tag)"
+                  @unselected="e_tagUnSelected(tag)"></snow-tag>
+      </div>
     </show>
     <div class="articles-inner"
          :class="classes.articlesInnerAppend"
@@ -18,8 +23,6 @@
            v-for="article in articles">
         <div class="image-wrapper" v-if="article.titleImgUrl">
           <div class="image-wrapper-inner">
-            <!--<img v-if="article.titleImgUrl" :src="fileBase+article.titleImgUrl"/>-->
-            <!--<img v-if="!article.titleImgUrl" :src="fileBase + defaultImgPath"/>-->
             <div class="bg-img"
                  :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
           </div>
@@ -71,25 +74,39 @@
         },
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
-        searchInput: '',
-        searchInputLatest: '',
+        searchContent: null,
+        searchContentLatest: '',
         searchResultShow: false,
-        noArticleNotifyTimes: 10
+        noArticleNotifyTimes: 10,
+        tagsVisible: false,
+        isSearch: false,
+        tagsTemp: []
       }
     },
     components: {show},
     computed: {
+      // all articles
       ...mapState('article/articles', ['articles']),
-      ...mapState('article/articles', ['articlesSearch']),
-      ...mapState('article/articles', ['stateSearchInput']),
       ...mapState('article/articles', ['pagination']),
-
       ...mapGetters('article/articles', ['articlesNum']),
+
+      // search articles
+      ...mapState('article/articles', ['stateSearchContent']),
+
+      ...mapState('article/articles', ['articlesSearch']),
+      ...mapState('article/articles', ['paginationSearch']),
       ...mapGetters('article/articles', ['articlesNumSearch']),
       ...mapGetters('article/articles', ['articlesTotalNumSearch']),
-      ...mapGetters('article/articles', ['paginationSearch']),
 
+      // tags articles
+      // ...mapState('article/articles', ['articlesTags']),
+      // ...mapState('article/articles', ['paginationTags']),
+
+      // auth
       ...mapState('auth', ['userId', 'defaultUserId']),
+
+      // user tags
+      ...mapState('tag/tag', ['tags']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -99,31 +116,64 @@
             return false
           }
         }
-      },
-      isSearch () {
-        let state = this.searchInput && this.searchInput.length > 0
-        return state
       }
     },
     watch: {
+      'searchContent': {
+        handler () {
+          this.l_tryChangeIsSearch()
+        },
+        deep: true
+      },
       'isSearch' (val, oldVal) {
         if (!val) {
           this.searchResultShow = false
         }
-        console.log('刷新搜索状态')
         this.updateClasses()
-      },
-      'searchInput' (val, oldVal) {
-        if (val !== null) {
-          this.searchResultShow = val === this.searchInputLatest
-        }
-        this.SET_ARTICLES_SEARCH_INPUT(val)
       }
     },
     methods: {
-      ...mapActions('article/articles', ['loadArticlePage', 'loadArticleSearchPage']),
-      ...mapMutations('article/articles', ['CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_INPUT']),
-      l_scrollLoadArticlePage (e) {
+      ...mapActions('article/articles', ['loadArticlePage', 'searchArticles']),
+      ...mapActions('tag/tag', ['loadAllTags']),
+      ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_CONTENT']),
+      l_tryChangeIsSearch () {
+        if (this.searchContent.searchInput.length > 0 || this.searchContent.selectedTagNamesSet.size > 0) {
+          this.isSearch = true
+        } else {
+          this.isSearch = false
+        }
+        this.SET_ARTICLES_SEARCH_CONTENT(this.searchContent)
+      },
+      l_trySearch () {
+        this.l_tryChangeIsSearch()
+        if (this.isSearch) {
+          console.log('发起搜索')
+          this.l_searchArticlePage()
+        }
+      },
+      e_tagSelected (tag) {
+        tag.selected = true
+        this.searchContent.selectedTagNamesSet.add(tag.name)
+        this.CLEAR_ARTICLES_SEARCH_RESULT()
+        this.l_trySearch()
+      },
+      e_tagUnSelected (tag) {
+        tag.selected = false
+        this.searchContent.selectedTagNamesSet.delete(tag.name)
+        this.CLEAR_ARTICLES_SEARCH_RESULT()
+        this.l_trySearch()
+      },
+      l_loadAllTags () {
+        let userId = this.userId ? this.userId : this.defaultUserId
+        this.loadAllTags({userId: userId})
+      },
+      e_searchInputFocus () {
+        this.tagsVisible = true
+      },
+      e_searchInputBlur () {
+        this.tagsVisible = false
+      },
+      l_scrollLoad (e) {
         // console.log('滚轮滚动事件', 'deltaY', e.deltaY)
         const that = this
         let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
@@ -131,10 +181,14 @@
         let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
         if (scrollTop + windowHeight >= scrollHeight && e.deltaY > 0) {
           // that.l_loadArticlePage()
-          if (this.noArticleNotifyTimes >= 15) {
+          if (this.noArticleNotifyTimes >= 6) {
             this.noArticleNotifyTimes = 0
             // console.log('到底了要加载')
-            that.l_loadArticlePage()
+            if (!this.isSearch) {
+              that.l_loadArticlePage()
+            } else {
+              that.l_searchArticlePage()
+            }
           } else {
             // console.log('到底了不加载')
             this.noArticleNotifyTimes++
@@ -150,7 +204,7 @@
               this.updateClasses()
             }
           )
-        } else if (!this.pagination.last) {
+        } else if (!this.pagination.last || this.manualFlush) {
           // console.log('加载文章', this.pagination)
           this.loadArticlePage({userId: userId, page: (this.pagination.pageNumber + 1), size: 10}).then(
             () => {
@@ -161,61 +215,123 @@
           this.$notify.info({
             title: '加载文章',
             message: '没有更多文章了',
-            offset: 70
+            offset: 80
+          })
+        }
+      },
+      l_searchArticlePage () {
+        let userId = this.userId ? this.userId : this.defaultUserId
+        // 搜索旧输入内容
+        if (!this.paginationSearch) {
+          // 搜索首页
+          this.searchArticles({
+            userId: userId,
+            title: this.searchContent.searchInput,
+            tagNames: this.searchContent.selectedTagNamesSet,
+            page: 0,
+            size: 10
+          }).then(
+            () => {
+              this.searchResultShow = true
+              this.updateClasses()
+            }
+          )
+        } else if (!this.paginationSearch.last) {
+          // 搜索下一页
+          this.searchArticles({
+            userId: userId,
+            title: this.searchContent.searchInput,
+            tagNames: this.searchContent.selectedTagNamesSet,
+            page: (this.paginationSearch.pageNumber + 1),
+            size: 10
+          }).then(
+            () => {
+              this.updateClasses()
+            }
+          )
+        } else {
+          this.$notify.info({
+            title: '搜索文章',
+            message: '没有更多文章了',
+            offset: 80
           })
         }
       },
       e_searchArticle () {
-        if (this.searchInput && this.searchInput !== '') {
-          if (this.searchInputLatest !== this.searchInput) {
+        if (this.isSearch) {
+          // 判断是否需要搜索新内容
+          let userId = this.userId ? this.userId : this.defaultUserId
+          if (JSON.stringify(this.searchContentLatest) !== JSON.stringify(this.searchContent)) {
+            // 搜索新输入内容的首页
             this.CLEAR_ARTICLES_SEARCH_RESULT()
-            let userId = this.userId ? this.userId : this.defaultUserId
-            this.loadArticleSearchPage({userId: userId, content: '%' + this.searchInput + '%'}).then(
+            this.searchArticles({
+              userId: userId,
+              title: this.searchContent.searchInput,
+              tagNames: this.searchContent.selectedTagNamesSet,
+              page: 0,
+              size: 10
+            }).then(
               () => {
                 this.searchResultShow = true
-                this.searchInputLatest = this.searchInput
+                this.searchContentLatest = this.searchContent
+                this.updateClasses()
               }
             )
+          } else {
+            this.l_searchArticlePage()
           }
+        } else {
+          console.log('不是搜索状态')
         }
       },
       updateClasses () {
-        console.log('刷新文章列表样式', this.isSearch ? '搜索中' : '正常显示中', this.isSearch ? this.articlesNumSearch : this.articlesNum)
+        // console.log('刷新文章列表样式', this.isSearch ? '搜索中' : '正常显示中', this.isSearch ? this.articlesNumSearch : this.articlesNum)
         if (this.screenWidth > 1428) {
-          console.log('检测到大屏')
+          // console.log('检测到大屏')
           // this.articlesAppendNum = 3 - (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 3
           this.articlesAppendNum = 0
           this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesFlexStart'
           this.classes.descAppend = 'descLineClamp3'
         } else if (this.screenWidth > 958) {
-          console.log('检测到中屏')
+          // console.log('检测到中屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
           this.articlesAppendNum = 0
           this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerBetween'
           this.classes.descAppend = 'descLineClamp4'
         } else {
-          console.log('检测到小屏')
+          // console.log('检测到小屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
           this.articlesAppendNum = 0
           this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerCenter'
           this.classes.descAppend = 'descLineClamp8'
         }
-        console.log('articlesAppendNum', this.articlesAppendNum)
+        // console.log('articlesAppendNum', this.articlesAppendNum)
       },
       l_openArticle (_articleId) {
         this.$router.push({path: `/article/${_articleId}`})
       }
     },
     created () {
-      this.searchInput = this.stateSearchInput
+      this.searchContent = this.stateSearchContent
+      this.tagsTemp = this.tags
+      this.tagsTemp.forEach(tag => {
+        if (this.searchContent.selectedTagNamesSet.has(tag.name)) {
+          tag.selected = true
+        } else {
+          tag.selected = false
+        }
+      })
       if (this.manualFlush || this.articles === null) {
-        console.log('刷新文章列表')
+        // console.log('刷新文章列表')
+        this.CLEAR_ARTICLES_RESULT()
         this.l_loadArticlePage()
       }
       this.updateClasses()
+      this.l_loadAllTags()
+      this.l_trySearch()
     },
     mounted () {
       const that = this
@@ -226,11 +342,17 @@
       window.addEventListener('load', function () {
         that.screenWidth = `${document.documentElement.clientWidth}`
       })
-      // window.addEventListener('scroll', that.l_scrollLoadArticlePage)
+      // window.addEventListener('scroll', that.l_scrollLoad)
     },
     destroyed () {
       // const that = this
-      // window.removeEventListener('scroll', that.l_scrollLoadArticlePage)
+      // window.removeEventListener('scroll', that.l_scrollLoad)
+    },
+    beforeRouteUpdate (to, from, next) {
+      console.log('query刷新', to.query)
+      if (to.query.tagName) {
+        // this.searchInput = to.query.tagName
+      }
     }
   }
 </script>
@@ -238,6 +360,8 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
     font-family "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif
+    .tags
+      margin-top 14px
     .search-result-show
       font-size 14px
       color #626262

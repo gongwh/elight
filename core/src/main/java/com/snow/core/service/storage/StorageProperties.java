@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "storage")
+@ConfigurationProperties(prefix = "snow.storage")
 public class StorageProperties {
-    private String uploadDir = "/temp";
+    private String uploadDir = "/file";
 }

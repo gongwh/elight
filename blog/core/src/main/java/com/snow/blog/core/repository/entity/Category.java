@@ -1,6 +1,6 @@
 package com.snow.blog.core.repository.entity;
 
-import com.snow.lib.entity.EntityBase;
+import com.snow.lib.repository.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @DynamicInsert
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Category extends EntityBase {
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

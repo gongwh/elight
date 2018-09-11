@@ -7,8 +7,8 @@ import articleList from '@/component/articles/list'
 export default {
   path: '/articles',
   component: ARTICLES,
+  redirect: '/articles/list',
   children: [
-    { path: '', redirect: 'list' },
     {
       path: 'list',
       component: articleList,

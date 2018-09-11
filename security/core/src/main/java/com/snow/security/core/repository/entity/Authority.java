@@ -1,11 +1,10 @@
 package com.snow.security.core.repository.entity;
 
-import com.snow.lib.entity.EntityBase;
+import com.snow.lib.repository.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Entity;
@@ -20,9 +19,9 @@ import javax.persistence.Id;
 @DynamicUpdate
 @DynamicInsert
 @NoArgsConstructor
-public class Authority extends EntityBase implements GrantedAuthority {
+public class Authority extends BaseEntity implements GrantedAuthority {
 
-    public Authority(String name){
+    public Authority(String name) {
         this.name = name;
     }
 

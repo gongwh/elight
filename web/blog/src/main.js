@@ -8,9 +8,11 @@ import 'mavon-editor/dist/css/index.css'
 import highlight from 'highlight.js'
 import commonUtil from '@/util/common'
 import snowDialog from '@/component/common/snowDialog'
+import snowHover from '@/component/common/snowHover'
 import snowUpload from '@/component/common/snowUpload'
 import snowInput from '@/component/common/snowInput'
 import snowTooltip from '@/component/common/snowTooltip'
+import snowTag from '@/component/common/snowTag'
 
 import store from '@/store'
 import router from '@/router'
@@ -21,9 +23,11 @@ Vue.use(mavonEditor)
 Vue.use(VueVisible)
 
 Vue.use(snowDialog)
+Vue.use(snowHover)
 Vue.use(snowUpload)
 Vue.use(snowInput)
 Vue.use(snowTooltip)
+Vue.use(snowTag)
 
 Vue.use(commonUtil)
 Vue.config.productionTip = false
@@ -41,7 +45,7 @@ Vue.directive('highlight', function (el) {
 const vm = new Vue({
   router,
   store,
-  components: {App, snowDialog, snowUpload, snowInput, snowTooltip},
+  components: {App},
   template: '<App/>'
 })
 vm.$mount('#app')

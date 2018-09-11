@@ -55,13 +55,13 @@
         this.delDialogPosition.y = 35
       },
       l_loadArticle () {
-        console.log('文章详情路由信息', this.$route)
+        // console.log('文章详情路由信息', this.$route)
         if (!this.article || !this.article.articleId || this.article.articleId !== this.$route.params.articleId) {
           this.loadArticle(this.$route.params.articleId).then(loadOk => {
             if (loadOk) {
               this.NavigateToTop()
               this.articleTemp = this.article
-              console.log('加载文章成功', this.articleTemp)
+              // console.log('加载文章成功', this.articleTemp)
               this.l_updateTopButtonAddEdit()
               this.l_updateTopButtonAddDel()
               document.title = this.articleTemp.title
@@ -89,13 +89,13 @@
             this.$notify.success({
               title: '删除文章',
               message: '成功',
-              offset: 30
+              offset: 80
             })
           } else {
             this.$notify.error({
               title: '删除文章',
               message: '失败',
-              offset: 30
+              offset: 80
             })
           }
         })
@@ -123,7 +123,7 @@
       l_updateTopButtonAddEdit () {
         if (this.article) {
           if (this.article.articleId) {
-            console.log('文章已准备好编辑')
+            // console.log('文章已准备好编辑')
             this.SET_BUTTON_STATE(
               {
                 isDisplay: true,
@@ -184,7 +184,7 @@
     },
     watch: {
       '$route' (to) {
-        console.log('路由监控-article', to)
+        // console.log('路由监控-article', to)
         this.l_loadArticle()
       }
     }

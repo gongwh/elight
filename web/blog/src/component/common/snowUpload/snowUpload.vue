@@ -30,7 +30,7 @@
         }
       },
       l_updateInput () {
-        console.log(!this.file)
+        // console.log(!this.file)
         this.inputShow = !this.file
       },
       l_updateImg () {
@@ -43,7 +43,7 @@
       },
       l_loadFr () {
         const _that = this
-        console.log(_that.fr)
+        // console.log(_that.fr)
         if (!_that.fr.onload) {
           _that.fr.onload = function () {
             _that.$refs.showImg.src = _that.fr.result

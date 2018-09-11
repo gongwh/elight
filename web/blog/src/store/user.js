@@ -15,11 +15,11 @@ const actions = {
   async registration (store, user) {
     return userApi.registration(user).then(
       (res) => {
-        console.log('注册成功', res.data.data)
+        // console.log('注册成功', res.data.data)
         return true
       },
       (e) => {
-        console.log('注册失败', e)
+        // console.log('注册失败', e)
         return false
       }
     )
@@ -27,7 +27,7 @@ const actions = {
   async profile ({commit}) {
     userApi.profile().then(
       (res) => {
-        console.log('用户信息', res)
+        // console.log('用户信息', res)
         commit(UPDATE_PROFILE, res.data.data)
       },
       (e) => {

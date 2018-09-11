@@ -1,5 +1,6 @@
 package com.snow.core;
 
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
@@ -35,19 +36,19 @@ public class FundamentalErrorController implements ErrorController {
         RequestAttributes requestAttributes = new ServletRequestAttributes(request);
         Map<String, Object> errorAttributesData = errorAttributes.getErrorAttributes(requestAttributes, true);
 
-        Integer status = (Integer) errorAttributesData.get("status");
-        String error = (String) errorAttributesData.get("error");
-        String exception = (String) errorAttributesData.get("exception");
-        String path = (String) errorAttributesData.get("path");
+//        Integer status = (Integer) errorAttributesData.get("status");
+//        String error = (String) errorAttributesData.get("error");
+//        String exception = (String) errorAttributesData.get("exception");
+//        String path = (String) errorAttributesData.get("path");
         String message = (String) errorAttributesData.get("message");
 
-        ResultVO resultVO = new ResultVO();
-        resultVO.setStatus(status);
-        resultVO.setError(error);
-        resultVO.setException(exception);
-        resultVO.setPath(path);
-        resultVO.setMessage(message);
-        return resultVO;
+//        ResultVO resultVO = new ResultVO();
+//        resultVO.setStatus(status);
+//        resultVO.setError(error);
+//        resultVO.setException(exception);
+//        resultVO.setPath(path);
+//        resultVO.setMessage(message);
+        return ResultUtil.error(message);
     }
 
 }

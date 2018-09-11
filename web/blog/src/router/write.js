@@ -8,17 +8,16 @@ import publish from '@/component/write/publish'
 export default {
   path: '/write',
   component: WRITE,
+  redirect: '/write/editor',
   meta: {
     requireAuth: true
   },
   children: [
     {
-      path: '', redirect: 'editor'
-    },
-    {
       path: 'editor',
       component: editor,
       meta: {
+        requireAuth: true,
         title: 'Writing...'
       }
     },
@@ -26,6 +25,7 @@ export default {
       path: 'publish',
       component: publish,
       meta: {
+        requireAuth: true,
         title: 'Publishing...'
       }
     }

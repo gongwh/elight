@@ -10,10 +10,8 @@ const SET_USERNAME = 'SET_USERNAME'
 
 // state
 const state = {
-  // defaultUserId: 'bfc2efcb-ef2b-46e7-9787-e8b6f2099152', // notebook pc
-  defaultUserId: 'efa43353-91b1-4b0f-9204-3172d79e4f22', //  server
-  // defaultUserId: '80fd5968-95dc-4ebe-84e4-dc684583a52c', //  pc
-  defaultUserName: 'Elight'
+  defaultUserId: base.defaultUserId, //  server
+  defaultUserName: base.defaultUserName
 }
 
 // actions
@@ -22,7 +20,7 @@ const actions = {
     return auth.login(username, password).then(
       (res) => {
         if (res.headers.authorization) {
-          console.log('登陆成功', res.data.data)
+          // console.log('登陆成功', res.data.data)
           commit(SET_AUTHORIZATION, res.headers.authorization)
           commit(SET_USER_ID, res.data.data.userId)
           commit(SET_USERNAME, res.data.data.username)
@@ -35,7 +33,7 @@ const actions = {
         }
       },
       (e) => {
-        console.log('登陆失败', e)
+        // console.log('登陆失败', e)
         return false
       }
     )
@@ -46,7 +44,7 @@ const actions = {
         commit(SET_AUTHORIZATION, null)
       },
       (e) => {
-        console.log('登出失败', e)
+        // console.log('登出失败', e)
       }
     )
   }

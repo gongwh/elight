@@ -15,7 +15,7 @@ public class ArticleValidator {
                 || StringUtils.isBlank(article.getContentMd())
                 || StringUtils.isBlank(article.getContentHtml())
                 || StringUtils.isBlank(article.getContentText())) {
-            throw new BaseException(-1, "文章不符合条件");
+            throw new BaseException("文章不符合条件");
         }
     }
 

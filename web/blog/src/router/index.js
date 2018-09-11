@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/',
     component: index,
-    redirect: 'articles',
+    redirect: '/articles',
     children: [
       article,
       articles,

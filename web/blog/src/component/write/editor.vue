@@ -9,6 +9,8 @@
                     @imgDel="l_imgDel"
                     @save="e_save" @change="e_change">
       </mavon-editor>
+      <publish :visible.sync="publishDialog"></publish>
+      <!--<publish></publish>-->
     </div>
   </div>
 </template>
@@ -16,23 +18,23 @@
 <script type="text/ecmascript-6">
   import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
+  import publish from './publish'
 
   export default {
+    components: {publish},
     data () {
       return {
         draftTemp: {
           contentMd: '',
           contentHtml: '',
           draftId: null,
-          articleId: null,
-          userId: '123456'
+          articleId: null
         },
         draftSetup: {
           contentMd: '',
           contentHtml: '',
           draftId: null,
-          articleId: null,
-          userId: '123456'
+          articleId: null
         },
         imgFile: {},
         begin: 'Begin ...',
@@ -77,7 +79,8 @@
           hljs_css: false,
           markdown_css: false
         },
-        isLoading: true
+        isLoading: true,
+        publishDialog: false
       }
     },
     computed: {
@@ -94,6 +97,8 @@
     beforeRouteUpdate (to, from, next) {
       if (to.query.abandon) {
         this.l_abandon()
+      } else if (to.query.publish) {
+        this.l_publish()
       } else if (to.query.save) {
         this.l_saveDraft()
       }
@@ -106,6 +111,12 @@
       this.SET_BUTTON_STATE({display: false, index: 3})
       this.SET_BUTTON_STATE({display: false, index: 4})
     },
+    activated () {
+      this.l_autoSave()
+    },
+    deactivated () {
+      this.l_clearAutoSave()
+    },
     methods: {
       l_imgAdd (pos, $file) {
         this.imgFile[pos] = $file
@@ -117,10 +128,10 @@
         const that = this
         return new Promise(
           function (resolve, reject) {
-            console.log('准备上传图片')
+            // console.log('准备上传图片')
             upDown.upload(that.imgFile).then(
               (data) => {
-                console.log('上传成功', data)
+                // console.log('上传成功', data)
                 for (let i in data) {
                   delete that.imgFile[i]
                   that.$refs.md.$img2Url(i, that.fileBase + '' + data[i])
@@ -135,7 +146,7 @@
         )
       },
       l_loadEditor () {
-        console.log('编辑器 route', this.$route)
+        // console.log('编辑器 route', this.$route)
         if (this.$route.query.articleId) {
           this.l_loadEditorByArticle()
         } else {
@@ -145,14 +156,14 @@
       l_loadEditorByNewest () {
         if (!this.draft) {
           this.loadNewestDraft().then((loadOk) => {
-            console.log('加载最新草稿成功', this.draft)
+            // console.log('加载最新草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft
               this.l_updateTopButton()
               this.$notify.info({
                 title: '编辑器',
                 message: '已加载最新草稿',
-                offset: 70
+                offset: 80
               })
             }
             this.isLoading = false
@@ -173,33 +184,36 @@
         //   文章id不为空且id相同       不做任何动作
         //   文章id不为空且id不同       提示已有文章正在编辑
         if (!this.draft || !this.draft.articleId) {
+          // 加载参数指定文章
           this.loadDraftByArticleId(this.$route.query.articleId).then((loadOk) => {
-            console.log('加载文章草稿成功', this.draft)
+            // console.log('加载文章草稿成功', this.draft)
             if (loadOk && this.draft) {
               this.draftTemp = this.draft
               this.isLoading = false
             }
           })
         } else if (this.draft.articleId !== this.$route.query.articleId) {
+          // 加载缓存草稿
           this.draftTemp = this.draft
           this.$notify.warning({
             title: '编辑器',
-            message: '已有文章正在编辑',
-            offset: 70
+            message: '已有别的文章正在编辑',
+            offset: 80
           })
           this.isLoading = false
         } else if (this.draft.articleId === this.$route.query.articleId) {
+          // console.log('该文章正在编辑', this.draft)
           this.draftTemp = this.draft
           this.isLoading = false
         }
       },
       l_saveDraft () {
-        console.log('文章是否要不存？')
+        // console.log('文章是否要不存？')
         if (!this.sync && this.draftTemp) {
           try {
             if (Object.keys(this.imgFile).length !== 0) {
               this.l_uploadImg().then(() => {
-                console.log('准备保存草稿')
+                // console.log('准备保存草稿')
                 this.saveDraft(this.draftTemp)
               })
             } else {
@@ -209,20 +223,21 @@
             this.$notify.error({
               title: '草稿保存',
               message: '保存失败',
-              offset: 70
+              offset: 80
             })
           }
         }
       },
       l_clearEditor () {
-        console.group('准备清空store工作区')
+        this.l_clearAutoSave()
+        // console.group('准备清空store工作区')
         this.clearEditor()
-        console.group('准备清空本地工作区')
+        // console.group('准备清空本地工作区')
         // 清空本地工作区，浅拷贝
         this.draftTemp = this.draftSetup
       },
       l_abandon () {
-        console.group('准备删除服务器草稿')
+        // console.group('准备删除服务器草稿')
         // 删除草稿
         this.deleteDraft(this.draftTemp).then((ok) => {
           if (ok) {
@@ -236,11 +251,15 @@
       },
       l_autoSave () {
         const _this = this
+        this.l_clearAutoSave()
+        _this.autoSave = setTimeout(_this.l_autoSave_cb, 20000, _this)
+      },
+      l_clearAutoSave () {
+        const _this = this
         if (_this.autoSave) {
           clearTimeout(_this.autoSave)
           _this.autoSave = null
         }
-        _this.autoSave = setTimeout(_this.l_autoSave_cb, 20000, _this)
       },
       l_autoSave_cb (_this) {
         _this.l_saveDraft()
@@ -282,6 +301,9 @@
         this.updateSync(false)
         this.l_updateTopButton()
         this.l_autoSave()
+      },
+      l_publish () {
+        this.publishDialog = true
       }
     },
     watch: {

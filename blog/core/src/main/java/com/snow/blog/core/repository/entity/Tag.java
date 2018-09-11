@@ -1,14 +1,17 @@
 package com.snow.blog.core.repository.entity;
 
-import com.snow.lib.entity.EntityBase;
+import com.snow.lib.repository.BaseEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @create by SNOW 2018.07.18
@@ -18,16 +21,21 @@ import javax.persistence.*;
 @Table(name = "tag")
 @DynamicUpdate
 @DynamicInsert
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Tag extends EntityBase {
+@IdClass(TagIdClass.class)
+public class Tag extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String tagId;
-
     private String userId;
 
+    @Id
     private String name;
+
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Tag tag = (Tag) obj;
+        return StringUtils.equals(this.getUserId(), tag.getUserId()) && StringUtils.equals(this.getName(), tag.getName());
+    }
 }

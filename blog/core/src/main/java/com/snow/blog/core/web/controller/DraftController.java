@@ -7,8 +7,8 @@ import com.snow.blog.core.service.IDraftService;
 import com.snow.blog.core.util.validator.ArticleValidator;
 import com.snow.blog.core.util.validator.DraftValidator;
 import com.snow.lib.BeanCopyUtil;
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import com.snow.security.core.repository.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class DraftController {
     public ResultVO getDraftsAll(@PageableDefault(page = 0, size = 10, sort = {"createTime"}, direction = Sort.Direction.DESC) Pageable pageable,
                                  @AuthenticationPrincipal User user) {
         Page<Draft> page = draftService.getDraftPage(user.getUserId(), pageable);
-        return ResultVOUtil.page(page);
+        return ResultUtil.page(page);
     }
 
     // 获取指定用户的最新草稿
@@ -48,7 +48,7 @@ public class DraftController {
     public ResultVO getNewestDraftByUserId(@AuthenticationPrincipal User user) {
         Draft draft = draftService.getNewestDraft(user.getUserId());
         log.debug("加载最新草稿:{}", draft);
-        return ResultVOUtil.success(draft);
+        return ResultUtil.success(draft);
     }
 
     @GetMapping("/article")
@@ -60,7 +60,7 @@ public class DraftController {
         draftNew.setUpdateTime(null);
         Draft draftNewSaveResult = draftService.saveDraft(draftNew, user.getUserId());
         log.debug("加载新的文章为草稿,draftNew:{}", draftNewSaveResult.getArticleId());
-        return ResultVOUtil.success(draftNewSaveResult);
+        return ResultUtil.success(draftNewSaveResult);
     }
 
     // 保存草稿
@@ -68,7 +68,7 @@ public class DraftController {
     public ResultVO saveDraft(@RequestBody Draft draft, @AuthenticationPrincipal User user) {
         DraftValidator.validate(draft);
         Draft result = draftService.saveDraft(draft, user.getUserId());
-        return ResultVOUtil.success(result);
+        return ResultUtil.success(result);
     }
 
     // 删除草稿
@@ -77,6 +77,6 @@ public class DraftController {
         DraftValidator.draftExist(draft);
         draftService.deleteDraft(draft, user.getUserId());
         log.debug("删除草稿,draft:{}", draft.getDraftId());
-        return ResultVOUtil.success();
+        return ResultUtil.success();
     }
 }
