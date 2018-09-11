@@ -1,5 +1,5 @@
 <template>
-  <div class="snow_dialog_wrapper" v-show="visible">
+  <div class="snow_dialog_wrapper" v-show="visible" @click="closeModalWithMouse">
     <div class="snow_dialog" :style="style">
       <div class="snow_cro_left_top"></div>
       <div class="snow_cro_right_top"></div>
@@ -52,11 +52,11 @@
     },
     created () {
       document.addEventListener('keydown', this.closeModalWithEsc)
-      document.addEventListener('mouseup', this.closeModalWithMouse)
+      // document.addEventListener('mouseup', this.closeModalWithMouse)
     },
     destroyed () {
       document.removeEventListener('keydown', this.closeModalWithEsc)
-      document.removeEventListener('mouseup', this.closeModalWithMouse)
+      // document.removeEventListener('mouseup', this.closeModalWithMouse)
     },
     methods: {
       closeModalWithEsc (e) {
