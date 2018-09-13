@@ -41,7 +41,7 @@ Vue.directive('highlight', function (el) {
 const vm = new Vue({
   router,
   store,
-  components: {App, snowDialog, snowUpload, snowInput, snowTooltip},
+  components: {App},
   template: '<App/>'
 })
 vm.$mount('#app')
