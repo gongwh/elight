@@ -1,16 +1,17 @@
 package com.snow.blog.core.web.controller;
 
+import com.snow.blog.core.repository.TagRepository;
 import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.ITagService;
-import com.snow.lib.enums.ResultEnum;
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import com.snow.security.core.repository.entity.User;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -18,24 +19,37 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/tag")
+@Validated
 public class TagController {
 
     @Autowired
     private ITagService tagService;
 
+    @Autowired
+    private TagRepository tagRepository;
+
     @GetMapping
-    public ResultVO getAllTag(@AuthenticationPrincipal User user) {
-        List<Tag> result = tagService.getAllTag(user.getUserId());
-        return ResultVOUtil.success(result);
+    public ResultVO getAllTag(@NotEmpty String userId, @AuthenticationPrincipal User user) {
+        List<Tag> result = tagService.getAllTag(userId, user == null ? null : user.getUserId());
+        return ResultUtil.success(result);
     }
 
     @PostMapping
     public ResultVO saveTag(@RequestBody Tag tag, @AuthenticationPrincipal User user) {
-        Tag result = tagService.saveTag(tag, user.getUserId());
-        if (null != result) {
-            return ResultVOUtil.success(result);
-        } else {
-            return ResultVOUtil.error(ResultEnum.SAVE_ERROR.getCode(), "该标签已存在");
+        if (null == user) {
+            return ResultUtil.unauthorized();
         }
+        Tag result = tagService.saveTag(tag, user.getUserId());
+        return ResultUtil.success(result);
+    }
+
+    @DeleteMapping
+    public ResultVO deleteTag(@RequestBody Tag tag, @AuthenticationPrincipal User user) {
+        if (null == user) {
+            return ResultUtil.unauthorized();
+        }
+        tag.setUserId(user.getUserId());
+        tagRepository.delete(tag);
+        return ResultUtil.success();
     }
 }

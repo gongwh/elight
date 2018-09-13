@@ -1,20 +1,15 @@
 package com.snow.security.core.repository.entity;
 
-import com.snow.lib.entity.EntityBase;
+import com.snow.lib.repository.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dozer.util.CollectionUtils;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.CredentialsContainer;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -25,7 +20,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @Data
-public class User extends EntityBase implements UserDetails, CredentialsContainer {
+public class User extends BaseEntity implements UserDetails, CredentialsContainer {
 
     public User(String username, String password, Collection<Authority> authorities) {
         this(username, password, true, true, true, true, authorities);

@@ -27,13 +27,11 @@ public class UserService implements IUserService {
 
     public User registerNewUserAccount(UserDto userDto) {
         if (emailExist(userDto.getEmail())) {
-            throw new EmailExistsException(-1,
-                    "There is an account with that email address:" + userDto.getEmail());
+            throw new EmailExistsException(userDto.getEmail());
         }
 
         if (usernameExist(userDto.getUsername())) {
-            throw new UsernameExistsException(-1,
-                    "There is an account with that username:" + userDto.getUsername());
+            throw new UsernameExistsException(userDto.getUsername());
         }
         Authority authority = new Authority("USER");
         Set authorities = new HashSet();

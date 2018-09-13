@@ -5,29 +5,39 @@ import com.snow.blog.core.repository.ArticleRepository;
 import com.snow.blog.core.repository.entity.Article;
 import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.IArticleService;
+import com.snow.blog.core.service.ITagService;
 import com.snow.blog.core.util.validator.CommonValidator;
-import com.snow.lib.BeanCopyUtil;
+import com.snow.blog.core.web.controller.support.SearchArticleCondition;
+import com.snow.security.core.exception.AccessDeniedException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by SNOW on 2018.01.25.
  */
 @Service
+@Slf4j
 public class ArticleService implements IArticleService {
+
+    private static final String IMAGE_URL_REGEX = "\\[http(s)?:.+?\\.((jpg)|(jpeg)|(png)|(bmp))\\]";
+
+    private static final String IMAGE_URL_REPLACEMENT = "\n";
 
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
     private BlogProperties blogProperties;
+
+    @Autowired
+    private ITagService tagService;
 
 
     @Override
@@ -47,27 +57,25 @@ public class ArticleService implements IArticleService {
     @Override
     public Article getArticleById(String articleId, String userId) {
         Article article = articleRepository.findByArticleIdAndEnabledIsTrue(articleId);
-        if (article.getPersonal() && !StringUtils.equals(article.getUserId(), userId)) {
+        if (null != article && !StringUtils.equals(article.getUserId(), userId) && article.getPersonal()) {
             throw new AccessDeniedException("私有文章，无法访问");
         }
-        CommonValidator.getOk(article);
-        return BeanCopyUtil.createOnCopy(article, Article.class);
+        return article;
     }
 
     @Override
     public Article saveArticle(Article article, String userId) {
         article.setUserId(userId);
-        Set<Tag> tagSet = article.getTags();
-        if (!CollectionUtils.isEmpty(tagSet)) {
-            tagSet.forEach((tag -> {
-                tag.setUserId(article.getUserId());
-            }));
-        }
-        article.setContentTextSubNail(
-                StringUtils.substring(
-                        article.getContentText(), 0, blogProperties.getArticle().getThumbnailCharNum()
-                )
-        );
+        // 保存标签
+        List<Tag> tags = tagService.saveTag(article.getTags(), userId);
+        article.setTags(tags);
+        // 生成缩略文字
+        String thumbnail = StringUtils.deleteWhitespace(article.getContentText());
+        thumbnail = thumbnail.replaceAll(IMAGE_URL_REGEX, IMAGE_URL_REPLACEMENT);
+        thumbnail = StringUtils.substring(thumbnail, 0, blogProperties.getArticle().getThumbnailCharNum());
+        log.debug("[文章保存] 缩略文字 {}", thumbnail);
+        article.setContentTextSubNail(thumbnail);
+        // 保存
         Article result = articleRepository.save(article);
         CommonValidator.saveOk(result);
         return result;
@@ -75,27 +83,51 @@ public class ArticleService implements IArticleService {
 
     @Override
     public void deleteArticle(Article article) {
-        Article result = articleRepository.findByArticleIdAndEnabledIsTrue(article.getArticleId());
-        if (null != result) {
-            result.setEnabled(false);
-            result = articleRepository.save(result);
+        //        Article result = articleRepository.findByArticleIdAndEnabledIsTrue(article.getArticleId());
+        if (null != article) {
+            //            result.setEnabled(false);
+            articleRepository.delete(article.getArticleId());
         }
-        CommonValidator.delOk(result);
+        //        CommonValidator.delOk(result);
     }
 
     @Override
-    public Page<Article> getArticleSearchPage(String targetUserId,String currentUserId,String content,Pageable pageable) {
-        Page<Article> page;
-        // 判断目标用户ID和当前用户是否相同
-        if (StringUtils.equals(currentUserId, targetUserId)) {
-            // 搜索所有文章
-            page = articleRepository.findByUserIdAndSearchLike(targetUserId, content, pageable);
-        } else {
-            // 搜索非私有文章
-            page = articleRepository.findByUserIdAndPersonalIsFalseSearchLike(targetUserId, content, pageable);
+    public Page<Article> searchArticleByCondition(SearchArticleCondition condition, String currentUserId, Pageable pageable) {
+        boolean notCurrentUser = !StringUtils.equals(currentUserId, condition.getUserId());
+        boolean needTagSearch = !CollectionUtils.isEmpty(condition.getTagNames());
+        boolean needTitleSearch = StringUtils.isNotBlank(condition.getTitle());
+        if (needTitleSearch) {
+            condition.setTitle("%" + condition.getTitle() + "%");
         }
-        return page;
+        if (needTagSearch) {
+            if (needTitleSearch) {
+                if (notCurrentUser) {
+                    return articleRepository.findByUserIdAndTitleLikeAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
+                } else {
+                    return articleRepository.findByUserIdAndTitleLikeAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
+                }
+            } else {
+                if (notCurrentUser) {
+                    return articleRepository.findByUserIdAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTagNames(), pageable);
+                } else {
+                    return articleRepository.findByUserIdAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTagNames(), pageable);
+                }
+            }
+        } else {
+            if (needTitleSearch) {
+                if (notCurrentUser) {
+                    return articleRepository.findByUserIdAndTitleLikeAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
+                } else {
+                    return articleRepository.findByUserIdAndTitleLikeAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
+                }
+            } else {
+                if (notCurrentUser) {
+                    return articleRepository.findByUserIdAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), pageable);
+                } else {
+                    return articleRepository.findByUserIdAndEnabledIsTrue(condition.getUserId(), pageable);
+                }
+            }
+        }
     }
-
 
 }

@@ -5,7 +5,7 @@ function GetElementBottomMiddlePosition (id) {
   const ele = document.getElementById(id)
   if (ele) {
     let rect = ele.getBoundingClientRect()
-    console.log('getElementBottomMiddlePosition rect', rect)
+    // console.log('getElementBottomMiddlePosition rect', rect)
     let _x = rect.left + ele.scrollLeft + rect.width / 2
     let _y = rect.bottom + ele.scrollTop
     return {x: _x, y: _y}
@@ -15,7 +15,7 @@ function GetElementBottomMiddlePosition (id) {
 }
 
 function ImgLoader (url, ready, load, error) {
-  console.log('图片加载方法', url)
+  // console.log('图片加载方法', url)
   let onready
   let width
   let height
@@ -28,7 +28,7 @@ function ImgLoader (url, ready, load, error) {
   if (img.complete) {
     ready && ready.call(img)
     load && load.call(img)
-    console.log('已经加载过该图')
+    // console.log('已经加载过该图')
     return
   }
 
@@ -37,7 +37,7 @@ function ImgLoader (url, ready, load, error) {
 
   // 加载错误后的事件
   img.onerror = function () {
-    console.log('onerror执行')
+    // console.log('onerror执行')
     error && error.call(img)
     onready.end = true
     img = img.onload = img.onerror = null
@@ -50,7 +50,7 @@ function ImgLoader (url, ready, load, error) {
       // 如果图片已经在其他地方加载可使用面积检测
       newWidth * newHeight > 1024
     ) {
-      console.log('当前图片', img)
+      // console.log('当前图片', img)
       ready && ready.call(img)
       onready.end = true
     }
@@ -59,7 +59,7 @@ function ImgLoader (url, ready, load, error) {
 
   // 完全加载完毕的事件
   img.onload = function () {
-    console.log('onload执行')
+    // console.log('onload执行')
     // onload在定时器时间差范围内可能比onready快
     // 这里进行检查并保证onready优先执行
     !onready.end && onready()

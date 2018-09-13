@@ -1,7 +1,7 @@
 package com.snow.security.core.controller;
 
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.service.UserService;
 import com.snow.security.core.support.UserDto;
@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResultVO me(@AuthenticationPrincipal User user) {
-        return ResultVOUtil.success(user);
+        return ResultUtil.success(user);
     }
 
     @PostMapping("/registration")
@@ -33,9 +33,9 @@ public class UserController {
         if (null != user) {
             // 剔除敏感信息
             user.setPassword(null);
-            return ResultVOUtil.success(user);
+            return ResultUtil.success(user);
         } else {
-            return ResultVOUtil.error(-1, "注册失败");
+            return ResultUtil.error("注册失败");
         }
     }
 }

@@ -219,10 +219,13 @@
             if (valid) {
               // 进行登陆
               that.login(this.loginForm).then((loginOk) => {
-                console.log('登陆结果', loginOk)
+                // console.log('登陆结果', loginOk)
                 if (loginOk) {
-                  console.log('准备跳转到/article/articles')
-                  that.$router.push({path: '/articles'})
+                  if (that.$route.query.redirect) {
+                    window.location.replace(that.$route.query.redirect)
+                  } else {
+                    window.location.replace(window.location.origin)
+                  }
                 } else {
                   that.$message('账户名或密码错误')
                 }
@@ -249,7 +252,7 @@
                   }
                 }
               )
-              console.log(valid)
+              // console.log(valid)
               return true
             } else {
               // 提醒填写正确

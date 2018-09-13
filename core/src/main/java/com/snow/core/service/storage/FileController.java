@@ -1,8 +1,8 @@
 package com.snow.core.service.storage;
 
 
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class FileController {
                 path -> MvcUriComponentsBuilder.fromMethodName(FileController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList());
-        return ResultVOUtil.success(filesNames);
+        return ResultUtil.success(filesNames);
     }
 
     @GetMapping("/**")
@@ -62,7 +62,7 @@ public class FileController {
         for (Map.Entry<String, List<MultipartFile>> fileEntry : multipartHttpServletRequest.getMultiFileMap().entrySet()) {
             result.put(fileEntry.getKey(), storageService.store(fileEntry.getValue().get(0)));
         }
-        return ResultVOUtil.success(result);
+        return ResultUtil.success(result);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

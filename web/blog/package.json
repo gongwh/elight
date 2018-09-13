@@ -31,6 +31,7 @@
     "vue-highlight.js": "^2.2.0",
     "vue-router": "^3.0.1",
     "vue-scroll": "^2.1.7",
+    "vue-scroll-lock": "^0.0.6",
     "vue-sticky-position": "^2.0.0",
     "vue-sticky-scroll": "^0.1.0",
     "vue-visible": "^1.0.2",

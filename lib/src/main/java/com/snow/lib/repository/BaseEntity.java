@@ -1,5 +1,6 @@
-package com.snow.lib.entity;
+package com.snow.lib.repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -12,10 +13,11 @@ import java.util.Date;
  */
 @Data
 @MappedSuperclass
-public class EntityBase {
+public class BaseEntity {
+    @JsonIgnore
     protected Boolean enabled = true;
     @CreatedDate
-    protected Date createTime = new Date();
+    Date createTime = new Date();
     @LastModifiedDate
-    protected Date updateTime = new Date();
+    Date updateTime = new Date();
 }

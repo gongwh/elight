@@ -3,7 +3,7 @@ package com.snow.security.core.filter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snow.lib.result.ResultVOUtil;
+import com.snow.lib.result.Body;
 import com.snow.security.core.properties.SecurityProperties;
 import com.snow.security.core.repository.entity.User;
 import com.snow.security.core.service.CustomUserDetailService;
@@ -35,6 +35,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
 
     @Autowired
     private SecurityProperties securityProperties;
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -68,7 +69,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
             // === 这一块本身在AuthenticationSuccessHandler中做处理的，但是配置成功处理器不成功。
             response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
             try {
-                response.getWriter().write(objectMapper.writeValueAsString(ResultVOUtil.success((User) authentication.getPrincipal())));
+                response.getWriter().write(objectMapper.writeValueAsString(new Body((User) authentication.getPrincipal())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -84,7 +85,7 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
         String token = Jwts.builder()
                 .setSubject(objectMapper.writeValueAsString((User) authResult.getPrincipal()))
                 .claim("authorities", getAuthoritiesToStr(authResult))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * securityProperties.getPassword().getJwtExpirationHours() ))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * securityProperties.getPassword().getJwtExpirationHours()))
                 .signWith(SignatureAlgorithm.HS512, "SNOW")
                 .compact();
         response.addHeader("Authorization", "Bearer " + token);

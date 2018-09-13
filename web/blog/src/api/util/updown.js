@@ -27,7 +27,8 @@ export default {
       () => {
         this.$notify.error({
           title: '上传图片',
-          message: '失败'
+          message: '失败',
+          offset: 80
         })
         return null
       })

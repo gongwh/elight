@@ -23,14 +23,14 @@ const actions = {
     context.commit(UPDATE_LOADING, true)
     return writeApi.editor.loadNewestDraft().then(
       (result) => {
-        if (result.data.status === 0) {
+        if (result.status === 200) {
           if (result.data.data) {
-            console.log('非空草稿', result.data.data)
+            // console.log('非空草稿', result.data.data)
             context.commit(UPDATE_DRAFT, result.data.data)
             context.commit(UPDATE_SYNC, true)
             return true
           } else {
-            console.log('空草稿')
+            // console.log('空草稿')
             return false
           }
         }
@@ -44,7 +44,7 @@ const actions = {
     context.commit(UPDATE_LOADING, true)
     return writeApi.editor.loadDraftByArticleId(articleId).then(
       (result) => {
-        if (result.data.status === 0) {
+        if (result.status === 200) {
           if (result.data.data) {
             // console.log('非空草稿')
             context.commit(UPDATE_DRAFT, result.data.data)
@@ -80,7 +80,7 @@ const actions = {
     return await
       writeApi.editor.deleteDraft(draft).then(
         (result) => {
-          if (result.data.status === 0) {
+          if (result.status === 200) {
             // console.log('删除草稿成功')
           }
           context.commit(UPDATE_LOADING, false)
@@ -104,6 +104,7 @@ const actions = {
 // mutations
 const mutations = {
   UPDATE_DRAFT (state, _draft) {
+    console.log('store设置草稿', _draft)
     state.draft = _draft
   },
   UPDATE_DRAFT_PART (state, _draft) {
@@ -115,7 +116,7 @@ const mutations = {
       // console.log('mutations保存草稿', _draft)
       state.draft.contentMd = _draft.contentMd
       state.draft.contentHtml = _draft.contentHtml
-      console.log('mutation保存后', state.draft)
+      // console.log('mutation保存后', state.draft)
     }
   },
   UPDATE_SYNC (state, sync) {

@@ -1,8 +1,8 @@
 package com.snow.blog.core.web.controller;
 
 import com.snow.blog.core.service.ICategoryService;
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +20,6 @@ public class CategoryController {
 
     @GetMapping
     public ResultVO getAllCategory() {
-        return ResultVOUtil.success(categoryService.getAllCategory());
+        return ResultUtil.success(categoryService.getAllCategory());
     }
 }

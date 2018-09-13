@@ -2,8 +2,8 @@ package com.snow.lib.exception.handler;
 
 import com.snow.lib.enums.ResultEnum;
 import com.snow.lib.exception.BaseException;
+import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
-import com.snow.lib.result.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -40,7 +40,7 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResultVO handleSellException(BaseException e) {
         log.error("【异常】【{}】【{}】", e.getMessage(), e);
-        return ResultVOUtil.error(e.getCode(), e.getMessage());
+        return ResultUtil.error(e);
     }
 
     /**
@@ -54,6 +54,6 @@ public class BaseExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResultVO handleSellException(MissingServletRequestParameterException e) {
         log.error("【异常】【{}】【{}】", e.getMessage(), e);
-        return ResultVOUtil.error(ResultEnum.REQUEST_MISMATCH_ERROR.getCode(), ResultEnum.REQUEST_MISMATCH_ERROR.getMsg());
+        return ResultUtil.error(ResultEnum.REQUEST_MISMATCH_ERROR.getMsg());
     }
 }

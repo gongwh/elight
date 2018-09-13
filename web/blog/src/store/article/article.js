@@ -17,7 +17,7 @@ const actions = {
   loadArticle ({commit}, articleId) {
     return articleApi.loadArticle(articleId).then(
       (result) => {
-        if (result.data.status === 0) {
+        if (result.status === 200) {
           commit(UPDATE_ARTICLE, result.data.data)
           return true
         }
@@ -38,8 +38,8 @@ const actions = {
     return await
       articleApi.deleteArticle(article).then(
         (result) => {
-          if (result.data.status === 0) {
-            console.log('删除文章成功')
+          if (result.status === 200) {
+            // console.log('删除文章成功')
             context.commit(UPDATE_ARTICLE, null)
             return true
           } else {
@@ -47,7 +47,7 @@ const actions = {
           }
         },
         () => {
-          console.log('删除文章失败')
+          // console.log('删除文章失败')
           return false
         })
   }
