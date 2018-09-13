@@ -3,7 +3,6 @@
  */
 import WRITE from '@/component/write/index'
 import editor from '@/component/write/editor'
-import publish from '@/component/write/publish'
 
 export default {
   path: '/write',
@@ -19,14 +18,6 @@ export default {
       meta: {
         requireAuth: true,
         title: 'Writing...'
-      }
-    },
-    {
-      path: 'publish',
-      component: publish,
-      meta: {
-        requireAuth: true,
-        title: 'Publishing...'
       }
     }
   ]
