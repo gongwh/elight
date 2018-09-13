@@ -177,7 +177,7 @@
         }
       },
       e_closePublish () {
-        this.$emit('update:visible', false)
+        this.publishVisible = false
       },
       e_publish () {
         // 保存文章
@@ -449,7 +449,7 @@
 
   .publish_wrapper
     .el-input, .el-input__inner
-      font-size 25px
+      /*font-size 25px*/
       height 32px
       width 80px
       line-height 42px

@@ -5,13 +5,13 @@
                   @focus="e_searchInputFocus"
                   @blur="e_searchInputBlur"
                   placeholder=""
-                  v-model="searchContent.searchInput">
+                  v-model="searchInput">
       </snow-input>
 
       <div class="tags">
-        <snow-tag :name="tag.name" :selected.sync="tag.selected" v-for="tag in tagsTemp" :key="tag.id"
-                  @selected="e_tagSelected(tag)"
-                  @unselected="e_tagUnSelected(tag)"></snow-tag>
+        <snow-tag :name="tag.name" v-for="(tag,index) in state_tagNames" :key="tag.id"
+                  @selected="e_tagSelected(index)"
+                  @unselected="e_tagUnSelected(index)"></snow-tag>
       </div>
     </show>
     <div class="articles-inner"
@@ -74,13 +74,12 @@
         },
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
-        searchContent: null,
-        searchContentLatest: '',
+        searchInput: '',
+        searchInputLatest: '',
         searchResultShow: false,
         noArticleNotifyTimes: 10,
         tagsVisible: false,
-        isSearch: false,
-        tagsTemp: []
+        isSearch: false
       }
     },
     components: {show},
@@ -91,16 +90,9 @@
       ...mapGetters('article/articles', ['articlesNum']),
 
       // search articles
-      ...mapState('article/articles', ['stateSearchContent']),
-
-      ...mapState('article/articles', ['articlesSearch']),
-      ...mapState('article/articles', ['paginationSearch']),
-      ...mapGetters('article/articles', ['articlesNumSearch']),
-      ...mapGetters('article/articles', ['articlesTotalNumSearch']),
-
-      // tags articles
-      // ...mapState('article/articles', ['articlesTags']),
-      // ...mapState('article/articles', ['paginationTags']),
+      ...mapState('article/articles', ['state_tagNames', 'state_searchInput', 'hasSelectedTag']),
+      ...mapState('article/articles', ['articlesSearch', 'paginationSearch']),
+      ...mapGetters('article/articles', ['articlesNumSearch', 'articlesTotalNumSearch', 'getSelectedTagNames']),
 
       // auth
       ...mapState('auth', ['userId', 'defaultUserId']),
@@ -119,11 +111,9 @@
       }
     },
     watch: {
-      'searchContent': {
-        handler () {
-          this.l_tryChangeIsSearch()
-        },
-        deep: true
+      'searchInput' (nv, ov) {
+        this.SET_ARTICLES_SEARCH_INPUT(nv)
+        this.l_tryChangeIsSearch()
       },
       'isSearch' (val, oldVal) {
         if (!val) {
@@ -132,17 +122,48 @@
         this.updateClasses()
       }
     },
+    created () {
+      this.searchInput = this.state_searchInput
+      if (this.manualFlush || this.articles === null) {
+        // console.log('刷新文章列表')
+        this.CLEAR_ARTICLES_RESULT()
+        this.l_loadArticlePage()
+      }
+      this.updateClasses()
+      this.l_loadAllTags()
+      this.l_tryInitTagNames()
+      this.l_trySearch()
+    },
+    mounted () {
+      const that = this
+      window.addEventListener('resize', function () {
+        that.screenWidth = `${document.documentElement.clientWidth}`
+        that.updateClasses()
+      })
+      window.addEventListener('load', function () {
+        that.screenWidth = `${document.documentElement.clientWidth}`
+      })
+      // window.addEventListener('scroll', that.l_scrollLoad)
+    },
     methods: {
       ...mapActions('article/articles', ['loadArticlePage', 'searchArticles']),
       ...mapActions('tag/tag', ['loadAllTags']),
-      ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT', 'SET_ARTICLES_SEARCH_CONTENT']),
+      ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT',
+        'SET_ARTICLES_SEARCH_INPUT', 'INIT_TAG_NAMES', 'UPDATE_TAG_SELECT']),
+      l_tryInitTagNames () {
+        if (!this.state_tagNames) {
+          if (this.tags) {
+            this.INIT_TAG_NAMES(this.tags)
+          }
+        }
+      },
       l_tryChangeIsSearch () {
-        if (this.searchContent.searchInput.length > 0 || this.searchContent.selectedTagNamesSet.size > 0) {
+        console.log('判断是否有选中的TAG', this.hasSelectedTag)
+        if (this.searchInput.length > 0 || this.hasSelectedTag) {
           this.isSearch = true
         } else {
           this.isSearch = false
         }
-        this.SET_ARTICLES_SEARCH_CONTENT(this.searchContent)
       },
       l_trySearch () {
         this.l_tryChangeIsSearch()
@@ -151,15 +172,15 @@
           this.l_searchArticlePage()
         }
       },
-      e_tagSelected (tag) {
-        tag.selected = true
-        this.searchContent.selectedTagNamesSet.add(tag.name)
+      e_tagSelected (index) {
+        console.log('第', index, '个tag被选中')
+        this.UPDATE_TAG_SELECT({index: index, selected: true})
         this.CLEAR_ARTICLES_SEARCH_RESULT()
         this.l_trySearch()
       },
-      e_tagUnSelected (tag) {
-        tag.selected = false
-        this.searchContent.selectedTagNamesSet.delete(tag.name)
+      e_tagUnSelected (index) {
+        console.log('第', index, '个tag被取消选中')
+        this.UPDATE_TAG_SELECT({index: index, selected: false})
         this.CLEAR_ARTICLES_SEARCH_RESULT()
         this.l_trySearch()
       },
@@ -226,8 +247,8 @@
           // 搜索首页
           this.searchArticles({
             userId: userId,
-            title: this.searchContent.searchInput,
-            tagNames: this.searchContent.selectedTagNamesSet,
+            title: this.searchInput,
+            tagNames: this.getSelectedTagNames,
             page: 0,
             size: 10
           }).then(
@@ -240,8 +261,8 @@
           // 搜索下一页
           this.searchArticles({
             userId: userId,
-            title: this.searchContent.searchInput,
-            tagNames: this.searchContent.selectedTagNamesSet,
+            title: this.searchInput,
+            tagNames: this.getSelectedTagNames,
             page: (this.paginationSearch.pageNumber + 1),
             size: 10
           }).then(
@@ -261,19 +282,19 @@
         if (this.isSearch) {
           // 判断是否需要搜索新内容
           let userId = this.userId ? this.userId : this.defaultUserId
-          if (JSON.stringify(this.searchContentLatest) !== JSON.stringify(this.searchContent)) {
+          if (this.searchInputLatest !== this.searchInput) {
             // 搜索新输入内容的首页
             this.CLEAR_ARTICLES_SEARCH_RESULT()
             this.searchArticles({
               userId: userId,
-              title: this.searchContent.searchInput,
-              tagNames: this.searchContent.selectedTagNamesSet,
+              title: this.searchInput,
+              tagNames: this.getSelectedTagNames,
               page: 0,
               size: 10
             }).then(
               () => {
                 this.searchResultShow = true
-                this.searchContentLatest = this.searchContent
+                this.searchInputLatest = this.searchInput
                 this.updateClasses()
               }
             )
@@ -313,36 +334,6 @@
       l_openArticle (_articleId) {
         this.$router.push({path: `/article/${_articleId}`})
       }
-    },
-    created () {
-      this.searchContent = this.stateSearchContent
-      this.tagsTemp = this.tags
-      this.tagsTemp.forEach(tag => {
-        if (this.searchContent.selectedTagNamesSet.has(tag.name)) {
-          tag.selected = true
-        } else {
-          tag.selected = false
-        }
-      })
-      if (this.manualFlush || this.articles === null) {
-        // console.log('刷新文章列表')
-        this.CLEAR_ARTICLES_RESULT()
-        this.l_loadArticlePage()
-      }
-      this.updateClasses()
-      this.l_loadAllTags()
-      this.l_trySearch()
-    },
-    mounted () {
-      const that = this
-      window.addEventListener('resize', function () {
-        that.screenWidth = `${document.documentElement.clientWidth}`
-        that.updateClasses()
-      })
-      window.addEventListener('load', function () {
-        that.screenWidth = `${document.documentElement.clientWidth}`
-      })
-      // window.addEventListener('scroll', that.l_scrollLoad)
     },
     destroyed () {
       // const that = this

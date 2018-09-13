@@ -1,5 +1,5 @@
 <template>
-  <div class="snow_tag" :class="selected?'snow_tag_selected':''" @click="e_toggleState">
+  <div class="snow_tag" :class="select?'snow_tag_select':''" @click="e_toggleState">
     {{name}}
     <slot></slot>
   </div>
@@ -8,30 +8,24 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
-      name: [String],
-      selected: {
-        type: Boolean,
-        default: false
-      }
+      name: [String]
     },
     data () {
       return {
-        _selected: false
+        select: false
       }
     },
     watch: {},
     computed: {},
     created () {
-      this._selected = this.selected
     },
     destroyed () {
     },
     methods: {
       e_toggleState () {
-        this._selected = !this._selected
-        this.$emit('update:selected', this._selected)
-        if (this._selected) {
-          this.l_selected()
+        this.select = !this.select
+        if (this.select) {
+          this.l_select()
         } else {
           this.l_unselected()
         }
@@ -40,7 +34,7 @@
         console.log('路由推向文章')
         this.$router.push({path: '/articles/list', query: {tagName: this.name}})
       },
-      l_selected () {
+      l_select () {
         this.$emit('selected')
       },
       l_unselected () {
@@ -93,8 +87,10 @@
       /*transition: background-color .2s;*/
       // background-color rgba(56, 56, 56, 0.88)
       color white
-  .snow_tag_selected
+
+  .snow_tag_select
     background #578062 linear-gradient(to right, #60996f, #997798)
+
   /*&:hover::after*/
   /*border-left-color crimson*/
 </style>

@@ -6,6 +6,7 @@ import * as articlesApi from '@/api/article/articles'
 // mutations names
 const UPDATE_ARTICLES_PAGE = 'UPDATE_ARTICLES_PAGE'
 const UPDATE_ARTICLES_SEARCH_PAGE = 'UPDATE_ARTICLES_SEARCH_PAGE'
+// const INIT_TAG_NAMES = 'INIT_TAG_NAMES'
 
 // state
 const state = {
@@ -14,12 +15,13 @@ const state = {
   pagination: null,
   articlesSearch: null,
   paginationSearch: null,
-  stateSearchContent: {searchInput: '', selectedTagNamesSet: new Set()}
+  state_searchInput: '',
+  state_tagNames: null,
+  hasSelectedTag: false
 }
 
 // actions
 const actions = {
-
   async loadArticlePage ({commit}, {userId, page, size}) {
     // console.log('loadArticlePage', userId, page, size)
     return articlesApi.loadArticlePage({userId, page, size}).then(
@@ -48,6 +50,22 @@ const actions = {
 
 // mutations
 const mutations = {
+  'UPDATE_TAG_SELECT' (state, {index, selected}) {
+    if (state.state_tagNames) {
+      state.state_tagNames[index].selected = selected
+    }
+    state.hasSelectedTag = false
+    if (state.state_tagNames) {
+      state.state_tagNames.forEach(tag => {
+        if (tag.selected) {
+          state.hasSelectedTag = true
+        }
+      })
+    }
+  },
+  'INIT_TAG_NAMES' (state, data) {
+    state.state_tagNames = data
+  },
   UPDATE_ARTICLES_PAGE (state, data) {
     if (state.articles) {
       state.articles.push(...data.data)
@@ -72,13 +90,24 @@ const mutations = {
     state.articlesSearch = null
     state.paginationSearch = null
   },
-  SET_ARTICLES_SEARCH_CONTENT (state, content) {
-    state.stateSearchContent = content
+  SET_ARTICLES_SEARCH_INPUT (state, input) {
+    state.state_searchInput = input
   }
 }
 
 // getters
 const getters = {
+  getSelectedTagNames (state) {
+    let temp = []
+    if (state.state_tagNames) {
+      state.state_tagNames.forEach(tag => {
+        if (tag.selected) {
+          temp.push(tag.name)
+        }
+      })
+    }
+    return temp
+  },
   articlesNum (state) {
     if (state.articles === null) {
       return 0

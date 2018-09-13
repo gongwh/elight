@@ -10,9 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 文章
@@ -67,12 +65,12 @@ public class Article extends BaseEntity {
     private Boolean personal;
 
     // 文章标签
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(name = "article_tag")
     private List<Tag> tags = new ArrayList<>();
 
     // 文章分类
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(name = "article_category")
     private List<Category> categories = new ArrayList<>();
 
