@@ -28,7 +28,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndEnabledIsTrue(String userId, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndEnabledIsTrue(String userId, Pageable pageable);
 
     /**
      * 根据用户查询公共文章
@@ -37,7 +37,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndPersonalIsFalseAndEnabledIsTrue(String userId, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndPersonalIsFalseAndEnabledIsTrue(String userId, Pageable pageable);
 
     /**
      * 根据用户和标题查询文章
@@ -47,7 +47,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndTitleLikeAndEnabledIsTrue(String userId, String title, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndTitleLikeAndEnabledIsTrue(String userId, String title, Pageable pageable);
 
     /**
      * 根据用户和标题查询共有文章
@@ -57,7 +57,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndTitleLikeAndPersonalIsFalseAndEnabledIsTrue(String userId, String title, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndTitleLikeAndPersonalIsFalseAndEnabledIsTrue(String userId, String title, Pageable pageable);
 
     /**
      * 根据用户和标签查询文章
@@ -67,7 +67,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndTags_NameInAndEnabledIsTrue(String userId, List<String> tagNames, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndTags_NameInAndEnabledIsTrue(String userId, List<String> tagNames, Pageable pageable);
 
     /**
      * 根据用户和标签查询公共文章
@@ -88,7 +88,7 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndTitleLikeAndTags_NameInAndEnabledIsTrue(String userId, String title, List<String> tagNames, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndTitleLikeAndTags_NameInAndEnabledIsTrue(String userId, String title, List<String> tagNames, Pageable pageable);
 
     /**
      * 根据用户和标题以及标签查询公共文章
@@ -99,6 +99,6 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * @param pageable
      * @return
      */
-    Page<Article> findByUserIdAndTitleLikeAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(String userId, String title, List<String> tagNames, Pageable pageable);
+    Page<Article> findDistinctByUserIdAndTitleLikeAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(String userId, String title, List<String> tagNames, Pageable pageable);
 
 }

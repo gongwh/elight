@@ -9,8 +9,46 @@
                     @imgDel="l_imgDel"
                     @save="e_save" @change="e_change">
       </mavon-editor>
-      <publish :visible.sync="publishDialog"></publish>
-      <!--<publish></publish>-->
+      <div class="publish_wrapper" v-show="publishVisible">
+        <div class="publish">
+          <div class="main">
+            <div class="title">
+              <div class="text">Title</div>
+              <el-input placeholder="" v-model="articleTemp.title">
+              </el-input>
+            </div>
+            <div class="tag">
+              <div class="text">Tag</div>
+              <div class="tag_inputs">
+                <div class="tag_input" v-for="(tagName,index) in tagNames" :key="index">
+                  <el-input placeholder="" v-model="tagNames[index]">
+                  </el-input>
+                  <i class="el-icon-remove" @click="tagNames.splice(index,1)"></i>
+                </div>
+                <i class="el-icon-circle-plus" @click="tagNames.push('')"></i>
+              </div>
+            </div>
+            <div class="upload-img">
+              <div class="text">Figure</div>
+              <div>
+                <el-upload
+                  :action="fileBase"
+                  :multiple="false"
+                  :name="titleImgName"
+                  :limit="1"
+                  :on-remove="e_whenTitleImgRemove"
+                  :on-success="e_whenTitleImgUploadSuccess">
+                  <i class="el-icon-circle-plus"></i>
+                </el-upload>
+              </div>
+            </div>
+            <div class="handle">
+              <el-button type="primary" size="medium" @click="e_closePublish">Cancel</el-button>
+              <el-button type="primary" size="medium" @click="e_publish">Publish</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,24 +56,23 @@
 <script type="text/ecmascript-6">
   import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
-  import publish from './publish'
 
   export default {
-    components: {publish},
     data () {
       return {
         draftTemp: {
           contentMd: '',
-          contentHtml: '',
           draftId: null,
           articleId: null
         },
         draftSetup: {
           contentMd: '',
-          contentHtml: '',
           draftId: null,
           articleId: null
         },
+        articleTemp: {},
+        titleImgName: 'titleImg',
+        tagNames: [],
         imgFile: {},
         begin: 'Begin ...',
         autoSave: null,
@@ -80,12 +117,13 @@
           markdown_css: false
         },
         isLoading: true,
-        publishDialog: false
+        publishVisible: false
       }
     },
     computed: {
       ...mapState(['topButtonsProps']),
-      ...mapState('write/editor', ['draft', 'sync', 'loading'])
+      ...mapState('write/editor', ['draft', 'sync', 'loading']),
+      ...mapState('article/article', ['article'])
     },
     created () {
       this.l_loadEditor()
@@ -98,7 +136,7 @@
       if (to.query.abandon) {
         this.l_abandon()
       } else if (to.query.publish) {
-        this.l_publish()
+        this.e_openPublish()
       } else if (to.query.save) {
         this.l_saveDraft()
       }
@@ -118,6 +156,63 @@
       this.l_clearAutoSave()
     },
     methods: {
+      ...mapActions('write/editor', ['saveDraft', 'loadNewestDraft', 'loadDraftByArticleId', 'updateSync', 'deleteDraft', 'clearEditor']),
+      ...mapActions('article/article', ['saveArticle']),
+      ...mapMutations(['SET_BUTTON_STATE']),
+      l_loadArticle () {
+        if (this.$route.query.articleId) {
+          this.articleTemp = this.article
+          console.log('加载文章到本地', this.articleTemp)
+          for (let tag of this.articleTemp.tags) {
+            this.tagNames.push(tag.name)
+          }
+        }
+      },
+      e_whenTitleImgRemove (file, fileList) {
+        this.articleTemp.titleImageUrl = ''
+      },
+      e_whenTitleImgUploadSuccess (response, file, fileList) {
+        if (response.message === 'success') {
+          this.articleTemp.titleImgUrl = response.data[this.titleImgName]
+        }
+      },
+      e_closePublish () {
+        this.$emit('update:visible', false)
+      },
+      e_publish () {
+        // 保存文章
+        // console.log('准备发布保存文章', this.draftTemp)
+        let tags = []
+        for (let i = 0; i < this.tagNames.length; i++) {
+          if (this.tagNames[i] && this.tagNames[i] !== '') {
+            tags.push({'name': this.tagNames[i]})
+          }
+        }
+        this.articleTemp.tags = tags
+        this.articleTemp.contentMd = this.draftTemp.contentMd
+        this.saveArticle(this.articleTemp).then(saveOk => {
+          if (saveOk) {
+            // 删除草稿
+            this.deleteDraft(this.draftTemp)
+            // 清除编辑器
+            this.clearEditor()
+            // 刷新并跳转到文章列表
+            this.$router.push({path: '/articles/list', query: {flush: true}})
+            // 保存成功
+            this.$notify.success({
+              title: '文章发布',
+              message: '成功',
+              offset: 35
+            })
+          } else {
+            this.$message.error({
+              title: '文章发布',
+              message: '失败',
+              offset: 35
+            })
+          }
+        })
+      },
       l_imgAdd (pos, $file) {
         this.imgFile[pos] = $file
       },
@@ -149,6 +244,7 @@
         // console.log('编辑器 route', this.$route)
         if (this.$route.query.articleId) {
           this.l_loadEditorByArticle()
+          this.l_loadArticle()
         } else {
           this.l_loadEditorByNewest()
         }
@@ -284,8 +380,6 @@
           this.SET_BUTTON_STATE({isDisplay: true, index: 3})
         }
       },
-      ...mapActions('write/editor', ['saveDraft', 'loadNewestDraft', 'loadDraftByArticleId', 'updateSync', 'deleteDraft', 'clearEditor']),
-      ...mapMutations(['SET_BUTTON_STATE']),
       e_save () {
         // 清除自动保存
         if (this.autoSave) {
@@ -297,13 +391,13 @@
       e_change (md, html) {
         // console.log('编辑器更改this.draft', this.draft)
         this.draftTemp.contentMd = md
-        this.draftTemp.contentHtml = html
+        this.articleTemp.contentHtml = html
         this.updateSync(false)
         this.l_updateTopButton()
         this.l_autoSave()
       },
-      l_publish () {
-        this.publishDialog = true
+      e_openPublish () {
+        this.publishVisible = true
       }
     },
     watch: {
@@ -352,4 +446,73 @@
     -ms-box-sizing border-box /*IE8*/
     box-sizing border-box
     margin-top 18px
+
+  .publish_wrapper
+    .el-input, .el-input__inner
+      font-size 25px
+      height 32px
+      width 80px
+      line-height 42px
+
+    z-index 5000
+    position absolute
+    top 0
+    right 0
+    bottom 0
+    left 0
+    overflow auto
+    margin 0
+    background-color rgba(123, 123, 123, 0.89)
+    .publish
+      max-width 400px
+      min-width 200px
+      margin 300px auto 0 auto
+      font-size 0
+      text-align center
+      padding 30px
+      border-radius 7px
+      background-color rgb(249, 249, 249)
+      box-shadow 0 0 20px rgba(122, 122, 119, 0.98)
+      .main
+        font-size 20px
+        .text
+          width 90px
+          text-align right
+          margin-right 10px
+        .title, .tag, .upload-img, .handle
+          text-align left
+          margin 5px 0
+          line-height 42px
+          > div
+            display inline-block
+        .tag
+          .tag_inputs
+            max-width 260px
+            height 42px
+            line-height 42px
+            margin auto
+            i
+              cursor pointer
+            > div, i
+              display inline-block
+            .tag_input
+              padding-right 10px
+        .title
+          .el-input, .el-input__inner
+            width 250px
+        .upload-img
+          ul
+            display inline-flex
+            vertical-align middle
+            max-width 230px
+            white-space nowrap
+            text-overflow: ellipsis
+            li
+              margin 0
+        .handle
+          text-align center
+
+    .disableUpload
+      .el-upload--picture-card
+        display none
 </style>

@@ -46,10 +46,10 @@ public class ArticleService implements IArticleService {
         // 判断目标用户ID和当前用户是否相同
         if (StringUtils.equals(currentUserId, targetUserId)) {
             // 加载所有文章
-            page = articleRepository.findByUserIdAndEnabledIsTrue(targetUserId, pageable);
+            page = articleRepository.findDistinctByUserIdAndEnabledIsTrue(targetUserId, pageable);
         } else {
             // 加载非私有文章
-            page = articleRepository.findByUserIdAndPersonalIsFalseAndEnabledIsTrue(targetUserId, pageable);
+            page = articleRepository.findDistinctByUserIdAndPersonalIsFalseAndEnabledIsTrue(targetUserId, pageable);
         }
         return page;
     }
@@ -102,29 +102,29 @@ public class ArticleService implements IArticleService {
         if (needTagSearch) {
             if (needTitleSearch) {
                 if (notCurrentUser) {
-                    return articleRepository.findByUserIdAndTitleLikeAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
+                    return articleRepository.findDistinctByUserIdAndTitleLikeAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
                 } else {
-                    return articleRepository.findByUserIdAndTitleLikeAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
+                    return articleRepository.findDistinctByUserIdAndTitleLikeAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), condition.getTagNames(), pageable);
                 }
             } else {
                 if (notCurrentUser) {
                     return articleRepository.findByUserIdAndTags_NameInAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTagNames(), pageable);
                 } else {
-                    return articleRepository.findByUserIdAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTagNames(), pageable);
+                    return articleRepository.findDistinctByUserIdAndTags_NameInAndEnabledIsTrue(condition.getUserId(), condition.getTagNames(), pageable);
                 }
             }
         } else {
             if (needTitleSearch) {
                 if (notCurrentUser) {
-                    return articleRepository.findByUserIdAndTitleLikeAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
+                    return articleRepository.findDistinctByUserIdAndTitleLikeAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
                 } else {
-                    return articleRepository.findByUserIdAndTitleLikeAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
+                    return articleRepository.findDistinctByUserIdAndTitleLikeAndEnabledIsTrue(condition.getUserId(), condition.getTitle(), pageable);
                 }
             } else {
                 if (notCurrentUser) {
-                    return articleRepository.findByUserIdAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), pageable);
+                    return articleRepository.findDistinctByUserIdAndPersonalIsFalseAndEnabledIsTrue(condition.getUserId(), pageable);
                 } else {
-                    return articleRepository.findByUserIdAndEnabledIsTrue(condition.getUserId(), pageable);
+                    return articleRepository.findDistinctByUserIdAndEnabledIsTrue(condition.getUserId(), pageable);
                 }
             }
         }

@@ -2,7 +2,7 @@
  * Created by SNOW on 2018.07.19
  */
 import auth from '@/api/auth'
-// import base from '@/config/base'
+import base from '@/config/base'
 
 const SET_AUTHORIZATION = 'SET_AUTHORIZATION'
 const SET_USER_ID = 'SET_USER_ID'

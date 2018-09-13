@@ -28,10 +28,6 @@ public class Draft extends BaseEntity {
     private String articleId;
     // 用户ID
     private String userId;
-    // 标题图片
-    private String titleImgUrl;
-    // 标题
-    private String title;
     // markdown 文本
     @Lob
     @Basic(fetch = FetchType.LAZY)

@@ -104,7 +104,7 @@ const actions = {
 // mutations
 const mutations = {
   UPDATE_DRAFT (state, _draft) {
-    console.log('store设置草稿', _draft)
+    // console.log('store设置草稿', _draft)
     state.draft = _draft
   },
   UPDATE_DRAFT_PART (state, _draft) {
@@ -115,7 +115,7 @@ const mutations = {
       // 保存草稿主要内容
       // console.log('mutations保存草稿', _draft)
       state.draft.contentMd = _draft.contentMd
-      state.draft.contentHtml = _draft.contentHtml
+      // state.draft.contentHtml = _draft.contentHtml
       // console.log('mutation保存后', state.draft)
     }
   },

@@ -41,7 +41,6 @@ public class DraftService implements IDraftService {
 
     @Override
     public Draft saveDraft(Draft draft,String userId) {
-        draft.setUserId(userId);
         Draft result = draftRepository.save(draft);
         CommonValidator.saveOk(result);
         return result;

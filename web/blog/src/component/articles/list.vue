@@ -215,7 +215,7 @@
           this.$notify.info({
             title: '加载文章',
             message: '没有更多文章了',
-            offset: 80
+            offset: 35
           })
         }
       },
@@ -253,7 +253,7 @@
           this.$notify.info({
             title: '搜索文章',
             message: '没有更多文章了',
-            offset: 80
+            offset: 35
           })
         }
       },

@@ -89,13 +89,13 @@
             this.$notify.success({
               title: '删除文章',
               message: '成功',
-              offset: 80
+              offset: 35
             })
           } else {
             this.$notify.error({
               title: '删除文章',
               message: '失败',
-              offset: 80
+              offset: 35
             })
           }
         })
