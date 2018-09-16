@@ -33,7 +33,7 @@ axios.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          console.log('HTTP 401, 当前路由 {}', router.currentRoute)
+          // console.log('HTTP 401, 当前路由 {}', router.currentRoute)
           // 跳转到登录页面
           router.replace({
             path: '/login',

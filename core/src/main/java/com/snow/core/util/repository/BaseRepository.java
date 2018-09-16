@@ -13,10 +13,10 @@ import java.util.List;
 public interface BaseRepository<T extends BaseEntity> extends JpaRepository<T, String> {
 
     @Modifying
-    @Query("update #{#entityName} set enable = false where id = ?1")
+    @Query("update #{#entityName} set enabled = false where id = ?1")
     void delete(String id);
 
     @Modifying
-    @Query("update #{#entityName} set enable = false where id IN ?1")
+    @Query("update #{#entityName} set enabled = false where id IN ?1")
     void delete(List<String> ids);
 }

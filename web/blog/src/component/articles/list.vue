@@ -158,7 +158,7 @@
         }
       },
       l_tryChangeIsSearch () {
-        console.log('判断是否有选中的TAG', this.hasSelectedTag)
+        // console.log('判断是否有选中的TAG', this.hasSelectedTag)
         if (this.searchInput.length > 0 || this.hasSelectedTag) {
           this.isSearch = true
         } else {
@@ -168,18 +168,18 @@
       l_trySearch () {
         this.l_tryChangeIsSearch()
         if (this.isSearch) {
-          console.log('发起搜索')
+          // console.log('发起搜索')
           this.l_searchArticlePage()
         }
       },
       e_tagSelected (index) {
-        console.log('第', index, '个tag被选中')
+        // console.log('第', index, '个tag被选中')
         this.UPDATE_TAG_SELECT({index: index, selected: true})
         this.CLEAR_ARTICLES_SEARCH_RESULT()
         this.l_trySearch()
       },
       e_tagUnSelected (index) {
-        console.log('第', index, '个tag被取消选中')
+        // console.log('第', index, '个tag被取消选中')
         this.UPDATE_TAG_SELECT({index: index, selected: false})
         this.CLEAR_ARTICLES_SEARCH_RESULT()
         this.l_trySearch()
@@ -302,7 +302,7 @@
             this.l_searchArticlePage()
           }
         } else {
-          console.log('不是搜索状态')
+          // console.log('不是搜索状态')
         }
       },
       updateClasses () {
@@ -340,7 +340,7 @@
       // window.removeEventListener('scroll', that.l_scrollLoad)
     },
     beforeRouteUpdate (to, from, next) {
-      console.log('query刷新', to.query)
+      // console.log('query刷新', to.query)
       if (to.query.tagName) {
         // this.searchInput = to.query.tagName
       }

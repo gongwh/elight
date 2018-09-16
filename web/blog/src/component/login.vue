@@ -15,7 +15,7 @@
                     <el-form-item prop="username">
                       <el-input
                         class="element"
-                        placeholder="用户名"
+                        placeholder="用户名或邮箱"
                         v-model="loginForm.username"
                         clearable>
                       </el-input>

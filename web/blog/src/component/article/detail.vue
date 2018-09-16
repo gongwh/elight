@@ -122,7 +122,7 @@
       },
       l_updateTopButtonAddEdit () {
         if (this.article) {
-          if (this.article.articleId) {
+          if (this.article.articleId && this.article.userId === window.localStorage.getItem('userId')) {
             // console.log('文章已准备好编辑')
             this.SET_BUTTON_STATE(
               {
@@ -144,7 +144,7 @@
       },
       l_updateTopButtonAddDel () {
         if (this.article) {
-          if (this.article.articleId) {
+          if (this.article.articleId && this.article.userId === window.localStorage.getItem('userId')) {
             this.SET_BUTTON_STATE(
               {
                 isDisplay: true,
@@ -168,6 +168,7 @@
       this.l_loadArticle()
     },
     mounted () {
+      //  this.l_updateTopButton()
     },
     beforeRouteUpdate (to, from, next) {
       if (to.query && to.query.delete) {

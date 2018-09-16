@@ -31,7 +31,7 @@
         }
       },
       e_gotoTagArticles () {
-        console.log('路由推向文章')
+        // console.log('路由推向文章')
         this.$router.push({path: '/articles/list', query: {tagName: this.name}})
       },
       l_select () {

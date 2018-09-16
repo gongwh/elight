@@ -56,6 +56,7 @@
 <script type="text/ecmascript-6">
   import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
+  const htmlToText = require('html-to-text')
 
   export default {
     data () {
@@ -162,7 +163,7 @@
       l_loadArticle () {
         if (this.$route.query.articleId) {
           this.articleTemp = this.article
-          console.log('加载文章到本地', this.articleTemp)
+          // console.log('加载文章到本地', this.articleTemp)
           for (let tag of this.articleTemp.tags) {
             this.tagNames.push(tag.name)
           }
@@ -190,6 +191,9 @@
         }
         this.articleTemp.tags = tags
         this.articleTemp.contentMd = this.draftTemp.contentMd
+        this.articleTemp.contentText = htmlToText.fromString(this.articleTemp.contentHtml, {
+          wordwrap: 130
+        })
         this.saveArticle(this.articleTemp).then(saveOk => {
           if (saveOk) {
             // 删除草稿

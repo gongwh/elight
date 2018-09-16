@@ -18,6 +18,10 @@ import store from '@/store'
 import router from '@/router'
 import globalConfig from '@/config'
 
+import noVueModule from '@/no-vue-module'
+
+Vue.use(noVueModule)
+
 Vue.use(elementUI)
 Vue.use(mavonEditor)
 Vue.use(VueVisible)
