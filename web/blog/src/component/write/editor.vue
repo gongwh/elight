@@ -56,6 +56,7 @@
 <script type="text/ecmascript-6">
   import {mapActions, mapMutations, mapState} from 'vuex'
   import upDown from '@/api/util/updown'
+
   const htmlToText = require('html-to-text')
 
   export default {
@@ -181,35 +182,53 @@
         this.publishVisible = false
       },
       e_publish () {
+        const _this = this
         // 保存文章
         // console.log('准备发布保存文章', this.draftTemp)
         let tags = []
-        for (let i = 0; i < this.tagNames.length; i++) {
+        for (let i = 0; i < _this.tagNames.length; i++) {
           if (this.tagNames[i] && this.tagNames[i] !== '') {
-            tags.push({'name': this.tagNames[i]})
+            tags.push({'name': _this.tagNames[i]})
           }
         }
-        this.articleTemp.tags = tags
-        this.articleTemp.contentMd = this.draftTemp.contentMd
-        this.articleTemp.contentText = htmlToText.fromString(this.articleTemp.contentHtml, {
+        _this.articleTemp.tags = tags
+        _this.articleTemp.contentMd = this.draftTemp.contentMd
+        _this.articleTemp.contentText = htmlToText.fromString(_this.articleTemp.contentHtml, {
           wordwrap: 130
         })
-        this.saveArticle(this.articleTemp).then(saveOk => {
+        _this.saveArticle(this.articleTemp).then(saveOk => {
           if (saveOk) {
             // 删除草稿
-            this.deleteDraft(this.draftTemp)
-            // 清除编辑器
-            this.clearEditor()
-            // 刷新并跳转到文章列表
-            this.$router.push({path: '/articles/list', query: {flush: true}})
-            // 保存成功
-            this.$notify.success({
-              title: '文章发布',
-              message: '成功',
-              offset: 35
-            })
+            if (_this.draftTemp.draftId) {
+              // console.log('准备删除草稿', this.draftTemp)
+              _this.deleteDraft(this.draftTemp.draftId).then((res) => {
+                if (res) {
+                  // 清除编辑器
+                  _this.l_clearEditor()
+                  // console.log('删除草稿成功', this.draftTemp)
+                  // 刷新并跳转到文章列表
+                  _this.$router.push({path: '/articles/list', query: {flush: true}})
+                  // 保存成功
+                  _this.$notify.success({
+                    title: '文章发布',
+                    message: '成功',
+                    offset: 35
+                  })
+                }
+              })
+            } else {
+              _this.l_clearEditor()
+              // 刷新并跳转到文章列表
+              _this.$router.push({path: '/articles/list', query: {flush: true}})
+              // 保存成功
+              _this.$notify.success({
+                title: '文章发布',
+                message: '成功',
+                offset: 35
+              })
+            }
           } else {
-            this.$message.error({
+            _this.$message.error({
               title: '文章发布',
               message: '失败',
               offset: 35
@@ -339,15 +358,19 @@
       l_abandon () {
         // console.group('准备删除服务器草稿')
         // 删除草稿
-        this.deleteDraft(this.draftTemp).then((ok) => {
-          if (ok) {
-            // 清空工作区
-            this.l_clearEditor()
-            // 重新加载工作区
-            // console.group('重新加载工作区')
-            this.l_loadEditorByNewest()
-          }
-        })
+        if (this.draftTemp.draftId) {
+          this.deleteDraft(this.draftTemp.draftId).then((ok) => {
+            if (ok) {
+              // 清空工作区
+              this.l_clearEditor()
+              // 重新加载工作区
+              // console.group('重新加载工作区')
+              // this.l_loadEditorByNewest()
+            }
+          })
+        } else {
+          this.l_clearEditor()
+        }
       },
       l_autoSave () {
         const _this = this

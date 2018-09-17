@@ -75,10 +75,11 @@ const actions = {
         return false
       })
   },
-  async deleteDraft (context, draft) {
+  async deleteDraft (context, draftId) {
     context.commit(UPDATE_LOADING, true)
+    // console.log('store准备删除草稿', draftId)
     return await
-      writeApi.editor.deleteDraft(draft).then(
+      writeApi.editor.deleteDraft(draftId).then(
         (result) => {
           if (result.status === 200) {
             // console.log('删除草稿成功')

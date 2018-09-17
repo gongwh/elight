@@ -5,7 +5,7 @@ import http from '@/api/util/http'
 
 export const saveDraft = (draft) => http.post('/draft', draft)
 
-export const deleteDraft = (draft) => http.delete('/draft', draft)
+export const deleteDraft = (draftId) => http.delete('/draft/' + draftId)
 
 export const loadNewestDraft = (userId) => http.get('/draft/newest', {userId: userId})
 
