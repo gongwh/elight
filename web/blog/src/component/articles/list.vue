@@ -90,9 +90,9 @@
       ...mapGetters('article/articles', ['articlesNum']),
 
       // search articles
-      ...mapState('article/articles', ['state_tagNames', 'state_searchInput', 'hasSelectedTag']),
+      ...mapState('article/articles', ['state_tagNames', 'state_searchInput', 'hasSelectedTag', 'state_selectedTagNames']),
       ...mapState('article/articles', ['articlesSearch', 'paginationSearch']),
-      ...mapGetters('article/articles', ['articlesNumSearch', 'articlesTotalNumSearch', 'getSelectedTagNames']),
+      ...mapGetters('article/articles', ['articlesNumSearch', 'articlesTotalNumSearch']),
 
       // auth
       ...mapState('auth', ['userId', 'defaultUserId']),
@@ -146,7 +146,7 @@
       // window.addEventListener('scroll', that.l_scrollLoad)
     },
     methods: {
-      ...mapActions('article/articles', ['loadArticlePage', 'searchArticles']),
+      ...mapActions('article/articles', ['loadArticlePage', 'searchArticles', 'getSelectedTagNames']),
       ...mapActions('tag/tag', ['loadAllTags']),
       ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT',
         'SET_ARTICLES_SEARCH_INPUT', 'INIT_TAG_NAMES', 'UPDATE_TAG_SELECT']),
@@ -240,7 +240,7 @@
           })
         }
       },
-      l_searchArticlePage () {
+      async l_searchArticlePage () {
         let userId = this.userId ? this.userId : this.defaultUserId
         // 搜索旧输入内容
         if (!this.paginationSearch) {
@@ -248,7 +248,7 @@
           this.searchArticles({
             userId: userId,
             title: this.searchInput,
-            tagNames: this.getSelectedTagNames,
+            tagNames: this.state_selectedTagNames,
             page: 0,
             size: 10
           }).then(
@@ -262,7 +262,7 @@
           this.searchArticles({
             userId: userId,
             title: this.searchInput,
-            tagNames: this.getSelectedTagNames,
+            tagNames: this.state_selectedTagNames,
             page: (this.paginationSearch.pageNumber + 1),
             size: 10
           }).then(
@@ -278,7 +278,7 @@
           })
         }
       },
-      e_searchArticle () {
+      async e_searchArticle () {
         if (this.isSearch) {
           // 判断是否需要搜索新内容
           let userId = this.userId ? this.userId : this.defaultUserId
@@ -288,7 +288,7 @@
             this.searchArticles({
               userId: userId,
               title: this.searchInput,
-              tagNames: this.getSelectedTagNames,
+              tagNames: this.state_selectedTagNames,
               page: 0,
               size: 10
             }).then(

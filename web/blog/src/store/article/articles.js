@@ -17,6 +17,7 @@ const state = {
   paginationSearch: null,
   state_searchInput: '',
   state_tagNames: null,
+  state_selectedTagNames: [],
   hasSelectedTag: false
 }
 
@@ -62,6 +63,14 @@ const mutations = {
         }
       })
     }
+    state.state_selectedTagNames.splice(0, state.state_selectedTagNames.length)
+    if (state.state_tagNames) {
+      state.state_tagNames.forEach(tag => {
+        if (tag.selected) {
+          state.state_selectedTagNames.push(tag.name)
+        }
+      })
+    }
   },
   'INIT_TAG_NAMES' (state, data) {
     state.state_tagNames = data
@@ -97,17 +106,6 @@ const mutations = {
 
 // getters
 const getters = {
-  getSelectedTagNames (state) {
-    let temp = []
-    if (state.state_tagNames) {
-      state.state_tagNames.forEach(tag => {
-        if (tag.selected) {
-          temp.push(tag.name)
-        }
-      })
-    }
-    return temp
-  },
   articlesNum (state) {
     if (state.articles === null) {
       return 0

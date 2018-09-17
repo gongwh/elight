@@ -344,7 +344,7 @@
             // 清空工作区
             this.l_clearEditor()
             // 重新加载工作区
-            console.group('重新加载工作区')
+            // console.group('重新加载工作区')
             this.l_loadEditorByNewest()
           }
         })
