@@ -256,7 +256,7 @@
                   delete that.imgFile[i]
                   that.$refs.md.$img2Url(i, that.fileBase + '' + data[i])
                 }
-                console.log('上传图片完成 contentHtml', that.articleTemp.contentHtml)
+                // console.log('上传图片完成 contentHtml', that.articleTemp.contentHtml)
                 resolve(true)
               },
               () => {

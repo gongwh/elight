@@ -373,6 +373,7 @@
         box-shadow 1px 1px 3px #dddddd
         background-color #f4f4f4fa
         overflow hidden
+        padding-bottom 10px
         .image-wrapper
           height 100%
           border-collapse collapse
@@ -405,10 +406,8 @@
             margin 5px 0
             font-size 15px
           .desc
+            word-break break-word
             color rgba(0, 0, 0, 0.7)
-            display -webkit-box
-            -webkit-box-orient vertical
-            text-overflow ellipsis
             overflow hidden
           .descLineClamp3
             -webkit-line-clamp 3

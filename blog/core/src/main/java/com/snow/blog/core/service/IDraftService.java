@@ -18,8 +18,8 @@ public interface IDraftService {
     Draft getNewestDraft(String userId);
 
     // 增，改
-    Draft saveDraft(Draft Draft,String userId);
+    Draft saveDraft(Draft draft,String userId);
 
     // 删
-    void deleteDraft(Draft Draft,String userId);
+    void deleteDraft(String draftId,String userId);
 }
