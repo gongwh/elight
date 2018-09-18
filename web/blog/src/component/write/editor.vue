@@ -238,11 +238,13 @@
       },
       l_imgAdd (pos, $file) {
         this.imgFile[pos] = $file
+        // console.log('添加图片 contentHtml', this.articleTemp.contentHtml)
       },
       l_imgDel (pos) {
         delete this.imgFile[pos]
       },
       async l_uploadImg () {
+        // console.log('准备上传图片 contentHtml', this.articleTemp.contentHtml)
         const that = this
         return new Promise(
           function (resolve, reject) {
@@ -254,6 +256,7 @@
                   delete that.imgFile[i]
                   that.$refs.md.$img2Url(i, that.fileBase + '' + data[i])
                 }
+                console.log('上传图片完成 contentHtml', that.articleTemp.contentHtml)
                 resolve(true)
               },
               () => {

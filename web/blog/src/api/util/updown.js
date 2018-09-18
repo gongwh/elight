@@ -18,10 +18,11 @@ export default {
     }
     return http.formPost(axios.defaults.fileUrl, formData).then(
       (res) => {
-        if (res.data.status === 0) {
+        // console.log('文件上传返回', res)
+        if (res.status === 200) {
           return res.data.data
         } else {
-          return {}
+          return []
         }
       },
       () => {

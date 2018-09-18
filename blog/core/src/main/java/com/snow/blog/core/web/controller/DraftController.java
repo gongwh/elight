@@ -72,11 +72,9 @@ public class DraftController {
     }
 
     // 删除草稿
-    @DeleteMapping
-    public ResultVO deleteDraft(@RequestBody Draft draft, @AuthenticationPrincipal User user) {
-        DraftValidator.draftExist(draft);
-        draftService.deleteDraft(draft, user.getUserId());
-        log.debug("删除草稿,draft:{}", draft.getDraftId());
+    @DeleteMapping("/{draftId}")
+    public ResultVO deleteDraft(@PathVariable String draftId, @AuthenticationPrincipal User user) {
+        draftService.deleteDraft(draftId, user.getUserId());
         return ResultUtil.success();
     }
 }
