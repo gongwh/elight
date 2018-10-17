@@ -13,16 +13,7 @@ const state = {
 // actions
 const actions = {
   async registration (store, user) {
-    return userApi.registration(user).then(
-      (res) => {
-        // console.log('注册成功', res.data.data)
-        return true
-      },
-      (e) => {
-        // console.log('注册失败', e)
-        return false
-      }
-    )
+    return userApi.registration(user)
   },
   async profile ({commit}) {
     userApi.profile().then(

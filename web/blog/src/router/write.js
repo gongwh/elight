@@ -1,12 +1,12 @@
 /**
  * Created by SNOW on 2018.01.27.
  */
-import WRITE from '@/component/write/index'
-import editor from '@/component/write/editor'
+const editor = r => require.ensure([], () => r(require('@/component/write/editor')), 'editor')
+const write = r => require.ensure([], () => r(require('@/component/write/index')), 'write')
 
 export default {
   path: '/write',
-  component: WRITE,
+  component: write,
   redirect: '/write/editor',
   meta: {
     requireAuth: true

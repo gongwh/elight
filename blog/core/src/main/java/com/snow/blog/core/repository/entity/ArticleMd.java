@@ -8,25 +8,24 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-
-/**
- * @create by SNOW 2018.07.18
- */
 @Data
 @Entity
-@Table(name = "category")
+@Table(name = "article_md")
 @DynamicUpdate
 @DynamicInsert
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Category extends BaseEntity {
-    @Id
-    private String categoryId;
+public class ArticleMd extends BaseEntity {
 
-    private String name;
+    @Id
+    private String articleId;
+
+    // markdown 文本
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "mediumtext")
+    private String contentMd;
+
 }

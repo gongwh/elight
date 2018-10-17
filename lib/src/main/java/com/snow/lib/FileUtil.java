@@ -18,13 +18,13 @@ public class FileUtil {
      */
     public static String getDateAsRelativePath(String originName) {
         String fileExtension = FilenameUtils.getExtension(originName);
-        return DateUtil.formatDate(new Date(),
+        return (DateUtil.formatDate(new Date(),
                 "yyyy" + File.separator +
                         "MM" + File.separator +
                         "dd" + File.separator +
                         "HH" + File.separator +
                         "mm" + File.separator +
                         "ss") + File.separator +
-                UUID.randomUUID() + "." + fileExtension;
+                UUID.randomUUID() + "." + fileExtension).toLowerCase();
     }
 }

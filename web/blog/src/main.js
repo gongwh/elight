@@ -2,10 +2,9 @@ import Vue from 'vue'
 import VueVisible from 'vue-visible'
 import App from './App.vue'
 import elementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
 import highlight from 'highlight.js'
+import preview from 'vue-photo-preview'
 import commonUtil from '@/util/common'
 import snowDialog from '@/component/common/snowDialog'
 import snowHover from '@/component/common/snowHover'
@@ -22,6 +21,7 @@ import noVueModule from '@/no-vue-module'
 
 Vue.use(noVueModule)
 
+Vue.use(preview)
 Vue.use(elementUI)
 Vue.use(mavonEditor)
 Vue.use(VueVisible)

@@ -1,8 +1,8 @@
 /**
  * Created by SNOW on 2018.01.27.
  */
-import ARTICLE from '@/component/article/index'
-import detail from '@/component/article/detail'
+const ARTICLE = r => require.ensure([], () => r(require('@/component/article/index')), 'ARTICLE')
+const detail = r => require.ensure([], () => r(require('@/component/article/detail')), 'detail')
 
 export default {
   path: '/article/:articleId',

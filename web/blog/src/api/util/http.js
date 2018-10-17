@@ -1,6 +1,13 @@
 import axios from 'axios'
 
 export default {
+  request: (config) => {
+    return axios.request(config).then(response => {
+      return response
+    }).catch(err => {
+      throw err
+    })
+  },
   get: (url, params = {}) => {
     // console.log('AXIOS GET', params)
     return axios.get(url, {params: params}).then(response => {
@@ -9,8 +16,8 @@ export default {
       throw err
     })
   },
-  post: (url, data) => {
-    return axios.post(url, data).then(response => {
+  post: (url, data, config) => {
+    return axios.post(url, data, config).then(response => {
       return response
     }).catch(err => {
       throw err
@@ -23,8 +30,8 @@ export default {
       throw err
     })
   },
-  put: (url, data) => {
-    return axios.put(url, data).then(response => {
+  put: (url, data, config) => {
+    return axios.put(url, data, config).then(response => {
       return response
     }).catch(err => {
       throw err

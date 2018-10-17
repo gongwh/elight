@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 import article from './article'
 import articles from './articles'
 import write from './write'
-import login from '@/component/login'
-import index from '@/component/index'
+const login = r => require.ensure([], () => r(require('@/component/login')), 'login')
+const index = r => require.ensure([], () => r(require('@/component/index')), 'index')
 Vue.use(VueRouter)
 
 const routes = [

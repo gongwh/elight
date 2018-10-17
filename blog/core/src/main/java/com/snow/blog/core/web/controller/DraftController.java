@@ -6,6 +6,7 @@ import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.service.IDraftService;
 import com.snow.blog.core.util.validator.ArticleValidator;
 import com.snow.blog.core.util.validator.DraftValidator;
+import com.snow.blog.core.vo.ArticleVO;
 import com.snow.lib.BeanCopyUtil;
 import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
@@ -53,7 +54,7 @@ public class DraftController {
 
     @GetMapping("/article")
     public ResultVO loadDraftByArticleId(String articleId, @AuthenticationPrincipal User user) {
-        Article article = articleService.getArticleById(articleId, user.getUserId());
+        ArticleVO article = articleService.getArticleById(articleId, user.getUserId());
         ArticleValidator.articleExist(article);
         Draft draftNew = new Draft();
         BeanCopyUtil.copy(article, draftNew);

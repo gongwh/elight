@@ -110,11 +110,6 @@
           preview: true // 预览
         },
         externalLink: {
-          // hljs_css: function (css) {
-          //   // 这是你的代码高亮配色文件路径
-          //   // return 'https://cdn.bootcss.com/highlight.js/9.12.0/styles/' + css + '.min.css'
-          //   return '../../common/highlight/styles/github.css'
-          // }
           hljs_css: false,
           markdown_css: false
         },
@@ -124,7 +119,7 @@
     },
     computed: {
       ...mapState(['topButtonsProps']),
-      ...mapState('write/editor', ['draft', 'sync', 'loading']),
+      ...mapState('write/editor', ['draft', 'sync']),
       ...mapState('article/article', ['article'])
     },
     created () {
@@ -151,25 +146,16 @@
       this.SET_BUTTON_STATE({display: false, index: 3})
       this.SET_BUTTON_STATE({display: false, index: 4})
     },
-    activated () {
+    activate () {
       this.l_autoSave()
     },
-    deactivated () {
+    deactivate () {
       this.l_clearAutoSave()
     },
     methods: {
       ...mapActions('write/editor', ['saveDraft', 'loadNewestDraft', 'loadDraftByArticleId', 'updateSync', 'deleteDraft', 'clearEditor']),
-      ...mapActions('article/article', ['saveArticle']),
+      ...mapActions('article/article', ['saveArticle', 'loadArticle', 'addSiteSearch', 'updateSiteSearch']),
       ...mapMutations(['SET_BUTTON_STATE']),
-      l_loadArticle () {
-        if (this.$route.query.articleId) {
-          this.articleTemp = this.article
-          // console.log('加载文章到本地', this.articleTemp)
-          for (let tag of this.articleTemp.tags) {
-            this.tagNames.push(tag.name)
-          }
-        }
-      },
       e_whenTitleImgRemove (file, fileList) {
         this.articleTemp.titleImageUrl = ''
       },
@@ -193,11 +179,19 @@
         }
         _this.articleTemp.tags = tags
         _this.articleTemp.contentMd = this.draftTemp.contentMd
+        _this.articleTemp.contentHtml = this.l_filterAndReplaceImg(_this.articleTemp.contentHtml)
         _this.articleTemp.contentText = htmlToText.fromString(_this.articleTemp.contentHtml, {
           wordwrap: 130
         })
+        // console.log('发布前情况', _this.articleTemp)
         _this.saveArticle(this.articleTemp).then(saveOk => {
           if (saveOk) {
+            // 添加或更新站点信息
+            if (this.draftTemp.articleId) {
+              this.updateSiteSearch(this.draftTemp.articleId)
+            } else {
+              this.addSiteSearch(this.draftTemp.articleId)
+            }
             // 删除草稿
             if (_this.draftTemp.draftId) {
               // console.log('准备删除草稿', this.draftTemp)
@@ -244,17 +238,17 @@
         delete this.imgFile[pos]
       },
       async l_uploadImg () {
-        // console.log('准备上传图片 contentHtml', this.articleTemp.contentHtml)
         const that = this
         return new Promise(
           function (resolve, reject) {
-            // console.log('准备上传图片')
+            // console.log('准备上传图片', that.imgFile, that.imgFile.length)
             upDown.upload(that.imgFile).then(
               (data) => {
                 // console.log('上传成功', data)
                 for (let i in data) {
                   delete that.imgFile[i]
                   that.$refs.md.$img2Url(i, that.fileBase + '' + data[i])
+                  // that.$refs.md.$img2Url(i, data[i])
                 }
                 // console.log('上传图片完成 contentHtml', that.articleTemp.contentHtml)
                 resolve(true)
@@ -267,67 +261,83 @@
         )
       },
       l_loadEditor () {
-        // console.log('编辑器 route', this.$route)
+        // console.log('编辑器加载')
         if (this.$route.query.articleId) {
+          // console.log('加载文章到编辑器')
           this.l_loadEditorByArticle()
-          this.l_loadArticle()
         } else {
+          // console.log('加载最新草稿到编辑器')
           this.l_loadEditorByNewest()
         }
       },
       l_loadEditorByNewest () {
-        if (!this.draft) {
-          this.loadNewestDraft().then((loadOk) => {
-            // console.log('加载最新草稿成功', this.draft)
-            if (loadOk && this.draft) {
-              this.draftTemp = this.draft
-              this.l_updateTopButton()
-              this.$notify.info({
-                title: '编辑器',
-                message: '已加载最新草稿',
-                offset: 80
-              })
-            }
-            this.isLoading = false
-          }, () => {
-            this.isLoading = false
-          })
-        }
+        this.loadNewestDraft().then((loadOk) => {
+          // console.log('加载最新草稿成功', this.draft)
+          if (loadOk && this.draft) {
+            // console.log('store draft', this.draft, 'draftTemp', this.draftTemp)
+            this.draftTemp = this.draft
+            this.l_updateTopButton()
+            this.l_loadAndApplyArticle(this.draftTemp.articleId)
+            this.$notify.info({
+              title: '编辑器',
+              message: '已加载最新草稿',
+              offset: 80
+            })
+          }
+          this.isLoading = false
+        }, () => {
+          this.isLoading = false
+        })
         if (this.sync) {
           this.draftTemp = this.draft
           this.l_updateTopButton()
           this.isLoading = false
         }
       },
-      l_loadEditorByArticle () {
+      l_loadAndApplyArticle (articleId) {
+        const that = this
+        that.loadArticle(articleId).then(
+          (ok) => {
+            if (ok) {
+              that.l_applyArticle()
+              that.isLoading = false
+            }
+          },
+          (e) => {
+            this.$notify.error({
+              title: '编辑器',
+              message: '加载文章到编辑器失败',
+              offset: 80
+            })
+          }
+        )
+      },
+      l_applyArticle () {
+        if (this.article) {
+          this.articleTemp = this.article
+          if (this.articleTemp.tags) {
+            for (let tag of this.articleTemp.tags) {
+              this.tagNames.push(tag.name)
+            }
+          }
+          document.title = this.articleTemp.title
+        }
+      },
+      async l_loadEditorByArticle () {
+        const that = this
         // draft空                     直接加载
         // draft不空
         //   文章id为空                直接加载
         //   文章id不为空且id相同       不做任何动作
         //   文章id不为空且id不同       提示已有文章正在编辑
-        if (!this.draft || !this.draft.articleId) {
-          // 加载参数指定文章
-          this.loadDraftByArticleId(this.$route.query.articleId).then((loadOk) => {
-            // console.log('加载文章草稿成功', this.draft)
-            if (loadOk && this.draft) {
-              this.draftTemp = this.draft
-              this.isLoading = false
-            }
-          })
-        } else if (this.draft.articleId !== this.$route.query.articleId) {
-          // 加载缓存草稿
-          this.draftTemp = this.draft
-          this.$notify.warning({
-            title: '编辑器',
-            message: '已有别的文章正在编辑',
-            offset: 80
-          })
-          this.isLoading = false
-        } else if (this.draft.articleId === this.$route.query.articleId) {
-          // console.log('该文章正在编辑', this.draft)
-          this.draftTemp = this.draft
-          this.isLoading = false
-        }
+        // console.log('判断是否加载文章到草稿')
+        that.loadDraftByArticleId(that.$route.query.articleId).then((loadOk) => {
+          if (loadOk && that.draft) {
+            // console.log('加载文章到草稿成功', that.draft)
+            that.draftTemp = that.draft
+            that.l_loadAndApplyArticle(that.draftTemp.articleId)
+          }
+        })
       },
       l_saveDraft () {
         // console.log('文章是否要不存？')
@@ -418,6 +428,10 @@
         }
         this.l_saveDraft()
       },
+      l_filterAndReplaceImg (html) {
+        // 给图片添加预览支持
+        return html.replace(/<img src="((http|https|ftp):\/\/(.*?)\/file\/(.*?))" alt="(.*?)" \/>/g, '<img preview="0" preview-text="$5" src="' + this.fileBase + '$4" alt="$5" />')
+      },
       e_change (md, html) {
         // console.log('编辑器更改this.draft', this.draft)
         this.draftTemp.contentMd = md
@@ -439,7 +453,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import 'mavon-editor/dist/css/index.css'
+  // @import 'mavon-editor/dist/css/index.css'
 </style>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -451,8 +465,13 @@
       .v-note-wrapper
         height 100%
 
+  .v-note-help-wrapper
+    top 30px
+
   .v-note-help-content
-    margin 60px auto
+    margin auto
+    .v-note-help-show
+      padding: 2%
 
   .v-note-op
     position fixed

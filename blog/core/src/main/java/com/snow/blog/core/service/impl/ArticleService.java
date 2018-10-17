@@ -1,14 +1,21 @@
 package com.snow.blog.core.service.impl;
 
 import com.snow.blog.core.properties.BlogProperties;
+import com.snow.blog.core.repository.ArticleHtmlRepository;
+import com.snow.blog.core.repository.ArticleMdRepository;
 import com.snow.blog.core.repository.ArticleRepository;
 import com.snow.blog.core.repository.entity.Article;
+import com.snow.blog.core.repository.entity.ArticleHtml;
+import com.snow.blog.core.repository.entity.ArticleMd;
 import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.service.ITagService;
 import com.snow.blog.core.util.validator.CommonValidator;
+import com.snow.blog.core.vo.ArticleVO;
 import com.snow.blog.core.web.controller.support.SearchArticleCondition;
+import com.snow.lib.BeanCopyUtil;
 import com.snow.security.core.exception.AccessDeniedException;
+import com.snow.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by SNOW on 2018.01.25.
@@ -34,11 +42,37 @@ public class ArticleService implements IArticleService {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private ArticleMdRepository articleMdRepository;
+
+    @Autowired
+    private ArticleHtmlRepository articleHtmlRepository;
+
+    @Autowired
     private BlogProperties blogProperties;
 
     @Autowired
     private ITagService tagService;
 
+    private String rootUserId;
+
+    public void setRootUserId(@Autowired SecurityProperties securityProperties) {
+        rootUserId = securityProperties.getRootUserId();
+    }
+
+
+    @Override
+    public List<Article> getArticleList(String targetUserId, String currentUserId) {
+        List<Article> articles;
+        // 判断目标用户ID和当前用户是否相同
+        if (StringUtils.equals(targetUserId, currentUserId)) {
+            // 加载所有文章
+            articles = articleRepository.findDistinctByUserIdAndEnabledIsTrue(targetUserId);
+        } else {
+            // 加载非私有文章
+            articles = articleRepository.findDistinctByUserIdAndPersonalIsFalseAndEnabledIsTrue(targetUserId);
+        }
+        return articles;
+    }
 
     @Override
     public Page<Article> getArticlePage(String targetUserId, String currentUserId, Pageable pageable) {
@@ -55,40 +89,52 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public Article getArticleById(String articleId, String userId) {
+    public ArticleVO getArticleById(String articleId, String userId) {
         Article article = articleRepository.findByArticleIdAndEnabledIsTrue(articleId);
         if (null != article && !StringUtils.equals(article.getUserId(), userId) && article.getPersonal()) {
             throw new AccessDeniedException("私有文章，无法访问");
         }
-        return article;
+        ArticleHtml articleHtml = articleHtmlRepository.getOne(articleId);
+        ArticleMd articleMd = articleMdRepository.getOne(articleId);
+        return new ArticleVO(article, articleHtml, articleMd);
     }
 
     @Override
-    public Article saveArticle(Article article, String userId) {
-        article.setUserId(userId);
+    public ArticleVO saveArticle(ArticleVO articleVO, String userId) {
+        articleVO.setUserId(userId);
+        if (StringUtils.isBlank(articleVO.getArticleId())) {
+            articleVO.setArticleId(UUID.randomUUID().toString());
+        }
         // 保存标签
-        List<Tag> tags = tagService.saveTag(article.getTags(), userId);
-        article.setTags(tags);
+        List<Tag> tags = tagService.saveTag(articleVO.getTags(), userId);
+        articleVO.setTags(tags);
         // 生成缩略文字
-        String thumbnail = StringUtils.deleteWhitespace(article.getContentText());
+        String thumbnail = StringUtils.deleteWhitespace(articleVO.getContentText());
         thumbnail = thumbnail.replaceAll(IMAGE_URL_REGEX, IMAGE_URL_REPLACEMENT);
         thumbnail = StringUtils.substring(thumbnail, 0, blogProperties.getArticle().getThumbnailCharNum());
         log.debug("[文章保存] 缩略文字 {}", thumbnail);
-        article.setContentTextSubNail(thumbnail);
+        articleVO.setContentTextSubNail(thumbnail);
         // 保存
-        Article result = articleRepository.save(article);
-        CommonValidator.saveOk(result);
-        return result;
+        Article articleToSave = articleVO.getArticle();
+        Article articleSaveResult = articleRepository.save(articleToSave);
+        CommonValidator.saveOk(articleSaveResult);
+
+        ArticleHtml articleHtmlToSave = articleVO.getArticleHtml();
+        ArticleHtml articleHtmlSaveResult = articleHtmlRepository.save(articleHtmlToSave);
+        CommonValidator.saveOk(articleHtmlSaveResult);
+
+        ArticleMd articleMdToSave = articleVO.getArticleMd();
+        ArticleMd articleMdSaveResult = articleMdRepository.save(articleMdToSave);
+        CommonValidator.saveOk(articleMdSaveResult);
+
+        return new ArticleVO(articleSaveResult, articleHtmlSaveResult, articleMdSaveResult);
     }
 
     @Override
-    public void deleteArticle(Article article) {
-        //        Article result = articleRepository.findByArticleIdAndEnabledIsTrue(article.getArticleId());
-        if (null != article) {
-            //            result.setEnabled(false);
-            articleRepository.delete(article.getArticleId());
+    public void deleteArticle(ArticleVO articleVO) {
+        if (null != articleVO) {
+            articleRepository.delete(articleVO.getArticleId());
         }
-        //        CommonValidator.delOk(result);
     }
 
     @Override

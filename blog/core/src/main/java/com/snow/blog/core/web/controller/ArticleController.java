@@ -3,6 +3,7 @@ package com.snow.blog.core.web.controller;
 import com.snow.blog.core.repository.entity.Article;
 import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.util.validator.ArticleValidator;
+import com.snow.blog.core.vo.ArticleVO;
 import com.snow.blog.core.web.controller.support.SearchArticleCondition;
 import com.snow.lib.result.ResultUtil;
 import com.snow.lib.result.ResultVO;
@@ -55,33 +56,33 @@ public class ArticleController {
     // 获取指定文章
     @GetMapping("/{articleId}")
     public ResultVO getArticleByArticleId(@NotNull @PathVariable("articleId") String articleId, @AuthenticationPrincipal User user) {
-        Article article = articlesService.getArticleById(articleId, user == null ? null : user.getUserId());
-        return ResultUtil.success(article);
+        ArticleVO articleVO = articlesService.getArticleById(articleId, user == null ? null : user.getUserId());
+        return ResultUtil.success(articleVO);
     }
 
     // 保存文章
     @PostMapping
-    public ResultVO saveArticle(@RequestBody Article article, @AuthenticationPrincipal User user) {
+    public ResultVO saveArticle(@RequestBody ArticleVO articleVO, @AuthenticationPrincipal User user) {
         if (null == user) {
             return ResultUtil.unauthorized();
         }
-        ArticleValidator.validate(article);
-        if (null == article.getPersonal()) {
-            article.setPersonal(false);
+        ArticleValidator.validate(articleVO);
+        if (null == articleVO.getPersonal()) {
+            articleVO.setPersonal(false);
         }
-        Article result = articlesService.saveArticle(article, user == null ? null : user.getUserId());
+        ArticleVO result = articlesService.saveArticle(articleVO, user == null ? null : user.getUserId());
         return ResultUtil.success(result);
     }
 
     // 删除文章
     @DeleteMapping
-    public ResultVO deleteArticle(@RequestBody Article article, @AuthenticationPrincipal User user) {
+    public ResultVO deleteArticle(@RequestBody ArticleVO articleVO, @AuthenticationPrincipal User user) {
         if (null == user) {
             return ResultUtil.unauthorized();
         }
-        Assert.isTrue(StringUtils.equals(user.getUserId(), article.getUserId()), "操作受限");
-        ArticleValidator.articleExist(article);
-        articlesService.deleteArticle(article);
+        Assert.isTrue(StringUtils.equals(user.getUserId(), articleVO.getUserId()), "操作受限");
+        ArticleValidator.articleExist(articleVO);
+        articlesService.deleteArticle(articleVO);
         return ResultUtil.success();
     }
 

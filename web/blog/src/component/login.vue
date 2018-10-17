@@ -243,13 +243,15 @@
             if (valid) {
               // 进行注册
               that.registration(that.registerForm).then(
-                (registerOk) => {
-                  if (registerOk) {
-                    that.$message('注册成功')
-                    that.changeSwitch()
-                  } else {
-                    that.$message('注册失败')
-                  }
+                (res) => {
+                  that.$message('注册成功')
+                  that.changeSwitch()
+                },
+                (e) => {
+                  that.$message({
+                    type: 'error',
+                    message: '注册失败,' + e.message
+                  })
                 }
               )
               // console.log(valid)

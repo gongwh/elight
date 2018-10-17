@@ -44,6 +44,7 @@ const actions = {
     context.commit(UPDATE_LOADING, true)
     return writeApi.editor.loadDraftByArticleId(articleId).then(
       (result) => {
+        // console.log('[store] 加载文章到草稿完成', result)
         if (result.status === 200) {
           if (result.data.data) {
             // console.log('非空草稿')
@@ -56,7 +57,8 @@ const actions = {
           }
         }
       },
-      () => {
+      (e) => {
+        // console.log('[store] 加载文章到草稿失败', e)
         context.commit(UPDATE_SYNC, false)
         return false
       })

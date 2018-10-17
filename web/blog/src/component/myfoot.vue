@@ -1,5 +1,5 @@
 <template>
-  <div class="snow_foot_wrapper">
+  <div class="snow_foot_wrapper" id="myFoot">
     <div class="snow_foot">
       <a href='https://gitee.com/gongwh' target="_blank">SNOW</a>
       <br/>
@@ -25,7 +25,7 @@
     display table
     margin auto
     text-align center
-    background-color rgba(232, 232, 232, 0.88)
+    background-color #f1f1f1
     height 50px
     font-size 10px
     .snow_foot

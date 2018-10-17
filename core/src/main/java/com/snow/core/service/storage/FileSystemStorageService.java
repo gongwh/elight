@@ -1,8 +1,10 @@
 package com.snow.core.service.storage;
 
 import com.snow.lib.FileUtil;
+import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -11,17 +13,31 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 @Service
+@Slf4j
 public class FileSystemStorageService implements StorageService {
 
     private final Path rootLocation;
 
+    private int compressWidth;
+
+    private int compressHeight;
+
+    private boolean isImageCompress;
+
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getUploadDir());
+        this.isImageCompress = properties.isImageCompress();
+        this.compressWidth = properties.getCompressWidth();
+        this.compressHeight = properties.getCompressHeight();
     }
 
     @Override
@@ -41,7 +57,11 @@ public class FileSystemStorageService implements StorageService {
             Path parentDir = this.rootLocation.resolve(fileName).getParent();
             if (!parentDir.toFile().exists())
                 Files.createDirectories(parentDir);
-            Files.write(this.rootLocation.resolve(fileName), file.getBytes(), StandardOpenOption.CREATE);
+            if (isImageCompress && FilenameUtils.isExtension(fileName, Arrays.asList("jpg", "jpeg", "png"))) {
+                Thumbnails.of(file.getInputStream()).size(compressWidth, compressHeight).toFile(this.rootLocation.resolve(fileName).toString());
+            } else {
+                Files.write(this.rootLocation.resolve(fileName), file.getBytes(), StandardOpenOption.CREATE);
+            }
             return fileName.replaceAll("\\\\", "/");
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + fileName, e);

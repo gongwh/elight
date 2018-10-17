@@ -1,5 +1,5 @@
 <template>
-  <div class="snow_tag" :class="select?'snow_tag_select':''" @click="e_toggleState">
+  <div class="snow_tag" :class="select?'snow_tag_select':''" @click="e_toggle">
     {{name}}
     <slot></slot>
   </div>
@@ -8,11 +8,11 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
-      name: [String]
+      name: [String],
+      select: {type: Boolean, default: false}
     },
     data () {
       return {
-        select: false
       }
     },
     watch: {},
@@ -22,23 +22,12 @@
     destroyed () {
     },
     methods: {
-      e_toggleState () {
-        this.select = !this.select
-        if (this.select) {
-          this.l_select()
-        } else {
-          this.l_unselected()
-        }
+      e_toggle () {
+        this.$emit('toggle', !this.select)
       },
       e_gotoTagArticles () {
         // console.log('路由推向文章')
         this.$router.push({path: '/articles/list', query: {tagName: this.name}})
-      },
-      l_select () {
-        this.$emit('selected')
-      },
-      l_unselected () {
-        this.$emit('unselected')
       }
     }
   }
@@ -46,7 +35,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   .snow_tag
-    font-family -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif
+    font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
     font-size 14px
     display inline-block
     background transparent

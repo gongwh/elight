@@ -2,11 +2,13 @@
  * Created by SNOW on 2018.01.23.
  */
 import * as articlesApi from '@/api/article/articles'
+import * as tagApi from '@/api/tag/tag'
+import {defaultUserId} from '@/config/base'
 
 // mutations names
 const UPDATE_ARTICLES_PAGE = 'UPDATE_ARTICLES_PAGE'
 const UPDATE_ARTICLES_SEARCH_PAGE = 'UPDATE_ARTICLES_SEARCH_PAGE'
-// const INIT_TAG_NAMES = 'INIT_TAG_NAMES'
+const INIT_TAG_NAMES = 'INIT_TAG_NAMES'
 
 // state
 const state = {
@@ -32,6 +34,17 @@ const actions = {
       },
       (e) => {
         // console.log('加载文章列表失败', e)
+      }
+    )
+  },
+  initTagNames ({commit}) {
+    let userId = window.localStorage.getItem('userId')
+    if (!userId) {
+      userId = defaultUserId
+    }
+    tagApi.loadAllTags(userId).then(
+      (res) => {
+        commit(INIT_TAG_NAMES, res.data.data)
       }
     )
   },
@@ -72,7 +85,7 @@ const mutations = {
       })
     }
   },
-  'INIT_TAG_NAMES' (state, data) {
+  INIT_TAG_NAMES (state, data) {
     state.state_tagNames = data
   },
   UPDATE_ARTICLES_PAGE (state, data) {

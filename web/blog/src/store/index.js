@@ -65,7 +65,7 @@ const state = {
     },
     {
       index: 6,
-      needAuth: true,
+      needAuth: false,
       isDisplay: false,
       path: '/article',
       displayName: 'Delete',
@@ -73,7 +73,17 @@ const state = {
       style: 'normal',
       query: {delete: true}
     },
-    {index: 7, isDisplay: false, path: '/article', displayName: 'Reading', tip: 'latest read', style: 'reading'}
+    {
+      index: 7,
+      needAuth: false,
+      isDisplay: false,
+      path: '/article',
+      displayName: 'Export',
+      tip: 'export to pdf',
+      style: 'normal',
+      query: {exp: true}
+    },
+    {index: 8, isDisplay: false, path: '/article', displayName: 'Reading', tip: 'latest read', style: 'reading'}
   ]
 }
 

@@ -9,9 +9,8 @@
       </snow-input>
 
       <div class="tags">
-        <snow-tag :name="tag.name" v-for="(tag,index) in state_tagNames" :key="tag.id"
-                  @selected="e_tagSelected(index)"
-                  @unselected="e_tagUnSelected(index)"></snow-tag>
+        <snow-tag :name="tag.name" :select="tag.selected" v-for="(tag,index) in state_tagNames" :key="tag.id"
+                  @toggle="e_toggleSelect(index,tag)"></snow-tag>
       </div>
     </show>
     <div class="articles-inner"
@@ -22,6 +21,7 @@
            :class="classes.articleAppend"
            v-for="article in articles">
         <div class="image-wrapper" v-if="article.titleImgUrl">
+          <!--<div class="image-wrapper" v-if="article.titleImgUrl">-->
           <div class="image-wrapper-inner">
             <div class="bg-img"
                  :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
@@ -42,7 +42,8 @@
       <div @click="l_openArticle(article.articleId)" class="article"
            :class="classes.articleAppend"
            v-for="article in articlesSearch">
-        <div class="image-wrapper" v-if="article.titleImgUrl">
+        <!--<div class="image-wrapper" v-if="article.titleImgUrl">-->
+        <div class="image-wrapper">
           <div class="image-wrapper-inner">
             <div class="bg-img"
                  :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
@@ -51,7 +52,8 @@
         <div class="miniContent">
           <div class="title">{{article.title}}</div>
           <div class="date">{{article.updateTime}}</div>
-          <div :class="`${article.titleImgUrl?classes.descAppend:''}`" class="desc">{{article.contentTextSubNail}}</div>
+          <!--<div :class="`${article.titleImgUrl?classes.descAppend:''}`" class="desc">{{article.contentTextSubNail}}</div>-->
+          <div class="desc">{{article.contentTextSubNail}}</div>
         </div>
       </div>
       <div v-for="n in articlesAppendNum" :class="classes.articleAppend" class="article" v-visible="false"></div>
@@ -68,9 +70,9 @@
       return {
         screenWidth: `${document.documentElement.clientWidth}`,
         classes: {
-          articleAppend: '',
-          articlesInnerAppend: '',
-          descAppend: ''
+          articleAppend: 'articleSmall',
+          articlesInnerAppend: ''
+          // descAppend: ''
         },
         articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
@@ -97,8 +99,6 @@
       // auth
       ...mapState('auth', ['userId', 'defaultUserId']),
 
-      // user tags
-      ...mapState('tag/tag', ['tags']),
       // 是否手动刷新
       manualFlush () {
         if (this.$route.query) {
@@ -124,15 +124,18 @@
     },
     created () {
       this.searchInput = this.state_searchInput
+      this.l_tryChangeIsSearch()
       if (this.manualFlush || this.articles === null) {
         // console.log('刷新文章列表')
         this.CLEAR_ARTICLES_RESULT()
-        this.l_loadArticlePage()
+        if (this.isSearch) {
+          this.l_searchArticlePage()
+        } else {
+          this.l_loadArticlePage()
+        }
+        this.l_tryInitTagNames()
       }
       this.updateClasses()
-      this.l_loadAllTags()
-      this.l_tryInitTagNames()
-      this.l_trySearch()
     },
     mounted () {
       const that = this
@@ -146,15 +149,13 @@
       // window.addEventListener('scroll', that.l_scrollLoad)
     },
     methods: {
-      ...mapActions('article/articles', ['loadArticlePage', 'searchArticles', 'getSelectedTagNames']),
+      ...mapActions('article/articles', ['loadArticlePage', 'searchArticles', 'getSelectedTagNames', 'initTagNames']),
       ...mapActions('tag/tag', ['loadAllTags']),
       ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT',
         'SET_ARTICLES_SEARCH_INPUT', 'INIT_TAG_NAMES', 'UPDATE_TAG_SELECT']),
       l_tryInitTagNames () {
         if (!this.state_tagNames) {
-          if (this.tags) {
-            this.INIT_TAG_NAMES(this.tags)
-          }
+          this.initTagNames()
         }
       },
       l_tryChangeIsSearch () {
@@ -172,21 +173,14 @@
           this.l_searchArticlePage()
         }
       },
-      e_tagSelected (index) {
-        // console.log('第', index, '个tag被选中')
-        this.UPDATE_TAG_SELECT({index: index, selected: true})
+      e_toggleSelect (index, tag) {
+        if (tag.selected) {
+          this.UPDATE_TAG_SELECT({index: index, selected: false})
+        } else {
+          this.UPDATE_TAG_SELECT({index: index, selected: true})
+        }
         this.CLEAR_ARTICLES_SEARCH_RESULT()
         this.l_trySearch()
-      },
-      e_tagUnSelected (index) {
-        // console.log('第', index, '个tag被取消选中')
-        this.UPDATE_TAG_SELECT({index: index, selected: false})
-        this.CLEAR_ARTICLES_SEARCH_RESULT()
-        this.l_trySearch()
-      },
-      l_loadAllTags () {
-        let userId = this.userId ? this.userId : this.defaultUserId
-        this.loadAllTags({userId: userId})
       },
       e_searchInputFocus () {
         this.tagsVisible = true
@@ -306,28 +300,28 @@
         }
       },
       updateClasses () {
-        // console.log('刷新文章列表样式', this.isSearch ? '搜索中' : '正常显示中', this.isSearch ? this.articlesNumSearch : this.articlesNum)
+        console.log('刷新文章列表样式', this.screenWidth, this.isSearch ? '搜索中' : '正常显示中', this.isSearch ? this.articlesNumSearch : this.articlesNum)
         if (this.screenWidth > 1428) {
           // console.log('检测到大屏')
           // this.articlesAppendNum = 3 - (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 3
-          this.articlesAppendNum = 0
-          this.classes.articleAppend = 'articleSmall'
+          // this.articlesAppendNum = 0
+          // this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesFlexStart'
-          this.classes.descAppend = 'descLineClamp3'
+          // this.classes.descAppend = 'descLineClamp3'
         } else if (this.screenWidth > 958) {
           // console.log('检测到中屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
-          this.articlesAppendNum = 0
-          this.classes.articleAppend = 'articleSmall'
+          // this.articlesAppendNum = 0
+          // this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerBetween'
-          this.classes.descAppend = 'descLineClamp4'
+          // this.classes.descAppend = 'descLineClamp4'
         } else {
           // console.log('检测到小屏')
           // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
-          this.articlesAppendNum = 0
-          this.classes.articleAppend = 'articleSmall'
+          // this.articlesAppendNum = 0
+          // this.classes.articleAppend = 'articleSmall'
           this.classes.articlesInnerAppend = 'articlesInnerCenter'
-          this.classes.descAppend = 'descLineClamp8'
+          // this.classes.descAppend = 'descLineClamp8'
         }
         // console.log('articlesAppendNum', this.articlesAppendNum)
       },
@@ -366,12 +360,13 @@
       flex-direction row
       flex-wrap wrap
       .article
+        height 220px
         cursor pointer
         display block
         margin 30px 10px
         border-radius 6px
         box-shadow 1px 1px 3px #dddddd
-        background-color #f4f4f4fa
+        background-color rgba(255, 255, 255, 0.98)
         overflow hidden
         padding-bottom 10px
         .image-wrapper
@@ -394,17 +389,19 @@
         &:hover
           box-shadow: 0 0 30px #cacaca
         .miniContent
-          margin 15px 10px 10px 10px
           padding 0
           text-align center
           .title
             font-size 15px
+            color #080809
+            font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
           .date
             margin 5px 0
             font-size 15px
+            color darkgray
           .desc
             word-break break-word
             color rgba(0, 0, 0, 0.7)
@@ -425,8 +422,8 @@
     height 420px
 
   .articleSmall
-    width 220px
-    height 280px
+    width 180px
+    height 220px
 
   .articlesFlexStart
     justify-content center

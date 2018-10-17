@@ -26,8 +26,6 @@ import java.util.List;
 public class Article extends BaseEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String articleId;
 
     // 标题图片
@@ -35,24 +33,6 @@ public class Article extends BaseEntity {
 
     // 标题
     private String title;
-
-    // html 文本
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "mediumtext")
-    private String contentHtml;
-
-    // markdown 文本
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "mediumtext")
-    private String contentMd;
-
-    // html 文本
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "mediumtext")
-    private String contentText;
 
     // html 文本缩略
     @Column
@@ -65,12 +45,12 @@ public class Article extends BaseEntity {
     private Boolean personal;
 
     // 文章标签
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "article_tag")
     private List<Tag> tags = new ArrayList<>();
 
     // 文章分类
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "article_category")
     private List<Category> categories = new ArrayList<>();
 

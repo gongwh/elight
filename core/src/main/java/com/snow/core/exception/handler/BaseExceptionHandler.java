@@ -1,4 +1,4 @@
-package com.snow.lib.exception.handler;
+package com.snow.core.exception.handler;
 
 import com.snow.lib.enums.ResultEnum;
 import com.snow.lib.exception.BaseException;
@@ -36,10 +36,8 @@ public class BaseExceptionHandler {
      * @return
      */
     @ExceptionHandler(BaseException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResultVO handleSellException(BaseException e) {
-        log.error("【异常】【{}】【{}】", e.getMessage(), e);
+        log.error("[异常] [{}]", e.getMessage(), e);
         return ResultUtil.error(e);
     }
 
@@ -50,10 +48,8 @@ public class BaseExceptionHandler {
      * @return
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResultVO handleSellException(MissingServletRequestParameterException e) {
-        log.error("【异常】【{}】【{}】", e.getMessage(), e);
+        log.error("[异常] [{}]", e.getMessage(), e);
         return ResultUtil.error(ResultEnum.REQUEST_MISMATCH_ERROR.getMsg());
     }
 }

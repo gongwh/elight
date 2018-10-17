@@ -11,6 +11,7 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties(prefix = "snow.security")
 public class SecurityProperties {
+    private String rootUserId;
     private String[] permitAnts = {};
     private PasswordOauthProperties password = new PasswordOauthProperties();
 }

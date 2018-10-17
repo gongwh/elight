@@ -48,11 +48,12 @@
   html, body
     margin 0
 
+
   .el-message
     z-index 5000
 
   .index
-    background-color #e6e6e682
+    background-color #fafafa
 
     a:link {
       text-decoration: none;

@@ -5,7 +5,7 @@
         <el-button type="primary" @click="e_login">login</el-button>
       </div>
     </snow-dialog>
-    <div class="my_head" @scroll="l_onScroll">
+    <div class="my_head" @scroll="l_onScroll" id="myHead">
       <div class="title">
         <div class="title-inner">
           <snow-tooltip content="login in">
@@ -104,7 +104,7 @@
     // background-image linear-gradient(120deg,#155799,#159957)
     width 100%
     position fixed
-    background-color rgba(230, 230, 230, 1)
+    background-color #f1f1f1
     z-index 2100
     transition transform .5s;
     transform translateZ(0);
@@ -113,7 +113,7 @@
       height 42px
       .title-inner
         height 30px
-        width 90%
+        /*width 90%*/
         line-height 30px
         margin auto
         padding-top 6px
@@ -123,6 +123,7 @@
           display inline-block
           height 100%
         .me
+          margin-left 80px
           font-size 25px
           font-weight 500
           cursor pointer
@@ -131,16 +132,17 @@
           font-size 18px
           text-align center
           .navigation_block
-            width 80px
+            width 85px
             cursor pointer
             overflow hidden
             display block
           .normal
             font-weight 300
           .reading
-            width 200px
+            width 100px
             /*font-weight 600*/
             /*color #383fff*/
+            margin-right 30px
             text-overflow ellipsis
             white-space nowrap
     .back_to_top

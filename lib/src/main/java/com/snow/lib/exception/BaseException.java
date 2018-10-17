@@ -27,7 +27,7 @@ public class BaseException extends RuntimeException {
 
 
     public BaseException(String msg) {
-        this(msg, HttpStatus.INTERNAL_SERVER_ERROR.value());
+        this(msg, HttpStatus.BAD_REQUEST.value());
     }
 
 }

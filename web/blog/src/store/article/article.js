@@ -50,6 +50,15 @@ const actions = {
           // console.log('删除文章失败')
           return false
         })
+  },
+  addSiteSearch (context, articleId) {
+    // articleApi.addSiteSearch(articleId)
+  },
+  updateSiteSearch (context, articleId) {
+    // articleApi.updateSiteSearch(articleId)
+  },
+  deleteSiteSearch (articleId) {
+    // articleApi.deleteSiteSearch(articleId)
   }
 }
 

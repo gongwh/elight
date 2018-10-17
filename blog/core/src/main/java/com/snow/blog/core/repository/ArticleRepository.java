@@ -25,6 +25,22 @@ public interface ArticleRepository extends BaseRepository<Article> {
      * 根据用户查询文章
      *
      * @param userId
+     * @return
+     */
+    List<Article> findDistinctByUserIdAndEnabledIsTrue(String userId);
+
+    /**
+     * 根据用户查询公共文章
+     *
+     * @param userId
+     * @return
+     */
+    List<Article> findDistinctByUserIdAndPersonalIsFalseAndEnabledIsTrue(String userId);
+
+    /**
+     * 根据用户查询文章
+     *
+     * @param userId
      * @param pageable
      * @return
      */

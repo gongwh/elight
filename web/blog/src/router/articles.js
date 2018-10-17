@@ -1,8 +1,8 @@
 /**
  * Created by SNOW on 2018.01.27.
  */
-import ARTICLES from '@/component/articles/index'
-import articleList from '@/component/articles/list'
+const articleList = r => require.ensure([], () => r(require('@/component/articles/list')), 'articleList')
+const ARTICLES = r => require.ensure([], () => r(require('@/component/articles/index')), 'ARTICLES')
 
 export default {
   path: '/articles',
