@@ -34,6 +34,9 @@ public class Article extends BaseEntity {
     // 标题
     private String title;
 
+    // 标题拼音
+    private String titleLetter;
+
     // html 文本缩略
     @Column
     private String contentTextSubNail;
@@ -44,13 +47,18 @@ public class Article extends BaseEntity {
     // 是否私有
     private Boolean personal;
 
+    // 文章统计
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "article_read_statistic")
+    private Statistic readStatistic;
+
     // 文章标签
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "article_tag")
     private List<Tag> tags = new ArrayList<>();
 
     // 文章分类
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "article_category")
     private List<Category> categories = new ArrayList<>();
 

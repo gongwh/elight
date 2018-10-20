@@ -7,56 +7,53 @@
                   placeholder=""
                   v-model="searchInput">
       </snow-input>
-
       <div class="tags">
         <snow-tag :name="tag.name" :select="tag.selected" v-for="(tag,index) in state_tagNames" :key="tag.id"
                   @toggle="e_toggleSelect(index,tag)"></snow-tag>
       </div>
     </show>
     <div class="articles-inner"
-         :class="classes.articlesInnerAppend"
          v-show="!isSearch"
     >
       <div @click="l_openArticle(article.articleId)" class="article"
-           :class="classes.articleAppend"
            v-for="article in articles">
-        <div class="image-wrapper" v-if="article.titleImgUrl">
-          <!--<div class="image-wrapper" v-if="article.titleImgUrl">-->
+        <div class="image-wrapper">
           <div class="image-wrapper-inner">
-            <div class="bg-img"
-                 :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
+            <div class="bg-img" v-if="article.titleImgUrl"
+                 :style="{'background-image': 'url(' + fileBase + article.titleImgUrl + ')'} "></div>
+            <div class="bg-letter" v-if="!article.titleImgUrl">{{article.titleLetter ? article.titleLetter: '?'}}</div>
           </div>
         </div>
         <div class="miniContent">
           <div class="title">{{article.title}}</div>
-          <div class="date">{{article.updateTime}}</div>
-          <div :class="`${article.titleImgUrl?classes.descAppend:''}`" class="desc">{{article.contentTextSubNail}}</div>
+          <div class="desc">{{article.contentTextSubNail}}</div>
+          <div class="subscribe">{{article.updateTime}}
+            <div>
+              <img src="./see.png"/>
+              {{article.readStatistic ? article.readStatistic.total: 0}}
+            </div>
+          </div>
         </div>
       </div>
-      <div v-for="n in articlesAppendNum" :class="classes.articleAppend" class="article" v-visible="false"></div>
     </div>
     <div class="articles-inner"
-         :class="classes.articlesInnerAppend"
          v-show="isSearch"
     >
       <div @click="l_openArticle(article.articleId)" class="article"
-           :class="classes.articleAppend"
            v-for="article in articlesSearch">
-        <!--<div class="image-wrapper" v-if="article.titleImgUrl">-->
         <div class="image-wrapper">
           <div class="image-wrapper-inner">
-            <div class="bg-img"
-                 :style="{'background-image': 'url(' + fileBase + (!(article.titleImgUrl)?defaultImgPath:article.titleImgUrl) + ')'} "></div>
+            <div class="bg-img" v-if="article.titleImgUrl"
+                 :style="{'background-image': 'url(' + fileBase + article.titleImgUrl + ')'} "></div>
+            <div class="bg-letter" v-if="!article.titleImgUrl">{{article.titleLetter ? article.titleLetter: '?'}}</div>
           </div>
         </div>
         <div class="miniContent">
           <div class="title">{{article.title}}</div>
-          <div class="date">{{article.updateTime}}</div>
-          <!--<div :class="`${article.titleImgUrl?classes.descAppend:''}`" class="desc">{{article.contentTextSubNail}}</div>-->
           <div class="desc">{{article.contentTextSubNail}}</div>
+          <div class="subscribe">{{article.updateTime}}<img src="./see.png"/></div>
         </div>
       </div>
-      <div v-for="n in articlesAppendNum" :class="classes.articleAppend" class="article" v-visible="false"></div>
     </div>
   </div>
 </template>
@@ -68,13 +65,6 @@
   export default {
     data () {
       return {
-        screenWidth: `${document.documentElement.clientWidth}`,
-        classes: {
-          articleAppend: 'articleSmall',
-          articlesInnerAppend: ''
-          // descAppend: ''
-        },
-        articlesAppendNum: 0,
         defaultImgPath: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg',
         searchInput: '',
         searchInputLatest: '',
@@ -119,14 +109,12 @@
         if (!val) {
           this.searchResultShow = false
         }
-        this.updateClasses()
       }
     },
     created () {
       this.searchInput = this.state_searchInput
       this.l_tryChangeIsSearch()
       if (this.manualFlush || this.articles === null) {
-        // console.log('刷新文章列表')
         this.CLEAR_ARTICLES_RESULT()
         if (this.isSearch) {
           this.l_searchArticlePage()
@@ -135,18 +123,8 @@
         }
         this.l_tryInitTagNames()
       }
-      this.updateClasses()
     },
     mounted () {
-      const that = this
-      window.addEventListener('resize', function () {
-        that.screenWidth = `${document.documentElement.clientWidth}`
-        that.updateClasses()
-      })
-      window.addEventListener('load', function () {
-        that.screenWidth = `${document.documentElement.clientWidth}`
-      })
-      // window.addEventListener('scroll', that.l_scrollLoad)
     },
     methods: {
       ...mapActions('article/articles', ['loadArticlePage', 'searchArticles', 'getSelectedTagNames', 'initTagNames']),
@@ -159,7 +137,6 @@
         }
       },
       l_tryChangeIsSearch () {
-        // console.log('判断是否有选中的TAG', this.hasSelectedTag)
         if (this.searchInput.length > 0 || this.hasSelectedTag) {
           this.isSearch = true
         } else {
@@ -169,7 +146,6 @@
       l_trySearch () {
         this.l_tryChangeIsSearch()
         if (this.isSearch) {
-          // console.log('发起搜索')
           this.l_searchArticlePage()
         }
       },
@@ -189,23 +165,19 @@
         this.tagsVisible = false
       },
       l_scrollLoad (e) {
-        // console.log('滚轮滚动事件', 'deltaY', e.deltaY)
         const that = this
         let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
         let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
         if (scrollTop + windowHeight >= scrollHeight && e.deltaY > 0) {
-          // that.l_loadArticlePage()
           if (this.noArticleNotifyTimes >= 6) {
             this.noArticleNotifyTimes = 0
-            // console.log('到底了要加载')
             if (!this.isSearch) {
               that.l_loadArticlePage()
             } else {
               that.l_searchArticlePage()
             }
           } else {
-            // console.log('到底了不加载')
             this.noArticleNotifyTimes++
           }
         }
@@ -216,14 +188,12 @@
           // console.log('首次加载文章', this.pagination)
           this.loadArticlePage({userId: userId, page: 0, size: 10}).then(
             () => {
-              this.updateClasses()
             }
           )
         } else if (!this.pagination.last || this.manualFlush) {
           // console.log('加载文章', this.pagination)
           this.loadArticlePage({userId: userId, page: (this.pagination.pageNumber + 1), size: 10}).then(
             () => {
-              this.updateClasses()
             }
           )
         } else {
@@ -248,7 +218,6 @@
           }).then(
             () => {
               this.searchResultShow = true
-              this.updateClasses()
             }
           )
         } else if (!this.paginationSearch.last) {
@@ -261,7 +230,6 @@
             size: 10
           }).then(
             () => {
-              this.updateClasses()
             }
           )
         } else {
@@ -289,7 +257,6 @@
               () => {
                 this.searchResultShow = true
                 this.searchInputLatest = this.searchInput
-                this.updateClasses()
               }
             )
           } else {
@@ -299,45 +266,13 @@
           // console.log('不是搜索状态')
         }
       },
-      updateClasses () {
-        console.log('刷新文章列表样式', this.screenWidth, this.isSearch ? '搜索中' : '正常显示中', this.isSearch ? this.articlesNumSearch : this.articlesNum)
-        if (this.screenWidth > 1428) {
-          // console.log('检测到大屏')
-          // this.articlesAppendNum = 3 - (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 3
-          // this.articlesAppendNum = 0
-          // this.classes.articleAppend = 'articleSmall'
-          this.classes.articlesInnerAppend = 'articlesFlexStart'
-          // this.classes.descAppend = 'descLineClamp3'
-        } else if (this.screenWidth > 958) {
-          // console.log('检测到中屏')
-          // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
-          // this.articlesAppendNum = 0
-          // this.classes.articleAppend = 'articleSmall'
-          this.classes.articlesInnerAppend = 'articlesInnerBetween'
-          // this.classes.descAppend = 'descLineClamp4'
-        } else {
-          // console.log('检测到小屏')
-          // this.articlesAppendNum = (this.isSearch ? this.articlesNumSearch : this.articlesNum) % 2
-          // this.articlesAppendNum = 0
-          // this.classes.articleAppend = 'articleSmall'
-          this.classes.articlesInnerAppend = 'articlesInnerCenter'
-          // this.classes.descAppend = 'descLineClamp8'
-        }
-        // console.log('articlesAppendNum', this.articlesAppendNum)
-      },
       l_openArticle (_articleId) {
         this.$router.push({path: `/article/${_articleId}`})
       }
     },
     destroyed () {
-      // const that = this
-      // window.removeEventListener('scroll', that.l_scrollLoad)
     },
     beforeRouteUpdate (to, from, next) {
-      // console.log('query刷新', to.query)
-      if (to.query.tagName) {
-        // this.searchInput = to.query.tagName
-      }
     }
   }
 </script>
@@ -354,18 +289,17 @@
     .articles-inner
       display flex
       margin auto
-      padding-top 50px
-      width 95%
+      max-width 1200px
       text-align center
       flex-direction row
       flex-wrap wrap
+      justify-content center
       .article
-        height 220px
+        height 280px
+        width 280px
         cursor pointer
         display block
-        margin 30px 10px
-        border-radius 6px
-        box-shadow 1px 1px 3px #dddddd
+        margin 30px 18px
         background-color rgba(255, 255, 255, 0.98)
         overflow hidden
         padding-bottom 10px
@@ -386,51 +320,56 @@
               background-size cover
               background-repeat no-repeat
               background-position center center
-        &:hover
-          box-shadow: 0 0 30px #cacaca
+            .bg-letter
+              height 100%
+              line-height 135px
+              background #f9f9f9 linear-gradient(to right, rgba(144, 195, 194, 0.17), #dedfea42)
+              font-size 50px
+              font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+        /*&:hover*/
+        /*box-shadow: 0 0 30px #cacaca*/
         .miniContent
-          padding 0
-          text-align center
+          padding-top 5px
+          text-align left
+          font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
           .title
-            font-size 15px
+            text-align left
+            font-size 16px
             color #080809
             font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif
             white-space nowrap
             overflow hidden
             text-overflow ellipsis
-          .date
-            margin 5px 0
-            font-size 15px
-            color darkgray
+            &::before
+              margin-right 10px
+              background #212226
+              width 10px
+              height 10px
+              display inline-block
+              content ''
+              left -20px
+              top 6px
           .desc
-            word-break break-word
+            height 54px
+            margin 5px 0
+            font-size 14px
             color rgba(0, 0, 0, 0.7)
             overflow hidden
-          .descLineClamp3
+            text-overflow ellipsis
+            display -webkit-box
             -webkit-line-clamp 3
-          .descLineClamp4
-            -webkit-line-clamp 3
-          .descLineClamp8
-            -webkit-line-clamp 3
-
-  .articleLarge
-    width 500px
-    height 580px
-
-  .articleMiddle
-    width 380px
-    height 420px
-
-  .articleSmall
-    width 180px
-    height 220px
-
-  .articlesFlexStart
-    justify-content center
-
-  .articlesInnerCenter
-    justify-content center
-
-  .articlesInnerBetween
-    justify-content center
+            -webkit-box-orient vertical
+          .subscribe
+            height 15px
+            line-height 15px
+            text-align left
+            margin 8px 0
+            font-size 5px
+            color darkgray
+            > div
+              display inline-block
+              img
+                margin-left 10px
+                height 15px
+                vertical-align middle
 </style>

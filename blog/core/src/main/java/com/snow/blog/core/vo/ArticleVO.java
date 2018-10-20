@@ -35,9 +35,11 @@ public class ArticleVO extends BaseVO {
         article.setArticleId(this.articleId);
         article.setTitleImgUrl(this.titleImgUrl);
         article.setTitle(this.title);
+        article.setTitleLetter(this.titleLetter);
         article.setContentTextSubNail(this.contentTextSubNail);
         article.setUserId(this.userId);
         article.setPersonal(this.personal);
+        article.setReadStatistic(this.readStatistic);
         article.setTags(this.tags);
         article.setCategories(this.categories);
         return article;
@@ -50,9 +52,11 @@ public class ArticleVO extends BaseVO {
         this.setArticleId(article.getArticleId());
         this.setTitleImgUrl(article.getTitleImgUrl());
         this.setTitle(article.getTitle());
+        this.setTitleLetter(article.getTitleLetter());
         this.setContentTextSubNail(article.getContentTextSubNail());
         this.setUserId(article.getUserId());
         this.setPersonal(article.getPersonal());
+        this.setReadStatistic(article.getReadStatistic());
         this.setTags(article.getTags());
         this.setCategories(article.getCategories());
         this.setContentHtml(articleHtml.getContentHtml());
@@ -67,6 +71,9 @@ public class ArticleVO extends BaseVO {
     // 标题
     private String title;
 
+    // 标题拼音
+    private String titleLetter;
+
     // html 文本缩略
     private String contentTextSubNail;
 
@@ -75,6 +82,9 @@ public class ArticleVO extends BaseVO {
 
     // 是否私有
     private Boolean personal;
+
+    // 阅读统计
+    private Statistic readStatistic;
 
     // 文章标签
     private List<Tag> tags = new ArrayList<>();

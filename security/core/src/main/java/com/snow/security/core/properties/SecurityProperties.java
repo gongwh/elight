@@ -14,4 +14,5 @@ public class SecurityProperties {
     private String rootUserId;
     private String[] permitAnts = {};
     private PasswordOauthProperties password = new PasswordOauthProperties();
+    private CorsProperties cors = new CorsProperties();
 }

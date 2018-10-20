@@ -10,10 +10,10 @@ import com.snow.blog.core.repository.entity.ArticleMd;
 import com.snow.blog.core.repository.entity.Tag;
 import com.snow.blog.core.service.IArticleService;
 import com.snow.blog.core.service.ITagService;
+import com.snow.blog.core.util.Pinyin4jUtil;
 import com.snow.blog.core.util.validator.CommonValidator;
 import com.snow.blog.core.vo.ArticleVO;
 import com.snow.blog.core.web.controller.support.SearchArticleCondition;
-import com.snow.lib.BeanCopyUtil;
 import com.snow.security.core.exception.AccessDeniedException;
 import com.snow.security.core.properties.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -108,6 +108,14 @@ public class ArticleService implements IArticleService {
         // 保存标签
         List<Tag> tags = tagService.saveTag(articleVO.getTags(), userId);
         articleVO.setTags(tags);
+        // 生成标题拼音
+        if (null != articleVO.getTitle()) {
+            try {
+                articleVO.setTitleLetter(StringUtils.substring(Pinyin4jUtil.converterToFirstSpell(articleVO.getTitle()).toUpperCase(), 0, 1));
+            } catch (Exception e) {
+                log.error("[文章保存] [标题字母] 生成", e);
+            }
+        }
         // 生成缩略文字
         String thumbnail = StringUtils.deleteWhitespace(articleVO.getContentText());
         thumbnail = thumbnail.replaceAll(IMAGE_URL_REGEX, IMAGE_URL_REPLACEMENT);

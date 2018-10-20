@@ -20,6 +20,7 @@ import javax.persistence.*;
 @DynamicInsert
 @EqualsAndHashCode(callSuper = true)
 public class Draft extends BaseEntity {
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

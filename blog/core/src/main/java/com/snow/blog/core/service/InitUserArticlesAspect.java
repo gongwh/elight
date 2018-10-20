@@ -18,7 +18,7 @@ import java.util.List;
 @Aspect
 @Component
 @Slf4j
-public class InitUserArticles {
+public class InitUserArticlesAspect {
 
     @Autowired
     private IArticleService articleService;

@@ -53,7 +53,7 @@
     z-index 5000
 
   .index
-    background-color #fafafa
+    background-color rgba(255,255,255,0.98)
 
     a:link {
       text-decoration: none;
