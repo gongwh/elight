@@ -1,5 +1,5 @@
 <template>
-  <div id="articles" class="articles" @wheel="l_scrollLoad">
+  <div id="articles" class="articles" @wheel="e_scrollLoad" @touchmove="e_touchMoveLoad">
     <show>
       <snow-input @keyup.enter.native="e_searchArticle"
                   @focus="e_searchInputFocus"
@@ -55,6 +55,9 @@
         </div>
       </div>
     </div>
+    <div class="loading">
+      <img v-show="isLoading" src="../../assets/loading.gif" alt="">
+    </div>
   </div>
 </template>
 
@@ -71,7 +74,8 @@
         searchResultShow: false,
         noArticleNotifyTimes: 10,
         tagsVisible: false,
-        isSearch: false
+        isSearch: false,
+        isLoading: false
       }
     },
     components: {show},
@@ -164,36 +168,70 @@
       e_searchInputBlur () {
         this.tagsVisible = false
       },
-      l_scrollLoad (e) {
+      e_scrollLoad (e) {
+        // console.log(e)
         const that = this
         let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
         let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        if (scrollTop + windowHeight >= scrollHeight && e.deltaY > 0) {
-          if (this.noArticleNotifyTimes >= 6) {
-            this.noArticleNotifyTimes = 0
-            if (!this.isSearch) {
-              that.l_loadArticlePage()
+        if (!that.isLoading) {
+          if (scrollTop + windowHeight >= scrollHeight && e.deltaY > 0) {
+            if (this.noArticleNotifyTimes >= 10) {
+              this.noArticleNotifyTimes = 0
+              if (!this.isSearch) {
+                that.l_loadArticlePage()
+              } else {
+                that.l_searchArticlePage()
+              }
             } else {
-              that.l_searchArticlePage()
+              this.noArticleNotifyTimes++
             }
-          } else {
-            this.noArticleNotifyTimes++
+          }
+        }
+      },
+      e_touchMoveLoad (e) {
+        const that = this
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+        let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+        if (scrollTop + windowHeight + 2 >= scrollHeight) {
+          if (!that.isLoading) {
+            if (this.noArticleNotifyTimes >= 10) {
+              this.noArticleNotifyTimes = 0
+              if (!this.isSearch) {
+                that.l_loadArticlePage()
+              } else {
+                that.l_searchArticlePage()
+              }
+            } else {
+              this.noArticleNotifyTimes++
+            }
           }
         }
       },
       l_loadArticlePage () {
-        let userId = this.userId ? this.userId : this.defaultUserId
-        if (!this.pagination) {
+        const that = this
+        let userId = that.userId ? that.userId : that.defaultUserId
+        if (!that.pagination) {
           // console.log('首次加载文章', this.pagination)
+          that.isLoading = true
           this.loadArticlePage({userId: userId, page: 0, size: 10}).then(
             () => {
+              that.isLoading = false
+            },
+            () => {
+              that.isLoading = false
             }
           )
-        } else if (!this.pagination.last || this.manualFlush) {
+        } else if (!that.pagination.last || this.manualFlush) {
           // console.log('加载文章', this.pagination)
+          that.isLoading = true
           this.loadArticlePage({userId: userId, page: (this.pagination.pageNumber + 1), size: 10}).then(
             () => {
+              that.isLoading = false
+            },
+            () => {
+              that.isLoading = false
             }
           )
         } else {
@@ -205,24 +243,31 @@
         }
       },
       async l_searchArticlePage () {
-        let userId = this.userId ? this.userId : this.defaultUserId
+        const that = this
+        let userId = that.userId ? that.userId : that.defaultUserId
         // 搜索旧输入内容
-        if (!this.paginationSearch) {
+        that.isLoading = true
+        if (!that.paginationSearch) {
           // 搜索首页
           this.searchArticles({
             userId: userId,
-            title: this.searchInput,
-            tagNames: this.state_selectedTagNames,
+            title: that.searchInput,
+            tagNames: that.state_selectedTagNames,
             page: 0,
             size: 10
           }).then(
             () => {
-              this.searchResultShow = true
+              that.searchResultShow = true
+              that.isLoading = false
+            },
+            () => {
+              that.isLoading = false
             }
           )
-        } else if (!this.paginationSearch.last) {
+        } else if (!that.paginationSearch.last) {
           // 搜索下一页
-          this.searchArticles({
+          that.isLoading = true
+          that.searchArticles({
             userId: userId,
             title: this.searchInput,
             tagNames: this.state_selectedTagNames,
@@ -230,6 +275,10 @@
             size: 10
           }).then(
             () => {
+              that.isLoading = false
+            },
+            () => {
+              that.isLoading = false
             }
           )
         } else {
@@ -241,26 +290,32 @@
         }
       },
       async e_searchArticle () {
-        if (this.isSearch) {
+        const that = this
+        if (that.isSearch) {
           // 判断是否需要搜索新内容
-          let userId = this.userId ? this.userId : this.defaultUserId
-          if (this.searchInputLatest !== this.searchInput) {
+          let userId = that.userId ? that.userId : that.defaultUserId
+          if (that.searchInputLatest !== that.searchInput) {
             // 搜索新输入内容的首页
-            this.CLEAR_ARTICLES_SEARCH_RESULT()
-            this.searchArticles({
+            that.CLEAR_ARTICLES_SEARCH_RESULT()
+            that.isLoading = true
+            that.searchArticles({
               userId: userId,
-              title: this.searchInput,
-              tagNames: this.state_selectedTagNames,
+              title: that.searchInput,
+              tagNames: that.state_selectedTagNames,
               page: 0,
               size: 10
             }).then(
               () => {
-                this.searchResultShow = true
-                this.searchInputLatest = this.searchInput
+                that.searchResultShow = true
+                that.searchInputLatest = that.searchInput
+                that.isLoading = false
+              },
+              () => {
+                that.isLoading = false
               }
             )
           } else {
-            this.l_searchArticlePage()
+            that.l_searchArticlePage()
           }
         } else {
           // console.log('不是搜索状态')
@@ -372,4 +427,9 @@
                 margin-left 10px
                 height 15px
                 vertical-align middle
+    .loading
+      height 100px
+      text-align center
+      img
+        height 100px
 </style>
