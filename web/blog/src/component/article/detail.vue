@@ -13,6 +13,9 @@
         <markdownShow :html="articleTemp.contentHtml"></markdownShow>
       </div>
     </div>
+    <div class="loading">
+      <img v-show="loading" src="../../assets/loading.gif" alt="">
+    </div>
   </div>
 </template>
 
@@ -278,6 +281,11 @@
         margin 30px auto
         padding 0 30px 0 0
 
+  .loading
+    height 100px
+    text-align center
+    img
+      height 100px
   @media (max-width: 767px) {
     .markdown-body {
       padding 15px;
