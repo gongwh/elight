@@ -130,6 +130,10 @@
     created () {
       this.l_loadEditor()
       this.l_updateTopButton()
+      this.$emit('global:HeadSlotShow', false)
+    },
+    destroyed () {
+      this.$emit('global:HeadSlotShow', true)
     },
     mounted () {
       this.l_updateTopButton()

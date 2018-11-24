@@ -39,14 +39,12 @@ const actions = {
     )
   },
   async logout ({commit}) {
-    auth.logout().then(
-      () => {
-        commit(SET_AUTHORIZATION, null)
-      },
-      (e) => {
-        // console.log('登出失败', e)
-      }
-    )
+    commit(SET_AUTHORIZATION, null)
+    commit(SET_USER_ID, null)
+    commit(SET_USERNAME, null)
+    window.localStorage.removeItem('authorization')
+    window.localStorage.removeItem('userId')
+    window.localStorage.removeItem('username')
   }
 }
 

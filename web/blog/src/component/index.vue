@@ -1,6 +1,6 @@
 <template>
   <div class="index" @wheel="e_scrollLoad">
-    <myhead :isSlotShow="isSlotShow" :needScroll="true"></myhead>
+    <myhead :isSlotShow="isSlotShow"></myhead>
     <div class="content">
       <transition name="fade">
         <router-view></router-view>

@@ -61,10 +61,6 @@
 
   export default {
     props: {
-      needScroll: {
-        type: Boolean,
-        default: true
-      },
       isSlotShow: {
         type: Boolean,
         default: false
@@ -75,6 +71,7 @@
         profileDialogVisible: false,
         profileDialogPosition: {x: 0, y: 35},
         slotTitle: 'Elight',
+        isNeedScroll: true,
         isSlotSearchShow: false
       }
     },
@@ -82,7 +79,8 @@
       ...mapState(['topButtonsProps']),
       ...mapState('auth', ['defaultUserName', 'username']),
       scrollClass: function () {
-        if (this.needScroll) {
+        console.log('isNeedScroll', this.isNeedScroll, 'isSlotShow', this.isSlotShow)
+        if (this.isNeedScroll) {
           return this.isSlotShow ? 'slot-show' : 'slot-hidden'
         } else {
           return 'slot-hidden'
@@ -97,6 +95,9 @@
       })
       this.$on('global:HeadSlotSearchShow', function (show) {
         that.isSlotSearchShow = show
+      })
+      this.$on('global:HeadSlotShow', function (show) {
+        that.isNeedScroll = show
       })
     },
     methods: {
