@@ -1,13 +1,13 @@
 <template>
   <div class="article" id="article">
     <div class="article_wrapper">
-      <snowDialog :visible.sync='deleteDialogVisible' :position="delDialogPosition">
+      <snow-dialog :visible.sync='deleteDialogVisible' :position="delDialogPosition">
         <div>are you sure ?</div>
         <div class="dialog_content">
           <el-button type="primary" @click="l_cancelDelete">cancel</el-button>
           <el-button type="primary" @click="l_confirmDelete">sure</el-button>
         </div>
-      </snowDialog>
+      </snow-dialog>
       <show :title="articleTemp.title" :detail="articleTemp.updateTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
       <div v-loading="loading" v-if="!loading" class="article_body">
         <markdownShow :html="articleTemp.contentHtml"></markdownShow>
@@ -67,11 +67,18 @@
       l_loadArticle () {
         const that = this
         if (!this.article || !this.article.articleId || this.article.articleId !== this.$route.params.articleId) {
-          this.loadArticle(this.$route.params.articleId).then(loadOk => {
-            if (loadOk) {
+          this.loadArticle(this.$route.params.articleId).then(({success, message}) => {
+            if (success) {
               that.l_onLoadFinished()
+            } else {
+              that.$notify.warning({
+                title: '文章加载',
+                message: message,
+                offset: 80
+              })
             }
-          })
+          }
+          )
         } else {
           that.l_onLoadFinished()
         }
@@ -88,6 +95,7 @@
         that.$nextTick(function () {
           that.$previewRefresh()
         })
+        this.$emit('global:HeadSlotTitleChange', this.articleTemp.title)
       },
       l_cancelDelete () {
         this.deleteDialogVisible = false
@@ -104,13 +112,13 @@
             this.$notify.success({
               title: '删除文章',
               message: '成功',
-              offset: 35
+              offset: 80
             })
           } else {
             this.$notify.error({
               title: '删除文章',
               message: '失败',
-              offset: 35
+              offset: 80
             })
           }
         })

@@ -73,6 +73,11 @@
           articleId: null
         },
         articleTemp: {},
+        articleSetup: {
+          contentMd: '',
+          draftId: null,
+          articleId: null
+        },
         titleImgName: 'titleImg',
         tagNames: [],
         imgFile: {},
@@ -186,7 +191,6 @@
         // console.log('发布前情况', _this.articleTemp)
         _this.saveArticle(this.articleTemp).then(saveOk => {
           if (saveOk) {
-            // 添加或更新站点信息
             if (this.draftTemp.articleId) {
               this.updateSiteSearch(this.draftTemp.articleId)
             } else {
@@ -197,37 +201,39 @@
               // console.log('准备删除草稿', this.draftTemp)
               _this.deleteDraft(this.draftTemp.draftId).then((res) => {
                 if (res) {
-                  // 清除编辑器
-                  _this.l_clearEditor()
-                  // console.log('删除草稿成功', this.draftTemp)
-                  // 刷新并跳转到文章列表
-                  _this.$router.push({path: '/articles/list', query: {flush: true}})
-                  // 保存成功
-                  _this.$notify.success({
-                    title: '文章发布',
-                    message: '成功',
-                    offset: 35
-                  })
+                  _this.l_onPublishSuccess()
+                } else {
+                  _this.l_onPublishError()
                 }
               })
             } else {
-              _this.l_clearEditor()
-              // 刷新并跳转到文章列表
-              _this.$router.push({path: '/articles/list', query: {flush: true}})
-              // 保存成功
-              _this.$notify.success({
-                title: '文章发布',
-                message: '成功',
-                offset: 35
-              })
+              _this.l_onPublishSuccess()
             }
           } else {
-            _this.$message.error({
-              title: '文章发布',
-              message: '失败',
-              offset: 35
-            })
+            _this.l_onPublishError()
           }
+        })
+      },
+      l_onPublishSuccess () {
+        const _this = this
+        // 清除编辑器
+        _this.l_clearEditor()
+        // console.log('删除草稿成功', this.draftTemp)
+        // 刷新并跳转到文章列表
+        _this.$router.push({path: '/articles/list', query: {flush: true}})
+        // 保存成功
+        _this.$notify.success({
+          title: '文章发布',
+          message: '成功',
+          offset: 80
+        })
+      },
+      l_onPublishError () {
+        const _this = this
+        _this.$message.error({
+          title: '文章发布',
+          message: '失败',
+          offset: 35
         })
       },
       l_imgAdd (pos, $file) {
@@ -277,7 +283,9 @@
             // console.log('store draft', this.draft, 'draftTemp', this.draftTemp)
             this.draftTemp = this.draft
             this.l_updateTopButton()
-            this.l_loadAndApplyArticle(this.draftTemp.articleId)
+            if (this.draftTemp && this.draftTemp.articleId) {
+              this.l_loadAndApplyArticle(this.draftTemp.articleId)
+            }
             this.$notify.info({
               title: '编辑器',
               message: '已加载最新草稿',
@@ -367,12 +375,16 @@
         // console.group('准备清空本地工作区')
         // 清空本地工作区，浅拷贝
         this.draftTemp = this.draftSetup
+        this.articleTemp = this.articleSetup
+        // console.log('清除结果', this)
+        this.l_updateTopButton()
       },
       l_abandon () {
         // console.group('准备删除服务器草稿')
         // 删除草稿
         if (this.draftTemp.draftId) {
           this.deleteDraft(this.draftTemp.draftId).then((ok) => {
+            // console.log('删除后台草稿', ok)
             if (ok) {
               // 清空工作区
               this.l_clearEditor()
@@ -395,6 +407,7 @@
         if (_this.autoSave) {
           clearTimeout(_this.autoSave)
           _this.autoSave = null
+          // console.log('自动保存清除成功', _this.autoSave)
         }
       },
       l_autoSave_cb (_this) {

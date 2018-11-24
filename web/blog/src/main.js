@@ -5,6 +5,7 @@ import elementUI from 'element-ui'
 import mavonEditor from 'mavon-editor'
 import highlight from 'highlight.js'
 import preview from 'vue-photo-preview'
+import EventProxy from 'vue-event-proxy'
 import commonUtil from '@/util/common'
 import snowDialog from '@/component/common/snowDialog'
 import snowHover from '@/component/common/snowHover'
@@ -25,6 +26,7 @@ Vue.use(preview)
 Vue.use(elementUI)
 Vue.use(mavonEditor)
 Vue.use(VueVisible)
+Vue.use(EventProxy)
 
 Vue.use(snowDialog)
 Vue.use(snowHover)

@@ -13,6 +13,6 @@ import java.util.List;
 public class SecurityProperties {
     private String rootUserId;
     private String[] permitAnts = {};
-    private PasswordOauthProperties password = new PasswordOauthProperties();
+    private PasswordOauthProperties passwordOauth = new PasswordOauthProperties();
     private CorsProperties cors = new CorsProperties();
 }

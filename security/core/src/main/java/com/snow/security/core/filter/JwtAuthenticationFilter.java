@@ -56,10 +56,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         try {
-            String token = request.getHeader("Authorization");
+            String token = header;
 
             Claims claims = Jwts.parser()
-                    .setSigningKey(securityProperties.getPassword().getJwtSigningKey())
+                    .setSigningKey(securityProperties.getPasswordOauth().getJwtSigningKey())
                     .parseClaimsJws(token.replace("Bearer ", "")).getBody();
             String userStr = claims.getSubject();
             User user = objectMapper.readValue(userStr, User.class);

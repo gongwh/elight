@@ -85,8 +85,8 @@ public class JwtJsonUsernamePasswordAuthenticationFilter extends UsernamePasswor
         String token = Jwts.builder()
                 .setSubject(objectMapper.writeValueAsString((User) authResult.getPrincipal()))
                 .claim("authorities", getAuthoritiesToStr(authResult))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * securityProperties.getPassword().getJwtExpirationHours()))
-                .signWith(SignatureAlgorithm.HS512, "SNOW")
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * securityProperties.getPasswordOauth().getJwtExpirationHours()))
+                .signWith(SignatureAlgorithm.HS512, securityProperties.getPasswordOauth().getJwtSigningKey())
                 .compact();
         response.addHeader("Authorization", "Bearer " + token);
     }

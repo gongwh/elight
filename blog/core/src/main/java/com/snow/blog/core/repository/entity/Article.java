@@ -6,10 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,7 +38,6 @@ public class Article extends BaseEntity {
     private String titleLetter;
 
     // html 文本缩略
-    @Column
     private String contentTextSubNail;
 
     // 用户ID
@@ -47,10 +46,11 @@ public class Article extends BaseEntity {
     // 是否私有
     private Boolean personal;
 
-    // 文章统计
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "article_read_statistic")
-    private Statistic readStatistic;
+    // 阅读统计v
+    private Integer readTotalTimes;
+
+    // 最后修改时间
+    private Date latestModifyDate;
 
     // 文章标签
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

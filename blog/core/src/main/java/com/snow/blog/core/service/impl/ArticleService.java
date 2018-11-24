@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,6 +123,8 @@ public class ArticleService implements IArticleService {
         thumbnail = StringUtils.substring(thumbnail, 0, blogProperties.getArticle().getThumbnailCharNum());
         log.debug("[文章保存] 缩略文字 {}", thumbnail);
         articleVO.setContentTextSubNail(thumbnail);
+        // 更新最后修改日期
+        articleVO.setLatestModifyDate(new Date());
         // 保存
         Article articleToSave = articleVO.getArticle();
         Article articleSaveResult = articleRepository.save(articleToSave);

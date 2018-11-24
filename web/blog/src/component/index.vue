@@ -1,27 +1,10 @@
 <template>
-  <div class="index">
-    <myhead></myhead>
+  <div class="index" @wheel="e_scrollLoad">
+    <myhead :isSlotShow="isSlotShow" :needScroll="true"></myhead>
     <div class="content">
-      <!--<el-button @click="hoverVisible = !hoverVisible">切换Hover</el-button>-->
-      <!--<snow-hover :visible.sync="hoverVisible"></snow-hover>-->
-      <!--<div class="snow_hover_scene">-->
-      <!--<div class="snow_hover_cube">-->
-      <!--<div class="snow_hover_side right">-->
-      <!--<el-button>哈哈哈</el-button>-->
-      <!--</div>-->
-      <!--<div class="snow_hover_side back">-->
-      <!--<el-button>哈哈哈</el-button>-->
-      <!--</div>-->
-      <!--<div class="snow_hover_side left">-->
-      <!--<el-button>哈哈哈</el-button>-->
-      <!--</div>-->
-      <!--<div class="snow_hover_side front">-->
       <transition name="fade">
         <router-view></router-view>
       </transition>
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
     </div>
     <myfoot></myfoot>
   </div>
@@ -34,10 +17,24 @@
   export default {
     data () {
       return {
-        hoverVisible: false
+        hoverVisible: false,
+        isSlotShow: false
       }
     },
-    components: {myhead, myfoot}
+    components: {myhead, myfoot},
+    methods: {
+      e_scrollLoad (e) {
+        // let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        // let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+        // let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+        // console.log('scrollTop', scrollTop, 'windowHeight', windowHeight, 'scrollHeight', scrollHeight)
+        if (e.deltaY > 0) {
+          this.isSlotShow = true
+        } else {
+          this.isSlotShow = false
+        }
+      }
+    }
   }
 </script>
 

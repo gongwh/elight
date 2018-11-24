@@ -1,6 +1,6 @@
 <template>
   <div class="snow_input">
-    <el-input v-model="currentValue" @blur="blur" @focus="focus" :placeholder="placeholder" :clearable="true"
+    <el-input v-model="currentValue" @keyup.enter.native="enter" @change="change" @blur="blur" @focus="focus" :placeholder="placeholder" :clearable="true"
               prefix-icon="el-icon-search"></el-input>
   </div>
 </template>
@@ -38,11 +38,17 @@
       setCurrentValue (value) {
         this.currentValue = value
       },
+      enter () {
+        this.$emit('enter', this.currentValue)
+      },
       focus (val) {
         this.$emit('focus', val)
       },
       blur (val) {
         this.$emit('blur', val)
+      },
+      change (val) {
+        this.$emit('change', val)
       }
     }
   }

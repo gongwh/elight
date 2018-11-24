@@ -5,6 +5,7 @@ import com.snow.lib.result.BaseVO;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -39,7 +40,8 @@ public class ArticleVO extends BaseVO {
         article.setContentTextSubNail(this.contentTextSubNail);
         article.setUserId(this.userId);
         article.setPersonal(this.personal);
-        article.setReadStatistic(this.readStatistic);
+        article.setReadTotalTimes(this.readTotalTimes);
+        article.setLatestModifyDate(this.latestModifyDate);
         article.setTags(this.tags);
         article.setCategories(this.categories);
         return article;
@@ -56,7 +58,8 @@ public class ArticleVO extends BaseVO {
         this.setContentTextSubNail(article.getContentTextSubNail());
         this.setUserId(article.getUserId());
         this.setPersonal(article.getPersonal());
-        this.setReadStatistic(article.getReadStatistic());
+        this.setReadTotalTimes(article.getReadTotalTimes());
+        this.setLatestModifyDate(article.getLatestModifyDate());
         this.setTags(article.getTags());
         this.setCategories(article.getCategories());
         this.setContentHtml(articleHtml.getContentHtml());
@@ -84,7 +87,10 @@ public class ArticleVO extends BaseVO {
     private Boolean personal;
 
     // 阅读统计
-    private Statistic readStatistic;
+    private Integer readTotalTimes;
+
+    // 最后修改时间
+    private Date latestModifyDate;
 
     // 文章标签
     private List<Tag> tags = new ArrayList<>();

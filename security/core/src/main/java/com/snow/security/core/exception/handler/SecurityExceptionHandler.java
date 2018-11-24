@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class SecurityExceptionHandler {
     @ExceptionHandler({AccessDeniedException.class})
     @ResponseBody
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResultVO handleArrayIndexOutOfBoundsException(AccessDeniedException e) {
         log.error("[Exception] " + e);
         return ResultUtil.error(e);

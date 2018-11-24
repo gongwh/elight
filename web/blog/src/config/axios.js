@@ -32,13 +32,27 @@ axios.interceptors.response.use(
   error => {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
-          // console.log('HTTP 401, 当前路由 {}', router.currentRoute)
-          // 跳转到登录页面
-          router.replace({
-            path: '/login',
-            query: {redirect: router.currentRoute.fullPath}
+        case 401: {
+          console.log('401 router.currentRoute', router.currentRoute)
+          if (store.state.auth.authorization) {
+            router.replace({
+              path: '/login',
+              query: {redirect: router.currentRoute.fullPath}
+            })
+          } else {
+            router.push({
+              path: '/articles/list'
+            })
+          }
+          break
+        }
+        case 403: {
+          console.log('403 router.currentRoute', router.currentRoute)
+          router.push({
+            path: '/articles/list'
           })
+          break
+        }
       }
     }
     return Promise.reject(error.response.data)

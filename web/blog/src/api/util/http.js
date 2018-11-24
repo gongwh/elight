@@ -16,8 +16,8 @@ export default {
       throw err
     })
   },
-  post: (url, data, config) => {
-    return axios.post(url, data, config).then(response => {
+  post: (url, data, params) => {
+    return axios.post(url, data, {params: params}).then(response => {
       return response
     }).catch(err => {
       throw err

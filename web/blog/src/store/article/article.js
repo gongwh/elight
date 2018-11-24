@@ -19,11 +19,12 @@ const actions = {
       (result) => {
         if (result.status === 200) {
           commit(UPDATE_ARTICLE, result.data.data)
-          return true
+          return {success: true}
         }
       },
-      () => {
-        return false
+      (e) => {
+        console.log('文章详情加载失败', e)
+        return {success: false, message: e.message}
       })
   },
   saveArticle ({commit}, article) {

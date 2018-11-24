@@ -3,14 +3,12 @@
  */
 import http from '@/api/util/http'
 
-export const loadArticlePage = ({userId, page, size}) => {
+export const loadArticlePage = (params) => {
   // console.log('loadArticlePage 参数', userId, page, size)
-  return http.get('/article/page', {userId: userId, page: page, size: size})
+  return http.get('/article/page', params)
 }
 
-export const loadArticleSearchPage = (userId, title, tagNames, page, size) => http.post('/article/page/search?page=' + page + '&size=' + size, {
-  userId: userId,
-  title: title,
-  tagNames: tagNames
-})
+export const loadArticleSearchPage = (data, params) => http.post('/article/page/search',
+  data,
+  params)
 

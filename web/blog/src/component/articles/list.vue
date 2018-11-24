@@ -1,12 +1,27 @@
 <template>
   <div id="articles" class="articles" @wheel="e_scrollLoad" @touchmove="e_touchMoveLoad">
     <show>
-      <snow-input @keyup.enter.native="e_searchArticle"
+      <snow-input @enter="e_searchArticle"
                   @focus="e_searchInputFocus"
                   @blur="e_searchInputBlur"
                   placeholder=""
                   v-model="searchInput">
       </snow-input>
+      <div class="sort">
+        <!--<el-switch-->
+        <!--v-model="sortBy"-->
+        <!--active-color="grey"-->
+        <!--inactive-color="grey"-->
+        <!--active-value="updateTime"-->
+        <!--inactive-value="createTime"-->
+        <!--active-text="更新时间排序"-->
+        <!--inactive-text="发表时间排序"-->
+        <!--&gt;-->
+        <!--</el-switch>-->
+        <el-radio v-model="sortBy" label="createTime">发表时间</el-radio>
+        <el-radio v-model="sortBy" label="latestModifyDate">更新时间</el-radio>
+        <el-radio v-model="sortBy" label="readTotalTimes">阅读次数</el-radio>
+      </div>
       <div class="tags">
         <snow-tag :name="tag.name" :select="tag.selected" v-for="(tag,index) in state_tagNames" :key="tag.id"
                   @toggle="e_toggleSelect(index,tag)"></snow-tag>
@@ -30,15 +45,13 @@
           <div class="subscribe">{{article.updateTime}}
             <div>
               <img src="./see.png"/>
-              {{article.readStatistic ? article.readStatistic.total: 0}}
+              {{article.readTotalTimes ? article.readTotalTimes: 0}}
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="articles-inner"
-         v-show="isSearch"
-    >
+    <div class="articles-inner" v-show="isSearch">
       <div @click="l_openArticle(article.articleId)" class="article"
            v-for="article in articlesSearch">
         <div class="image-wrapper">
@@ -51,7 +64,12 @@
         <div class="miniContent">
           <div class="title">{{article.title}}</div>
           <div class="desc">{{article.contentTextSubNail}}</div>
-          <div class="subscribe">{{article.updateTime}}<img src="./see.png"/></div>
+          <div class="subscribe">{{article.updateTime}}
+            <div>
+              <img src="./see.png"/>
+              {{article.readTotalTimes ? article.readTotalTimes: 0}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,6 +82,7 @@
 <script type="text/ecmascript-6">
   import show from '@/component/show'
   import {mapActions, mapGetters, mapMutations, mapState} from 'vuex'
+  import {getCookie, setCookie} from '../../util/util'
 
   export default {
     data () {
@@ -75,7 +94,8 @@
         noArticleNotifyTimes: 10,
         tagsVisible: false,
         isSearch: false,
-        isLoading: false
+        isLoading: false,
+        sortBy: 'latestModifyDate' // true: sort by createTime. false: sort by updateTime
       }
     },
     components: {show},
@@ -110,8 +130,20 @@
         this.l_tryChangeIsSearch()
       },
       'isSearch' (val, oldVal) {
-        if (!val) {
-          this.searchResultShow = false
+        if (val !== oldVal) {
+          if (val) {
+            this.searchResultShow = false
+          } else {
+            if (this.articles === null) {
+              this.l_clearAndInitArticles()
+            }
+          }
+        }
+      },
+      'sortBy' (val, oldVal) {
+        if (val !== oldVal) {
+          setCookie('sortBy', val, 30)
+          this.l_clearAndInitArticles()
         }
       }
     },
@@ -119,14 +151,13 @@
       this.searchInput = this.state_searchInput
       this.l_tryChangeIsSearch()
       if (this.manualFlush || this.articles === null) {
-        this.CLEAR_ARTICLES_RESULT()
-        if (this.isSearch) {
-          this.l_searchArticlePage()
-        } else {
-          this.l_loadArticlePage()
-        }
-        this.l_tryInitTagNames()
+        this.l_clearAndInitArticles()
       }
+      this.l_tryInitTagNames()
+      this.sortBy = this.l_getSortBy()
+      this.l_bindHeadSearchEvent()
+      this.$emit('global:HeadSlotTitleChange', 'Elight')
+      this.$emit('global:HeadSlotSearchShow', true)
     },
     mounted () {
     },
@@ -135,6 +166,29 @@
       ...mapActions('tag/tag', ['loadAllTags']),
       ...mapMutations('article/articles', ['CLEAR_ARTICLES_RESULT', 'CLEAR_ARTICLES_SEARCH_RESULT',
         'SET_ARTICLES_SEARCH_INPUT', 'INIT_TAG_NAMES', 'UPDATE_TAG_SELECT']),
+      l_bindHeadSearchEvent () {
+        const that = this
+        that.$on('global:HeadSearchEnter', function (val) {
+          console.log('global:HeadSearchEnter', val)
+          that.e_searchArticle()
+        })
+        that.$on('global:HeadSearchChange', function (val) {
+          console.log('HeadSearchChange', val)
+          that.searchInput = val
+        })
+      },
+      l_clearAndInitArticles () {
+        this.CLEAR_ARTICLES_RESULT()
+        if (this.isSearch) {
+          this.l_searchArticlePage()
+        } else {
+          this.l_loadArticlePage()
+        }
+      },
+      l_getSortBy () {
+        let sortBy = getCookie('sortBy')
+        return sortBy || 'latestModifyDate'
+      },
       l_tryInitTagNames () {
         if (!this.state_tagNames) {
           this.initTagNames()
@@ -215,7 +269,8 @@
         if (!that.pagination) {
           // console.log('首次加载文章', this.pagination)
           that.isLoading = true
-          this.loadArticlePage({userId: userId, page: 0, size: 10}).then(
+          // console.log('that.sortBy', that.sortBy)
+          this.loadArticlePage({userId: userId, page: 0, size: 10, sort: that.l_getSortBy() + ',desc'}).then(
             () => {
               that.isLoading = false
             },
@@ -226,7 +281,12 @@
         } else if (!that.pagination.last || this.manualFlush) {
           // console.log('加载文章', this.pagination)
           that.isLoading = true
-          this.loadArticlePage({userId: userId, page: (this.pagination.pageNumber + 1), size: 10}).then(
+          this.loadArticlePage({
+            userId: userId,
+            page: (this.pagination.pageNumber + 1),
+            size: 10,
+            sort: that.l_getSortBy() + ',desc'
+          }).then(
             () => {
               that.isLoading = false
             },
@@ -238,7 +298,7 @@
           this.$notify.info({
             title: '加载文章',
             message: '没有更多文章了',
-            offset: 35
+            offset: 80
           })
         }
       },
@@ -246,15 +306,20 @@
         const that = this
         let userId = that.userId ? that.userId : that.defaultUserId
         // 搜索旧输入内容
-        that.isLoading = true
         if (!that.paginationSearch) {
+          that.isLoading = true
           // 搜索首页
+          let params = new URLSearchParams()
+          params.append('page', 0)
+          params.append('size', 10)
+          params.append('sort', that.l_getSortBy() + ',desc')
           this.searchArticles({
-            userId: userId,
-            title: that.searchInput,
-            tagNames: that.state_selectedTagNames,
-            page: 0,
-            size: 10
+            data: {
+              userId: userId,
+              title: that.searchInput,
+              tagNames: that.state_selectedTagNames
+            },
+            params
           }).then(
             () => {
               that.searchResultShow = true
@@ -267,12 +332,17 @@
         } else if (!that.paginationSearch.last) {
           // 搜索下一页
           that.isLoading = true
+          let params = new URLSearchParams()
+          params.append('page', this.paginationSearch.pageNumber + 1)
+          params.append('size', 10)
+          params.append('sort', that.l_getSortBy() + ',desc')
           that.searchArticles({
-            userId: userId,
-            title: this.searchInput,
-            tagNames: this.state_selectedTagNames,
-            page: (this.paginationSearch.pageNumber + 1),
-            size: 10
+            data: {
+              userId: userId,
+              title: this.searchInput,
+              tagNames: this.state_selectedTagNames
+            },
+            params
           }).then(
             () => {
               that.isLoading = false
@@ -285,7 +355,7 @@
           this.$notify.info({
             title: '搜索文章',
             message: '没有更多文章了',
-            offset: 35
+            offset: 80
           })
         }
       },
@@ -298,12 +368,17 @@
             // 搜索新输入内容的首页
             that.CLEAR_ARTICLES_SEARCH_RESULT()
             that.isLoading = true
+            let params = new URLSearchParams()
+            params.append('page', 0)
+            params.append('size', 10)
+            params.append('sort', that.l_getSortBy() + ',desc')
             that.searchArticles({
-              userId: userId,
-              title: that.searchInput,
-              tagNames: that.state_selectedTagNames,
-              page: 0,
-              size: 10
+              data: {
+                userId: userId,
+                title: that.searchInput,
+                tagNames: that.state_selectedTagNames
+              },
+              params
             }).then(
               () => {
                 that.searchResultShow = true
@@ -326,6 +401,7 @@
       }
     },
     destroyed () {
+      this.$emit('global:HeadSlotSearchShow', false)
     },
     beforeRouteUpdate (to, from, next) {
     }
@@ -335,8 +411,16 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
     font-family "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif
-    .tags
-      margin-top 14px
+    .sort
+      margin 10px auto 0 auto
+      height 30px
+      line-height 30px
+      font-size 15px
+      .el-radio
+        .el-radio__input.is-checked+.el-radio__label
+          color unset
+        .el-radio__input.is-checked .el-radio__inner
+          background unset
     .search-result-show
       font-size 14px
       color #626262

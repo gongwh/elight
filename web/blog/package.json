@@ -20,6 +20,7 @@
     "mavon-editor": "^2.4.16",
     "vue": "^2.5.2",
     "vue-axios": "^2.0.2",
+    "vue-event-proxy": "^1.0.5",
     "vue-highlight.js": "^2.2.0",
     "vue-photo-preview": "^1.0.9",
     "vue-visible": "^1.0.2",

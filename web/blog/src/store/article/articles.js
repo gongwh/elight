@@ -25,9 +25,9 @@ const state = {
 
 // actions
 const actions = {
-  async loadArticlePage ({commit}, {userId, page, size}) {
+  async loadArticlePage ({commit}, params) {
     // console.log('loadArticlePage', userId, page, size)
-    return articlesApi.loadArticlePage({userId, page, size}).then(
+    return articlesApi.loadArticlePage(params).then(
       (result) => {
         // console.log('加载文章列表成功', result.data)
         commit(UPDATE_ARTICLES_PAGE, result.data)
@@ -48,9 +48,9 @@ const actions = {
       }
     )
   },
-  async searchArticles ({commit}, {userId, title, tagNames, page, size}) {
+  async searchArticles ({commit}, {data, params}) {
     // console.log('搜索文章列表参数', content, page, size)
-    return articlesApi.loadArticleSearchPage(userId, title, tagNames, page, size).then(
+    return articlesApi.loadArticleSearchPage(data, params).then(
       (result) => {
         // console.log('搜索文章列表成功', result.data)
         commit(UPDATE_ARTICLES_SEARCH_PAGE, result.data)
