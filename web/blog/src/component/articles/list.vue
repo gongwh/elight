@@ -169,11 +169,11 @@
       l_bindHeadSearchEvent () {
         const that = this
         that.$on('global:HeadSearchEnter', function (val) {
-          console.log('global:HeadSearchEnter', val)
+          // console.log('global:HeadSearchEnter', val)
           that.e_searchArticle()
         })
         that.$on('global:HeadSearchChange', function (val) {
-          console.log('HeadSearchChange', val)
+          // console.log('HeadSearchChange', val)
           that.searchInput = val
         })
       },

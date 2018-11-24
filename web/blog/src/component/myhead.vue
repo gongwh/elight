@@ -79,7 +79,7 @@
       ...mapState(['topButtonsProps']),
       ...mapState('auth', ['defaultUserName', 'username']),
       scrollClass: function () {
-        console.log('isNeedScroll', this.isNeedScroll, 'isSlotShow', this.isSlotShow)
+        // console.log('isNeedScroll', this.isNeedScroll, 'isSlotShow', this.isSlotShow)
         if (this.isNeedScroll) {
           return this.isSlotShow ? 'slot-show' : 'slot-hidden'
         } else {
@@ -108,7 +108,7 @@
         window.open('http://www.zhangzhuowei.com/article/f8cfbd2c-dfde-4f00-b0bd-9f72df709265', '_black')
       },
       e_searchEnter (val) {
-        console.log('e_searchEnter', val)
+        // console.log('e_searchEnter', val)
         this.$emit('global:HeadSearchEnter', val)
       },
       e_searchChange (val) {

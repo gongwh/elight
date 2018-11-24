@@ -33,7 +33,7 @@ axios.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401: {
-          console.log('401 router.currentRoute', router.currentRoute)
+          // console.log('401 router.currentRoute', router.currentRoute)
           if (store.state.auth.authorization) {
             router.replace({
               path: '/login',
@@ -47,7 +47,7 @@ axios.interceptors.response.use(
           break
         }
         case 403: {
-          console.log('403 router.currentRoute', router.currentRoute)
+          // console.log('403 router.currentRoute', router.currentRoute)
           router.push({
             path: '/articles/list'
           })
