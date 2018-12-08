@@ -1,32 +1,12 @@
 <template>
   <div id="articles" class="articles" @wheel="e_scrollLoad" @touchmove="e_touchMoveLoad">
-    <show>
-      <snow-input @enter="e_searchArticle"
-                  @focus="e_searchInputFocus"
-                  @blur="e_searchInputBlur"
-                  placeholder=""
-                  v-model="searchInput">
-      </snow-input>
-      <div class="sort">
-        <!--<el-switch-->
-        <!--v-model="sortBy"-->
-        <!--active-color="grey"-->
-        <!--inactive-color="grey"-->
-        <!--active-value="updateTime"-->
-        <!--inactive-value="createTime"-->
-        <!--active-text="更新时间排序"-->
-        <!--inactive-text="发表时间排序"-->
-        <!--&gt;-->
-        <!--</el-switch>-->
-        <el-radio v-model="sortBy" label="createTime">发表时间</el-radio>
-        <el-radio v-model="sortBy" label="latestModifyDate">更新时间</el-radio>
-        <el-radio v-model="sortBy" label="readTotalTimes">阅读次数</el-radio>
-      </div>
-      <div class="tags">
-        <snow-tag :name="tag.name" :select="tag.selected" v-for="(tag,index) in state_tagNames" :key="tag.id"
-                  @toggle="e_toggleSelect(index,tag)"></snow-tag>
-      </div>
-    </show>
+    <div class="tags" v-bind:class="scrollClass">
+      <snow-tag :name="tag.name" :select="tag.selected" v-for="(tag,index) in state_tagNames" :key="tag.id"
+                @toggle="e_toggleSelect(index,tag)"></snow-tag>
+      <el-radio v-model="sortBy" label="createTime">发表时间</el-radio>
+      <el-radio v-model="sortBy" label="latestModifyDate">更新时间</el-radio>
+      <el-radio v-model="sortBy" label="readTotalTimes">阅读次数</el-radio>
+    </div>
     <div class="articles-inner"
          v-show="!isSearch"
     >
@@ -40,7 +20,7 @@
           </div>
         </div>
         <div class="miniContent">
-          <div class="title">{{article.title}}</div>
+          <div class="title"><div class="banner"></div>{{article.title}}</div>
           <div class="desc">{{article.contentTextSubNail}}</div>
           <div class="subscribe">{{article.updateTime}}
             <div>
@@ -62,7 +42,7 @@
           </div>
         </div>
         <div class="miniContent">
-          <div class="title">{{article.title}}</div>
+          <div class="title"><div class="banner"></div>{{article.title}}</div>
           <div class="desc">{{article.contentTextSubNail}}</div>
           <div class="subscribe">{{article.updateTime}}
             <div>
@@ -95,7 +75,8 @@
         tagsVisible: false,
         isSearch: false,
         isLoading: false,
-        sortBy: 'latestModifyDate' // true: sort by createTime. false: sort by updateTime
+        sortBy: 'latestModifyDate', // true: sort by createTime. false: sort by updateTime,
+        isTagsShow: true
       }
     },
     components: {show},
@@ -122,6 +103,9 @@
             return false
           }
         }
+      },
+      scrollClass: function () {
+        return this.isTagsShow ? 'slot-show' : 'slot-hidden'
       }
     },
     watch: {
@@ -169,12 +153,13 @@
       l_bindHeadSearchEvent () {
         const that = this
         that.$on('global:HeadSearchEnter', function (val) {
-          // console.log('global:HeadSearchEnter', val)
           that.e_searchArticle()
         })
         that.$on('global:HeadSearchChange', function (val) {
-          // console.log('HeadSearchChange', val)
           that.searchInput = val
+        })
+        that.$on('global:HeadSlotShow', function (show) {
+          that.isTagsShow = show
         })
       },
       l_clearAndInitArticles () {
@@ -411,16 +396,27 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .articles
     font-family "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif
+    .tags
+      position fixed
+      margin auto
+      height 50px
+      width 100%
+      text-align center
+      background-color  #f1f1f1
+      transition transform .3s, -webkit-transform .3s
+      z-index 2099
+      &.slot-show
+        transform: translateY(-100%)
+      &.slot-hidden
+        transform: translateY(0)
+      >div
+        .snow_tag
+          margin 5px 0
     .sort
       margin 10px auto 0 auto
       height 30px
       line-height 30px
       font-size 15px
-      .el-radio
-        .el-radio__input.is-checked+.el-radio__label
-          color unset
-        .el-radio__input.is-checked .el-radio__inner
-          background unset
     .search-result-show
       font-size 14px
       color #626262
@@ -429,19 +425,39 @@
       display flex
       margin auto
       max-width 1200px
+      padding-top 100px
       text-align center
       flex-direction row
       flex-wrap wrap
       justify-content center
       .article
-        height 280px
+        top 0
+        height 210px
         width 280px
         cursor pointer
         display block
-        margin 30px 18px
+        margin 20px 18px
+        position relative
         background-color rgba(255, 255, 255, 0.98)
         overflow hidden
         padding-bottom 10px
+        background-position center center
+        &:hover
+          // top -4px
+          // box-shadow 0 15px 30px #e5e5e5
+          // transition translate3d(0, -2px, 0)
+          .image-wrapper-inner
+            transform scale(1.2)
+            transition all 1s linear
+          .miniContent
+            .title
+              @keyframes spin {
+                0%   { transform: rotate(360deg) }
+                40% { transform: rotate(0deg) }
+                100% { transform: rotate(0deg) }
+              }
+              .banner
+                animation spin 4s infinite
         .image-wrapper
           height 100%
           border-collapse collapse
@@ -453,35 +469,35 @@
           .image-wrapper-inner
             padding 0
             height 100%
+            transition all 0.3s linear
             .bg-img
               height 100%
               padding unset
               background-size cover
               background-repeat no-repeat
-              background-position center center
             .bg-letter
               height 100%
-              line-height 135px
+              line-height 110px
               background #f9f9f9 linear-gradient(to right, rgba(144, 195, 194, 0.17), #dedfea42)
               font-size 50px
               font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
-        /*&:hover*/
-        /*box-shadow: 0 0 30px #cacaca*/
         .miniContent
-          padding-top 5px
+          padding 5px 5px 0 5px
           text-align left
-          font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+          font-family "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
           .title
             text-align left
-            font-size 16px
-            color #080809
-            font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif
-            white-space nowrap
             overflow hidden
             text-overflow ellipsis
-            &::before
-              margin-right 10px
-              background #212226
+            white-space nowrap
+            letter-spacing 0.8px
+            font-size 16px
+            color #27272b
+            font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif
+            .banner
+              margin-right 8px
+              margin-left 2px
+              background black
               width 10px
               height 10px
               display inline-block
@@ -492,9 +508,10 @@
             height 54px
             margin 5px 0
             font-size 14px
-            color rgba(0, 0, 0, 0.7)
+            color rgba(0, 0, 0, 1)
             overflow hidden
             text-overflow ellipsis
+            letter-spacing 0.3px
             display -webkit-box
             -webkit-line-clamp 3
             -webkit-box-orient vertical

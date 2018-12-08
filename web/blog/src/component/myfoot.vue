@@ -1,10 +1,11 @@
 <template>
   <div class="snow_foot_wrapper" id="myFoot">
     <div class="snow_foot">
-      <a href='https://gitee.com/gongwh' target="_blank">SNOW</a>
-      <br/>
-      <br/>
-       <a href="http://www.miitbeian.gov.cn/" target="_blank">晋ICP备18008339号</a>
+      <div>
+        <img @click="e_goto('https://gitee.com/gongwh')" src="./github.png"/><span @click="e_goto('https://gitee.com/gongwh')">SNOW</span>
+        <img @click="e_goto('mailto:13162569078@163.com', '_self')" src="./email.png"/><span @click="e_goto('mailto:13162569078@163.com', '_self')">13162569078@163.com</span>
+        <img @click="e_goto('http://www.miitbeian.gov.cn')" src="./gov.png"/><span @click="e_goto('http://www.miitbeian.gov.cn')">晋ICP备18008339号</span>
+      </div>
     </div>
   </div>
 </template>
@@ -15,6 +16,9 @@
       return {}
     },
     methods: {
+      e_goto (path, target = '_black') {
+        window.open(path, target)
+      }
     }
   }
 </script>
@@ -29,17 +33,12 @@
     height 50px
     font-size 10px
     .snow_foot
-      a:link, a:visited
-        color #000000
-      a:hover
-        color #000da3
-      height 10px
-      display table-cell
-      vertical-align middle
-      line-height 10px
+      height 50px
+      line-height 50px
+      span
+        cursor pointer
       img
-        display inline-block
-        margin 0 20px 0 5px
-        width 15px
-        height 15px
+        cursor pointer
+        margin -3px 5px -3px 10px
+        height 16px
 </style>

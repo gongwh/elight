@@ -22,7 +22,7 @@
       backgroundUrl: {
         type: String,
         require: true,
-        default: '2018/03/07/17/33/06/e1fc525d-15ba-4112-90b1-335466c1f5ee.jpg'
+        default: '2018/12/08/17/40/35/4176363a-1e43-45b1-8dc5-7f341880598b.jpg'
       },
       detail: {
         type: String,
@@ -52,7 +52,7 @@
   .show
     display table
     position relative
-    height 250px
+    height 200px
     width 100%
     .show-inner
       display table-cell
@@ -74,9 +74,9 @@
       background-position center center
       position absolute
       width 100%
-      filter blur(15px)
+      filter blur(10px)
       opacity 0.3
-      height 250px
+      height 200px
       margin: auto
       z-index 1
       overflow hidden

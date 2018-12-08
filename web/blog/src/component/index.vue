@@ -1,6 +1,6 @@
 <template>
   <div class="index" @wheel="e_scrollLoad">
-    <myhead :isSlotShow="isSlotShow"></myhead>
+    <myhead></myhead>
     <div class="content">
       <transition name="fade">
         <router-view></router-view>
@@ -17,21 +17,16 @@
   export default {
     data () {
       return {
-        hoverVisible: false,
-        isSlotShow: false
+        hoverVisible: false
       }
     },
     components: {myhead, myfoot},
     methods: {
       e_scrollLoad (e) {
-        // let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        // let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        // console.log('scrollTop', scrollTop, 'windowHeight', windowHeight, 'scrollHeight', scrollHeight)
         if (e.deltaY > 0) {
-          this.isSlotShow = true
+          this.$emit('global:HeadSlotShow', true)
         } else {
-          this.isSlotShow = false
+          this.$emit('global:HeadSlotShow', false)
         }
       }
     }
@@ -119,6 +114,15 @@
       .right
         background-color: rgba(32, 170, 151, 0.5)
         transform: translateX(1300px) translateZ(-1300px) rotateY(90deg)
+
+  .el-radio
+    .el-radio__input.is-checked+.el-radio__label
+      color unset
+    .el-radio__input.is-checked .el-radio__inner
+      background unset
+      background-color #668c6e
+      border-color #668c6e
+
   @keyframes example {
     10% {
       transform: translateZ(-5200px) rotateY(0deg)

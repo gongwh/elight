@@ -39,7 +39,6 @@
     font-size 14px
     display inline-block
     background transparent
-    transition background 0.5s linear
     border-radius 3px
     color #646464
     height 24px
@@ -49,8 +48,10 @@
     margin 10px 10px 10px 0
     text-decoration none
     cursor pointer
+    background rgba(93, 128, 109, 0.05) linear-gradient(to right, rgba(96, 153, 111, 0.05), rgba(153, 119, 152, 0.05))
+    transition all 0.3s linear
     &:before
-      background #a49edd
+      background #d8d8d8
       border-radius 10px
       box-shadow inset 0 1px rgba(0, 0, 0, 0.25)
       content ''
@@ -59,27 +60,15 @@
       position absolute
       width 6px
       top 9px
-    /*
-  &:after
-    background #fff
-    border-bottom 13px solid transparent
-    border-left 10px solid #eee
-    border-top 13px solid transparent
-    content ''
-    position absolute
-    right 0
-    top 0
-    */
     &:hover
       background #578062 linear-gradient(to right, #60996f, #997798)
-      // background-image linear-gradient(120deg, #60996f, #997798)
-      /*transition: background-color .2s;*/
-      // background-color rgba(56, 56, 56, 0.88)
       color white
-
+      transition all 0.5s linear
+      &:before
+        background #f9f9f9
   .snow_tag_select
     background #578062 linear-gradient(to right, #60996f, #997798)
+    transform scale(1.1)
+    color white
 
-  /*&:hover::after*/
-  /*border-left-color crimson*/
 </style>

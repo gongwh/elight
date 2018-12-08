@@ -61,10 +61,6 @@
 
   export default {
     props: {
-      isSlotShow: {
-        type: Boolean,
-        default: false
-      }
     },
     data () {
       return {
@@ -72,14 +68,14 @@
         profileDialogPosition: {x: 0, y: 35},
         slotTitle: 'Elight',
         isNeedScroll: true,
-        isSlotSearchShow: false
+        isSlotSearchShow: false,
+        isSlotShow: false
       }
     },
     computed: {
       ...mapState(['topButtonsProps']),
       ...mapState('auth', ['defaultUserName', 'username']),
       scrollClass: function () {
-        // console.log('isNeedScroll', this.isNeedScroll, 'isSlotShow', this.isSlotShow)
         if (this.isNeedScroll) {
           return this.isSlotShow ? 'slot-show' : 'slot-hidden'
         } else {
@@ -96,8 +92,11 @@
       this.$on('global:HeadSlotSearchShow', function (show) {
         that.isSlotSearchShow = show
       })
-      this.$on('global:HeadSlotShow', function (show) {
+      this.$on('global:HeadNeedSlotShow', function (show) {
         that.isNeedScroll = show
+      })
+      this.$on('global:HeadSlotShow', function (show) {
+        that.isSlotShow = show
       })
     },
     methods: {
@@ -176,10 +175,10 @@
     .app-header, .custom-header
       height 42px
       transition transform .3s, -webkit-transform .3s
-    .slot-show
-      transform: translateY(-100%)
-    .slot-hidden
-      transform: translateY(0)
+      &.slot-show
+        transform: translateY(-100%)
+      &.slot-hidden
+        transform: translateY(0)
     .title
       position relative
       height 42px

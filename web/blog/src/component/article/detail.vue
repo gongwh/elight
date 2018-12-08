@@ -226,6 +226,7 @@
     created () {
       this.l_loadArticle()
       this.l_addEventListener()
+      this.$emit('global:HeadSlotShow', false)
     },
     mounted () {
     },
