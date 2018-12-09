@@ -16,11 +16,8 @@
 为什么要自己徒手去写这么一个网站呢？不是已经又很多`Markdown`博客网站了吗？主要是想练手，熟悉并巩固学习的一些学习的前后端知识，现在这个项目是用的`springboot` + `vue`的。中间想使用`springcloud`的，后来想想效果可能适得其反，故没有用。
 
 ### 3 How 将来准备做什么
-#### 3.1 整理博客
 接下来可能就是想这里整理一下原有的博客，顺便整理一下浏览器堆积的没来得及整理的书签。太多需要整理了，乱作一团了再不整理。
 ![一堆书签](http://www.zhangzhuowei.com/api/file/2018/09/21/00/44/45/e38514d2-9593-4abc-a8cf-5c488a403f9a.png)
-#### 3.2 优化Elight
-`Elight`还存在隐藏的问题，如有兴趣可到项目中反馈，也可以一起讨论学习。`Elight`项目地址 [地址](https://gitee.com/gongwh/sync)
 
 ### 4 Thanks
 `mavon-editor` 项目 [地址](https://github.com/hinesboy/mavonEditor)
