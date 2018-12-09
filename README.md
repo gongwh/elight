@@ -1,9 +1,8 @@
-
 ### 1 What 这个网站可以做什么
 这是一个博客网站，我把它起名为`Elight`,这里可以浏览我写的一些文章，当然任何人都可以在`Elight`里注册并登陆，写自己的文章并作为自己的博客网站。
 
 ![登录页](http://www.zhangzhuowei.com/api/file/2018/09/21/00/22/15/b140c667-9e3c-4340-90df-c5f5ee04196f.png)
-`Elight`主要是以编辑`Markdown`为主的一个编辑器，可以保存在线草稿，并将其发布生成博客。编辑器使用方法，点击 [这里](http://www.zhangzhuowei.com/article/4932e55e-41d2-443e-97a3-546fd9e0f804)
+`Elight`主要是以编辑`Markdown`为主的一个编辑器，可以保存在线草稿，并将其发布生成博客。编辑器使用方法，点击 [这里](https://www.zhangzhuowei.com/article/4500142a-e87d-47e5-98b4-508acd613c42)
 ![编辑器](http://www.zhangzhuowei.com/api/file/2018/09/21/00/23/05/60c441f6-80d5-456d-b4cf-ddcc139a0daa.png)
 已发布的文章可以进行管理和导出。
 ![文章列表](http://www.zhangzhuowei.com/api/file/2018/09/21/00/50/46/a0f924eb-b141-44ff-bc16-205d475ca528.png)
