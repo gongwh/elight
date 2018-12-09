@@ -1,37 +1,27 @@
-# sync
+@[TOC](目录)
+### 1 What 这个网站可以做什么
+这是一个博客网站，我把它起名为`Elight`,这里可以浏览我写的一些文章，当然任何人都可以在`Elight`里注册并登陆，写自己的文章并作为自己的博客网站。
 
-#### 项目介绍
-代码同步。包含多工程
+![登录页](http://www.zhangzhuowei.com/api/file/2018/09/21/00/22/15/b140c667-9e3c-4340-90df-c5f5ee04196f.png)
+`Elight`主要是以编辑`Markdown`为主的一个编辑器，可以保存在线草稿，并将其发布生成博客。编辑器使用方法，点击 [这里](http://www.zhangzhuowei.com/article/4932e55e-41d2-443e-97a3-546fd9e0f804)
+![编辑器](http://www.zhangzhuowei.com/api/file/2018/09/21/00/23/05/60c441f6-80d5-456d-b4cf-ddcc139a0daa.png)
+已发布的文章可以进行管理和导出。
+![文章列表](http://www.zhangzhuowei.com/api/file/2018/09/21/00/50/46/a0f924eb-b141-44ff-bc16-205d475ca528.png)
+![文章详情](http://www.zhangzhuowei.com/api/file/2018/09/21/00/49/35/84772815-61e2-40a9-9077-18b26a7034d3.png)
+文章内`图片分组预览`
+![图片预览](http://www.zhangzhuowei.com/api/file/2018/09/22/11/40/40/b4c51586-abb5-4223-9008-8f758114006b.png)
+导出为`PDF`。
+![文章导出](http://www.zhangzhuowei.com/api/file/2018/09/21/00/25/40/17322151-d0a0-47ed-bec6-ddd781553e06.png)
 
-#### 软件架构
-软件架构说明
+### 2 Why 为什么要自己写这个网站
+为什么要自己徒手去写这么一个网站呢？不是已经又很多`Markdown`博客网站了吗？主要是想练手，熟悉并巩固学习的一些学习的前后端知识，现在这个项目是用的`springboot` + `vue`的。中间想使用`springcloud`的，后来想想效果可能适得其反，故没有用。
 
+### 3 How 将来准备做什么
+#### 3.1 整理博客
+接下来可能就是想这里整理一下原有的博客，顺便整理一下浏览器堆积的没来得及整理的书签。太多需要整理了，乱作一团了再不整理。
+![一堆书签](http://www.zhangzhuowei.com/api/file/2018/09/21/00/44/45/e38514d2-9593-4abc-a8cf-5c488a403f9a.png)
+#### 3.2 优化Elight
+`Elight`还存在隐藏的问题，如有兴趣可到项目中反馈，也可以一起讨论学习。`Elight`项目地址 [地址](https://gitee.com/gongwh/sync)
 
-#### 安装教程
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 使用说明
-
-1. xxxx
-2. xxxx
-3. xxxx
-
-#### 参与贡献
-
-1. Fork 本项目
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
-
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [http://git.mydoc.io/](http://git.mydoc.io/)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+### 4 Thanks
+`mavon-editor` 项目 [地址](https://github.com/hinesboy/mavonEditor)
