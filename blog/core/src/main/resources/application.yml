@@ -1,0 +1,62 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: "******"
+    password: "******"
+    url: "jdbc:mysql://www.zhangzhuowei.com:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=false"
+  jpa:
+    database-platform: "org.hibernate.dialect.MySQL5Dialect"
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.show_sql: false
+      hibernate.format_sql: false
+  jackson:
+    default-property-inclusion: non_null
+    date-format: "yyyy-MM-dd HH:mm:ss"
+    time-zone: "GMT+8"
+  http:
+    multipart:
+      max-file-size: 10mb
+      max-request-size: 10mb
+
+logging:
+  level:
+    root: INFO
+    com.snow: INFO
+
+snow:
+  storage:
+    upload-dir: "./blog-img"
+    image-compress: true
+    image-width: 800
+    image-height: 600
+  security:
+    root-user-id: "9f044948-033d-4b08-abad-8e8035133630"
+    permit-ants:
+      - "/article/**"
+      - "/tag/**"
+    password:
+      jwt-expiration-hours: 48
+      jwt-signing-key: SNOW
+    cors:
+      allowed-origins:
+        - "http://localhost"
+        - "http://www.tobesimple.top:80"
+        - "https://www.tobesimple.top:443"
+        - "http://www.zhangzhuowei.com:80"
+        - "https://www.zhangzhuowei.com:443"
+  blog:
+    article:
+      thumbnail-char-num: 50
+
+server:
+  port: 8443
+  tomcat:
+    basedir: "${snow.storage.upload-dir}/temp"
+#  ssl:
+#    key-store: "classpath: 1540104555351.pfx"
+#    key-store-password: "******"
+#  session:
+#    timeout: 4320
