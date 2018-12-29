@@ -5,7 +5,7 @@
         <div class="login_content">
           <div class="content_header">
             <div class="header_title">Elight</div>
-            <div class="header_content">Making Edit and Share lighter</div>
+            <div class="header_content">Make editing and sharing easier</div>
           </div>
           <div class="content_body" :class="`content_body_${isLogin ? 'login':'registration'}`">
             <el-form :rules="loginRules" v-if="isLogin" ref="loginForm" :model="loginForm">

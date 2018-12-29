@@ -399,7 +399,6 @@
     .tags
       position fixed
       margin auto
-      height 50px
       width 100%
       text-align center
       background-color  #f1f1f1
@@ -425,7 +424,7 @@
       display flex
       margin auto
       max-width 1200px
-      padding-top 100px
+      padding-top 150px
       text-align center
       flex-direction row
       flex-wrap wrap
@@ -443,16 +442,14 @@
         padding-bottom 10px
         background-position center center
         &:hover
-          // top -4px
-          // box-shadow 0 15px 30px #e5e5e5
-          // transition translate3d(0, -2px, 0)
           .image-wrapper-inner
-            transform scale(1.2)
-            transition all 1s linear
+            .bg-img
+              transform scale(1.2)
+              transition all 1s linear
           .miniContent
             .title
               @keyframes spin {
-                0%   { transform: rotate(360deg) }
+                0% { transform: rotate(360deg) }
                 40% { transform: rotate(0deg) }
                 100% { transform: rotate(0deg) }
               }
@@ -475,9 +472,11 @@
               padding unset
               background-size cover
               background-repeat no-repeat
+              transition all 0.3s linear
             .bg-letter
               height 100%
               line-height 110px
+              transition all 0.3s linear
               background #f9f9f9 linear-gradient(to right, rgba(144, 195, 194, 0.17), #dedfea42)
               font-size 50px
               font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
@@ -492,12 +491,12 @@
             white-space nowrap
             letter-spacing 0.8px
             font-size 16px
-            color #27272b
+            color #1c4e1a
             font-family 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif
             .banner
               margin-right 8px
               margin-left 2px
-              background black
+              background #276b23
               width 10px
               height 10px
               display inline-block
