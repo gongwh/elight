@@ -1,10 +1,9 @@
 /**
  * Created by SNOW on 2018.01.24.
  */
-exports.host = 'https://www.zhangzhuowei.com/'
+exports.host = 'https://www.tobesimple.top/'
 exports.serviceUrl = this.host + 'api/'
 // exports.serviceUrl = 'http://localhost:8080/'
 exports.defaultUserId = '1c48be10-76ab-4d41-bc35-43f33ab37c53'
-exports.fileBase = 'https://www.zhangzhuowei.com/api/file/'
-// exports.fileBase = 'http://localhost:8080/file/'
+exports.fileBase = 'https://www.tobesimple.top/api/file/'
 exports.defaultUserName = 'Login'

@@ -1,6 +1,6 @@
 <template>
-  <div class="article" id="article">
-    <div class="article_wrapper">
+  <div class="article transition-slow" id="article">
+    <div class="article_wrapper transition-slow">
       <snow-dialog :visible.sync='deleteDialogVisible' :position="delDialogPosition">
         <div>are you sure ?</div>
         <div class="dialog_content">
@@ -9,12 +9,12 @@
         </div>
       </snow-dialog>
       <show :title="articleTemp.title" :detail="articleTemp.updateTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
-      <div v-loading="loading" v-if="!loading" class="article_body">
+      <div v-show="loading" class="loading">
+        <img src="../../assets/loading.gif" alt="">
+      </div>
+      <div v-loading="loading" v-show="!loading" class="article_body transition-slow">
         <markdownShow :html="articleTemp.contentHtml"></markdownShow>
       </div>
-    </div>
-    <div class="loading">
-      <img v-show="loading" src="../../assets/loading.gif" alt="">
     </div>
   </div>
 </template>
@@ -288,13 +288,8 @@
         width 45%
         min-width 800px
         margin 30px auto
-        padding 0 30px 0 0
+        padding 0 0 200px 0
 
-  .loading
-    height 100px
-    text-align center
-    img
-      height 100px
   @media (max-width: 767px) {
     .markdown-body {
       padding 15px;

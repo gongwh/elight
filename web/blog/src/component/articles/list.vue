@@ -7,6 +7,9 @@
       <el-radio v-model="sortBy" label="latestModifyDate">更新时间</el-radio>
       <el-radio v-model="sortBy" label="readTotalTimes">阅读次数</el-radio>
     </div>
+    <div v-show="isLoading" class="loading">
+      <img src="../../assets/loading.gif" alt="">
+    </div>
     <div class="articles-inner"
          v-show="!isSearch"
     >
@@ -52,9 +55,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="loading">
-      <img v-show="isLoading" src="../../assets/loading.gif" alt="">
     </div>
   </div>
 </template>
@@ -423,7 +423,7 @@
     .articles-inner
       display flex
       margin auto
-      max-width 1200px
+      max-width 1500px
       padding-top 150px
       text-align center
       flex-direction row
@@ -431,16 +431,18 @@
       justify-content center
       .article
         top 0
-        height 210px
-        width 280px
+        height 249px
+        width 382px
         cursor pointer
         display block
-        margin 20px 18px
+        margin 50px 38px
         position relative
-        background-color rgba(255, 255, 255, 0.98)
+        background-color rgb(255, 255, 255)
         overflow hidden
         padding-bottom 10px
         background-position center center
+        box-shadow 0 0 20px rgba(77, 82, 78, 0.27)
+        border-radius 3px
         &:hover
           .image-wrapper-inner
             .bg-img
@@ -475,13 +477,13 @@
               transition all 0.3s linear
             .bg-letter
               height 100%
-              line-height 110px
+              line-height 135px
               transition all 0.3s linear
-              background #f9f9f9 linear-gradient(to right, rgba(144, 195, 194, 0.17), #dedfea42)
-              font-size 50px
+              font-size 64px
               font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+              background rgba(107,195,147,0.05) linear-gradient(to right, rgba(166, 186, 193, 0.56), rgba(145, 119, 153, 0))
         .miniContent
-          padding 5px 5px 0 5px
+          padding 10px 10px 0 10px
           text-align left
           font-family "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
           .title
@@ -496,7 +498,7 @@
             .banner
               margin-right 8px
               margin-left 2px
-              background #276b23
+              background black
               width 10px
               height 10px
               display inline-block
@@ -504,7 +506,7 @@
               left -20px
               top 6px
           .desc
-            height 54px
+            max-height 63px
             margin 5px 0
             font-size 14px
             color rgba(0, 0, 0, 1)
@@ -527,9 +529,4 @@
                 margin-left 10px
                 height 15px
                 vertical-align middle
-    .loading
-      height 100px
-      text-align center
-      img
-        height 100px
 </style>

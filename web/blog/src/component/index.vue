@@ -45,7 +45,7 @@
     z-index 5000
 
   .index
-    background-color rgba(255,255,255,0.98)
+    background-color #f1f1f1
 
     a:link {
       text-decoration: none;
@@ -62,43 +62,35 @@
     a:visited {
       text-decoration: none;
     }
-
+    @keyframes bounce-in {
+      0% {
+        opacity 0
+      }
+      100% {
+        opacity 1
+      }
+    }
     .fade-enter-active
-      transition: all 0.5s ease
-
-    .fade-leave-active
-      transition: all 0s ease
-
-    .fade-enter
-      opacity: 0
-
-    .fade-leave-active
-      opacity: 0
+      animation bounce-in 1s
 
     .content
       padding-top 42px
       min-height: calc(100vh - 50px)
-    //*
-    //  color rgba(0, 0, 0, 1)
-    //  font-family "Raleway", Arial, Helvetica, sans-serif
 
     .push
       height 100px
 
   .snow_hover_scene
-    /*position absolute*/
     width: 100%;
     height: 100%;
     perspective: 5200px;
     .snow_hover_cube
       min-height: calc(100vh - 50px)
       position: relative;
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      // animation: example 10s infinite linear;
-      transform-origin 0 0 1300px;
-      /*animation-fill-mode forwards*/
+      width 100%
+      height 100%
+      transform-style preserve-3d
+      transform-origin 0 0 1300px
       .snow_hover_side
         padding-top 42px
         position: absolute;
@@ -123,15 +115,14 @@
       background-color #668c6e
       border-color #668c6e
 
-  @keyframes example {
-    10% {
-      transform: translateZ(-5200px) rotateY(0deg)
-    }
-    50% {
-      transform: translateZ(-5200px) rotateY(360deg)
-    }
-    90% {
-      transform: translateZ(-5200px) rotateY(0deg)
-    }
-  }
+  .content
+    .loading
+      height 500px
+      text-align center
+      img
+        margin-top 100px
+        height 100px
+    .transition-slow
+      transition all 5s
+
 </style>
