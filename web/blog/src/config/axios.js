@@ -1,13 +1,13 @@
 /**
  * Created by SNOW on 2018.03.09.
  */
-const base = require('./base')
+import {service as serviceConfig} from './base'
 import axios from 'axios'
 import store from '../store'
 import router from '../router'
 
-axios.defaults.baseURL = base.serviceUrl
-axios.defaults.fileUrl = base.fileBase
+axios.defaults.baseURL = serviceConfig.serviceUrl
+axios.defaults.fileUrl = serviceConfig.fileBase
 axios.defaults.headers['Content-Type'] = 'application/json'
 
 // http request 拦截器

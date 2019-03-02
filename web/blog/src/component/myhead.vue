@@ -58,7 +58,7 @@
 
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations, mapState, mapActions} from 'vuex'
-
+  import {web as WebConfig} from '@/config/base'
   export default {
     props: {
     },
@@ -104,7 +104,7 @@
       ...mapGetters('auth', ['alreadyAuth']),
       ...mapActions('auth', ['logout']),
       e_gotoElight () {
-        window.open('http://www.zhangzhuowei.com/article/f8cfbd2c-dfde-4f00-b0bd-9f72df709265', '_black')
+        window.open(WebConfig.baseUrl + 'article/f8cfbd2c-dfde-4f00-b0bd-9f72df709265', '_black')
       },
       e_searchEnter (val) {
         // console.log('e_searchEnter', val)
