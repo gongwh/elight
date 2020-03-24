@@ -4,7 +4,7 @@
       <div>
         <img @click="e_goto('https://gitee.com/gongwh')" src="./github.png"/><span @click="e_goto('https://gitee.com/gongwh')">SNOW</span>
         <img @click="e_goto('mailto:13162569078@163.com', '_self')" src="./email.png"/><span @click="e_goto('mailto:13162569078@163.com', '_self')">13162569078@163.com</span>
-        <img @click="e_goto('http://www.miitbeian.gov.cn')" src="./gov.png"/><span @click="e_goto('http://www.miitbeian.gov.cn')">晋ICP备18008339号</span>
+        <img @click="e_goto('http://beian.miit.gov.cn')" src="./gov.png"/><span @click="e_goto('http://beian.miit.gov.cn')">晋ICP备18008339号</span>
       </div>
     </div>
   </div>

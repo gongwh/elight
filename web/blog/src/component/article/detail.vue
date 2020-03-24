@@ -8,7 +8,7 @@
           <el-button type="primary" @click="l_confirmDelete">sure</el-button>
         </div>
       </snow-dialog>
-      <show :title="articleTemp.title" :detail="articleTemp.updateTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
+      <show :title="articleTemp.title" :detail="articleTemp.createTime" :backgroundUrl="articleTemp.titleImgUrl"></show>
       <div v-show="loading" class="loading">
         <img src="../../assets/loading.gif" alt="">
       </div>
