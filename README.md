@@ -17,7 +17,7 @@
 
 ### 3 How 将来准备做什么
 接下来可能就是想这里整理一下原有的博客，顺便整理一下浏览器堆积的没来得及整理的书签。太多需要整理了，乱作一团了再不整理。
-![一堆书签](http://www.zhangzhuowei.com/api/file/2018/09/21/00/44/45/e38514d2-9593-4abc-a8cf-5c488a403f9a.png)
+![一堆书签](http://www.tobesimple.top/api/file/2018/09/21/00/44/45/e38514d2-9593-4abc-a8cf-5c488a403f9a.png)
 
 ### 4 Thanks
 `mavon-editor` 项目 [地址](https://github.com/hinesboy/mavonEditor)
