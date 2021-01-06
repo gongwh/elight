@@ -14,7 +14,7 @@
     "analyze": "cross-env NODE_ENV=production npm_config_report=true npm run build"
   },
   "dependencies": {
-    "axios": "^0.16.1",
+    "axios": "^0.21.1",
     "element-ui": "^2.4.4",
     "html-to-text": "^3.3.0",
     "mavon-editor": "^2.4.16",
